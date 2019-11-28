@@ -1,0 +1,67 @@
+.utility{
+    height: 70px;
+    background: white !important;
+    color: #ddd !important;
+}
+
+.utility a.navbar-brand{
+    color: rgb(71, 71, 71) !important;
+}
+.nav-item .nav-link-icon i{
+    color: rgb(71, 71, 71) !important;
+}
+
+/* .nav-item.priv::before{
+    content: 'cisajoais';
+    display: inline-block;
+    width:100px;
+    height:40px;
+} */
+.custom-toggle.private::before{
+    content: 'Private';
+    position: absolute !important;
+    top:0;
+    left: -70px;
+}
+.custom-toggle.private::after{
+    content: 'Public';
+    position: absolute !important;
+    top:0;
+    right: -70px;
+    color: blue;
+    
+}
+.input-control{
+    background: transparent;
+    display: inline-block;
+    border-radius: 50px;
+    border: 1px solid gray;
+    padding:5px 5px 5px 20px;
+}
+
+
+
+
+
+.input-control:focus{
+    outline: none;
+}
+.input-control::before{
+    content: 'chsdc';
+    position: absolute;
+}
+
+
+/* modal */
+.modal-header{
+    background: #153590;
+}
+.modal-title{
+    color: #fff;
+}
+
+
+/* map */
+#mapid { 
+    height: 600px; 
+}
