@@ -9,7 +9,10 @@ var techMap,
     baseCartoDB,
     baseMapContoller,
     ObjBaseLayers,
-    ObjOverlays
+    ObjOverlays,
+    featureGRP,
+    drawController,
+    layerData
 
    $(document).ready(function(){
     //init setting
@@ -19,23 +22,28 @@ var techMap,
     leyerOSM = L.tileLayer.provider('OpenStreetMap')
     techMap.addLayer(leyerOSM)
 
-    baseWaterColor = L.tileLayer.provider('OpenTopoMap')
+    baseWaterColor = L.tileLayer.provider('Stamen.Watercolor')
     baseTopo = L.tileLayer.provider('OpenTopoMap')
     baseCartoDB = L.tileLayer.provider('CartoDB.DarkMatter')
 
     ObjOverlays = {
         "Open Street Map" : leyerOSM,
         "<b>Base Topo Map </b>" : baseTopo,
-        "<img src='https://picsum.photos/id/237/50/50' /> <span class='my-layer-item'>DarkMode - Carto DB</span>" : baseCartoDB
+        "Carto DB" : baseCartoDB,
+        " Water Color" : baseWaterColor
     }
     baseMapContoller = L.control.layers(ObjBaseLayers, ObjOverlays).addTo(techMap)
 
+    layerData = L.geoJSON.ajax('data/hospital.geojson', {
+        'pointTolayer': dataMarker
+    }).addTo(techMap)
 
+    
 
-
-
-
-    // get user location
+    layerData.on('data:loaded', () =>{
+        techMap.fitBounds(layerData.getBounds())
+    })
+    // get user location using the capital L key
     techMap.on('keypress', function(e){
         console.log(e)
         if(e.originalEvent.key == 'L'){
@@ -51,21 +59,7 @@ var techMap,
     techMap.on('locationerror', function(){
         console.log('location not found')
     })
-
-    rightNavMain = L.control.sidebar({
-        autopan: false,       // whether to maintain the centered map point when opening the sidebar
-        closeButton: false,    // whether t add a close button to the panes
-        container: 'sidebar', // the DOM container or #ID of a predefined sidebar container that should be used
-        position: 'right',     // left or right
-    }).addTo(techMap);
-
-    // rightNavMain.addPanel({
-    //     id: 'click',
-    //     tab: '<i class="fa fa-tape"></i>',
-    //     button: function (event) { console.log(event); }
-    // });
-
-    
+ 
     // Measure control button
     var measure = L.control.polylineMeasure().addTo(techMap);
     
@@ -81,4 +75,19 @@ var techMap,
         techMap.zoomOut()
     })
 
+  
+    // Draw controller
+    drawController = new L.Control.Draw({
+
+    })
+    drawController.addTo(techMap)
+    techMap.on('draw:created', (w) =>{
+        console.log(w)
+    })
    })
+
+   function dataMarker(json, latlng){
+        let attr = json.properties
+        console.log(attr)
+        return L.circleMarker(latlng, {radius:10, color:'blue'}).bindTooltip(`<b>${attr.properties}</b>`)
+    }
