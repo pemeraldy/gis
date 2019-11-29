@@ -14,14 +14,30 @@
   <!-- Icons -->
   <link href="./assets/vendor/nucleo/css/nucleo.css" rel="stylesheet">
   <link href="./assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  
   <!-- leaflet Css -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin=""/>
+
+  <!-- PLUGIN CSS -->
+  <link rel="stylesheet" href="./assets/js/plugins/leaflet-sidebar.css">
+  <link rel="stylesheet" href="./assets/js/plugins/Leaflet.PolylineMeasure.css">
+  <link rel="stylesheet" href="./assets/js/plugins/gh-fork-ribbon.ie.css">
+  <link rel="stylesheet" href="./assets/js/plugins/gh-fork-ribbon.css">
+
   <!-- leaflet Javascript -->
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
   crossorigin=""></script>
+
+  <script src="./assets/vendor/jquery/dist/jquery.min.js"></script>
+
+  <!-- PLUGINS -->
+  <script src="./assets/js/plugins/leaflet-sidebar.js"></script>
+  <script src="./assets/js/plugins/Leaflet.PolylineMeasure.js"></script>
+  <script src="./assets/js/plugins/leaflet-providers.js"></script>
+
   <!-- Argon CSS -->
   <link type="text/css" href="./assets/css/argon.css?v=1.0.0" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/custorm.css">
@@ -245,17 +261,20 @@
                         
                         <!-- Zoom in and out -->
                         <ul class="navbar-nav ml-lg-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link nav-link-icon" href="#">
-                                        <i class="far fa-plus-square "></i>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link nav-link-icon" href="#">
-                                        <i class="far fa-minus-square "></i>                                    
-                                    </a>
-                                </li>                                                   
-                            </ul>
+
+                            <li id="zoom-out" class="nav-item">
+                                <a class="nav-link nav-link-icon" href="#">
+                                    <i class="far fa-minus-square "></i>                                    
+                                </a>
+                            </li> 
+
+                            <li id="zoom-in" class="nav-item">
+                                <a class="nav-link nav-link-icon" href="#">
+                                    <i  class="far fa-plus-square "></i>
+                                </a>
+                            </li> 
+                                                                                  
+                        </ul>
                         
                     </div> 
                     
@@ -267,9 +286,44 @@
     <!-- Page content -->
     
     <!-- MAP -->
+    <!-- Right sidebar -->
+    <div id="sidebar" class="leaflet-sidebar collapsed">
+      <!-- Nav tabs -->
+      <div class="leaflet-sidebar-tabs">
+          <ul role="tablist"> <!-- top aligned tabs -->
+              <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+             
+              <li><a href="#profile" role="tab"><i class="fa fa-map"></i></a></li>
+          </ul>
+  
+          <ul role="tablist"> <!-- bottom aligned tabs -->
+              <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
+          </ul>
+      </div>
+  
+      <!-- Tab panes -->
+      <div class="leaflet-sidebar-content">
+          <div class="leaflet-sidebar-pane" id="home">
+              <h1 class="leaflet-sidebar-header">
+                  Utilities
+                  <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+              </h1>
+              <p>measure</p>
+          </div>
+  
+          <div class="leaflet-sidebar-pane" id="messages">
+              <h1 class="leaflet-sidebar-header">Messages<div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div></h1>
+          </div>
+  
+          <div class="leaflet-sidebar-pane" id="profile">
+              <h1 class="leaflet-sidebar-header">Base maps<div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div></h1>
+          </div>
+      </div>
+  </div>
+  <!-- main map component -->
     <div class="">
             <div id="mapid">
-              
+
             </div>  
     </div>
 
@@ -300,7 +354,7 @@
    
   <!-- Argon Scripts -->
   <!-- Core -->
-  <script src="./assets/vendor/jquery/dist/jquery.min.js"></script>
+  <!-- <script src="./assets/vendor/jquery/dist/jquery.min.js"></script> -->
   <script src="./assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Optional JS -->
   <!-- <script src="./assets/vendor/chart.js/dist/Chart.min.js"></script>
