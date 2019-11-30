@@ -1,15 +1,16 @@
 //*********GLOBAL VARAIBLES********* */
 var techMap,
     leyerOSM,
-    righNavMain,
+    rightSideBar,
     zoomInBtn,
+    easyBtn,
     zoomOutBtn,
     baseWaterColor,
     baseTopo,
     baseCartoDB,
     baseMapContoller,
-    ObjBaseLayers,
-    ObjOverlays,
+    objBaseLayers,
+    objOverlays,
     featureGRP,
     drawController,
     layerData
@@ -26,23 +27,32 @@ var techMap,
     baseTopo = L.tileLayer.provider('OpenTopoMap')
     baseCartoDB = L.tileLayer.provider('CartoDB.DarkMatter')
 
-    ObjOverlays = {
+    objBaseLayers = {
         "Open Street Map" : leyerOSM,
         "<b>Base Topo Map </b>" : baseTopo,
         "Carto DB" : baseCartoDB,
         " Water Color" : baseWaterColor
     }
-    baseMapContoller = L.control.layers(ObjBaseLayers, ObjOverlays).addTo(techMap)
-
-    layerData = L.geoJSON.ajax('data/hospital.geojson', {
-        'pointTolayer': dataMarker
-    }).addTo(techMap)
 
     
+    baseMapContoller = L.control.layers(objBaseLayers, objOverlays).addTo(techMap)
 
+    // ######## AJAX data Call #########
+    layerData = L.geoJSON.ajax('data/hospital.geojson', {
+        'pointToLayer': dataMarker
+    }).addTo(techMap)
+    
+    objOverlays  = {
+        "Lagos Data": layerData
+    }
     layerData.on('data:loaded', () =>{
         techMap.fitBounds(layerData.getBounds())
     })
+        
+    easyBtn = L.easyButton('fa-globe', function(){
+        console.log('hey')
+     }).addTo(techMap)
+
     // get user location using the capital L key
     techMap.on('keypress', function(e){
         console.log(e)
@@ -86,8 +96,9 @@ var techMap,
     })
    })
 
+//    outside ready function
    function dataMarker(json, latlng){
         let attr = json.properties
         console.log(attr)
-        return L.circleMarker(latlng, {radius:10, color:'blue'}).bindTooltip(`<b>${attr.properties}</b>`)
+        return L.marker(latlng, {radius:10, color:'blue'}).bindTooltip(`<b>LGA:${attr.lga}</b> <br> Address: ${attr.address} <br> Wardcode: <i class="text-success">${attr.wardcode}</i>`)
     }
