@@ -13,7 +13,9 @@ var techMap,
     objOverlays,
     featureGRP,
     drawController,
-    layerData
+    layerData,
+    drawnItems,
+    drawControl
 
    $(document).ready(function(){
     //init setting
@@ -87,18 +89,38 @@ var techMap,
 
   
     // Draw controller
-    drawController = new L.Control.Draw({
+    // drawController = new L.Control.Draw({
 
-    })
-    drawController.addTo(techMap)
-    techMap.on('draw:created', (w) =>{
-        console.log(w)
-    })
-   })
+    // })
+    // drawController.addTo(techMap)
+    // techMap.on('draw:created', (w) =>{
+    //     console.log(w)
+    // })
+
+    drawnItems = new L.FeatureGroup();
+        techMap.addLayer(drawnItems);
+
+    drawControl = new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems
+        }
+    });
+    techMap.addControl(drawControl);
+
+    techMap.on('draw:created', function (e) {
+        var type = e.layerType,
+            layer = e.layer;
+        drawnItems.addLayer(layer);
+    });
+})
 
 //    outside ready function
+
+//    display data attributes
    function dataMarker(json, latlng){
         let attr = json.properties
         console.log(attr)
-        return L.marker(latlng, {radius:10, color:'blue'}).bindTooltip(`<b>LGA:${attr.lga}</b> <br> Address: ${attr.address} <br> Wardcode: <i class="text-success">${attr.wardcode}</i>`)
+        return L.marker(latlng).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
+        Address: ${attr.address} <br> 
+        Wardcode: <i class="text-success">${attr.wardcode}</i>`)
     }
