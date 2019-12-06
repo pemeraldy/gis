@@ -66,3 +66,30 @@
     height: 600px; 
 }
 
+/* .leaflet-draw{
+    background: orange;
+    width: 200px;
+    transform: translateX(-200px);
+    transition: transform .250s linear
+}
+.show-right{
+    transform: translateX(0)
+} */
+/* a.leaflet-draw-draw-polyline{
+    padding: 20px;
+} */
+
+.leaflet-draw-toolbar a{
+    
+    color: orange
+}
+
+.mycontrol{
+    width: 250px;
+    height: 350px;
+    background: #fafbfd;
+    color: #999;
+    padding: 10px;
+    margin-left: 20px;
+    margin-bottom: 30px;
+}

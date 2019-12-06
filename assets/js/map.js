@@ -1,10 +1,11 @@
 //*********GLOBAL VARAIBLES********* */
-var techMap,
+let techMap,
     leyerOSM,
     rightSideBar,
     zoomInBtn,
     easyBtn,
     zoomOutBtn,
+    measure,
     baseWaterColor,
     baseTopo,
     baseCartoDB,
@@ -20,6 +21,11 @@ var techMap,
    $(document).ready(function(){
     //init setting
     techMap = L.map('mapid', {zoomControl:false}).setView([6.6088, 3.2545], 9);
+    
+    //######## adding markers to map at will for position purpose#######
+    // techMap.on("click", function(e){
+    //     new L.Marker([e.latlng.lat, e.latlng.lng]).addTo(techMap);
+    //  })
 
     //*********** BASE MAP OPTIONS ***********/
     leyerOSM = L.tileLayer.provider('OpenStreetMap')
@@ -35,17 +41,17 @@ var techMap,
         "Carto DB" : baseCartoDB,
         " Water Color" : baseWaterColor
     }
-
     
     baseMapContoller = L.control.layers(objBaseLayers, objOverlays).addTo(techMap)
-
+    let drawnItm = new L.featureGroup()
     // ######## AJAX data Call #########
     layerData = L.geoJSON.ajax('data/hospital.geojson', {
         'pointToLayer': dataMarker
     }).addTo(techMap)
     
     objOverlays  = {
-        "Lagos Data": layerData
+        "Lagos Data": layerData,
+        " drawn" : drawnItm
     }
     layerData.on('data:loaded', () =>{
         techMap.fitBounds(layerData.getBounds())
@@ -73,7 +79,7 @@ var techMap,
     })
  
     // Measure control button
-    var measure = L.control.polylineMeasure().addTo(techMap);
+    measure = L.control.polylineMeasure().addTo(techMap);
     
     // zoomIN and Zoom Out btn functions
     zoomInBtn = document.getElementById('zoom-in')
@@ -89,31 +95,57 @@ var techMap,
 
   
     // Draw controller
-    // drawController = new L.Control.Draw({
-
-    // })
-    // drawController.addTo(techMap)
-    // techMap.on('draw:created', (w) =>{
-    //     console.log(w)
-    // })
-
     drawnItems = new L.FeatureGroup();
         techMap.addLayer(drawnItems);
 
+    // create draw control
     drawControl = new L.Control.Draw({
+        draw: {
+            polygon: {
+                shapeOptions: {
+                    color: 'purple'
+                },
+                showArea: true,
+                metric: false,
+                allowIntersection: false,
+                repeatMode: true,
+                draggable: true
+            },
+        },
         edit: {
             featureGroup: drawnItems
-        }
-    });
+        },
+
+    }); 
+
+    //Add draw control to map
     techMap.addControl(drawControl);
 
     techMap.on('draw:created', function (e) {
-        var type = e.layerType,
-            layer = e.layer;
+        let type = e.layerType,
+            layer = e.layer
+        
+            if (type === 'circle') {
+                layer.bindTooltip('<b>Radius: </b>'+ (layer._mRadius/1000).toFixed(3)+' km');
+                console.log(layer._mRadius, e, layer)                
+            }
+            if (type === 'rectangle') {
+                layer.bindTooltip('width: '+e.sourceTarget._size.x +'km <br/> Height '+e.sourceTarget._size.y+'km');
+                console.log( e, layer, e.sourceTarget._size)                
+            }
+            if (type === 'polygon') {
+                layer.bindTooltip('');
+                console.log( layer)                
+            }
         drawnItems.addLayer(layer);
     });
+
 })
 
+
+
+
+// ###########################
 //    outside ready function
 
 //    display data attributes
