@@ -16,7 +16,8 @@ let techMap,
     drawController,
     layerData,
     drawnItems,
-    drawControl
+    drawControl,
+    drawStyle
 
    $(document).ready(function(){
     //init setting
@@ -139,6 +140,8 @@ let techMap,
             }
         drawnItems.addLayer(layer);
     });
+
+    drawStyle = L.control.styleEditor().addTo(techMap)
 
 })
 
