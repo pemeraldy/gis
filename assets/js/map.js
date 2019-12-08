@@ -1,10 +1,9 @@
 //*********GLOBAL VARAIBLES********* */
 let techMap,
     leyerOSM,
-    rightSideBar,
     zoomInBtn,
-    easyBtn,
     zoomOutBtn,
+    easyBtn,
     measure,
     baseWaterColor,
     baseTopo,
@@ -17,7 +16,8 @@ let techMap,
     layerData,
     drawnItems,
     drawControl,
-    drawStyle
+    drawStyle,
+    measureControl
 
    $(document).ready(function(){
     //init setting
@@ -38,22 +38,29 @@ let techMap,
 
     objBaseLayers = {
         "Open Street Map" : leyerOSM,
-        "<b>Base Topo Map </b>" : baseTopo,
+        "Base Topo Map" : baseTopo,
         "Carto DB" : baseCartoDB,
-        " Water Color" : baseWaterColor
+        // " Water Color" : baseWaterColor
     }
-    
+
+
     baseMapContoller = L.control.layers(objBaseLayers, objOverlays).addTo(techMap)
-    let drawnItm = new L.featureGroup()
+    
+    let drawned  = new L.FeatureGroup()
+    drawned.addTo(techMap)  
+
+    objOverlays  = {
+        "Lagos Data": layerData,
+        "nfnf" : drawned
+    }
+
+    
     // ######## AJAX data Call #########
-    layerData = L.geoJSON.ajax('data/hospital.geojson', {
+    layerData = L.geoJSON.ajax('data/PPMV.geojson', {
         'pointToLayer': dataMarker
     }).addTo(techMap)
     
-    objOverlays  = {
-        "Lagos Data": layerData,
-        " drawn" : drawnItm
-    }
+    
     layerData.on('data:loaded', () =>{
         techMap.fitBounds(layerData.getBounds())
     })
@@ -143,6 +150,10 @@ let techMap,
 
     drawStyle = L.control.styleEditor().addTo(techMap)
 
+    // Measure area and line
+    measureControl = new L.Control.Measure({position: 'topright'});
+    measureControl.addTo(techMap);
+
 })
 
 
@@ -155,7 +166,7 @@ let techMap,
    function dataMarker(json, latlng){
         let attr = json.properties
         console.log(attr)
-        return L.marker(latlng).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
+        return L.circleMarker(latlng).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
         Address: ${attr.address} <br> 
         Wardcode: <i class="text-success">${attr.wardcode}</i>`)
     }
