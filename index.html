@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="./assets/js/plugins/gh-fork-ribbon.css">
   <link rel="stylesheet" href="./assets/js/plugins/easy-button.css">
   <link rel="stylesheet" href="./assets/js/plugins/leaflet-measure.css">
-  <link rel="stylesheet" href="./assets/js/plugins/leaflet-styleeditor/css/Leaflet.StyleEditor.css">
+  <link rel="stylesheet" href="./assets/js/plugins/search/searchbox.min.css">
 
   <!-- leaflet Javascript -->
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
@@ -37,6 +37,7 @@
   crossorigin=""></script>
 
   <script src="./assets/vendor/jquery/dist/jquery.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.8.24/i18n/jquery-ui-i18n.min.js"></script> -->
 
   <!-- PLUGINS -->
   <script src="./assets/js/plugins/leaflet-sidebar.js"></script>
@@ -44,8 +45,10 @@
   <script src="./assets/js/plugins/leaflet-providers.js"></script>
   <script src="./assets/js/plugins/leaflet.ajax.min.js"></script>
   <script src="./assets/js/plugins/easy-button.js"></script>
+  <script src="./assets/js/plugins/leaflet-omnivore.min.js"></script>
   <script src="./assets/js/plugins/leaflet.filelayer.js"></script>
   <script src="./assets/js/plugins/leaflet-measure.js"></script>
+  <script src="./assets/js/plugins/search/leaflet.customsearchbox.min.js"></script>
   
   
   <!-- Drawer js n Css -->
@@ -246,7 +249,10 @@
                         <ul class="navbar-nav  search-map">
                             <form action="">
                                 <div class="search-map-input">
-                                    <input class="input-control" type="text"  placeholder="search map">
+                                    <input id="searchedValue" class="input-control" type="text"  placeholder="search map">
+                                </div>
+                                <div class="btn btn-primary">
+                                  <button id="search" type="submit">Search</button>
                                 </div>
                             </form>
                         </ul>

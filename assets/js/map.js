@@ -17,7 +17,8 @@ let techMap,
     drawnItems,
     drawControl,
     drawStyle,
-    measureControl
+    measureControl,
+    layerSearch
 
    $(document).ready(function(){
     //init setting
@@ -151,8 +152,53 @@ let techMap,
     drawStyle = L.control.styleEditor().addTo(techMap)
 
     // Measure area and line
-    measureControl = new L.Control.Measure({position: 'topright'});
+    measureControl = new L.Control.Measure({position: 'topright', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters'});
     measureControl.addTo(techMap);
+
+    // File layer uploader
+    var layer = omnivore.gpx('data/laboratory.geojson')
+    .on('ready', function() {
+        // when this is fired, the layer
+        // is done being initialized
+    })
+    .on('error', function() {
+        // fired if the layer can't be loaded over AJAX
+        // or can't be parsed
+    })
+    .addTo(techMap);
+
+    // Search function
+            	    
+        function returnResById(id){
+            let searchedLayer = layerData.getLayers()
+            for(i = 0 ;searchedLayer.length -1 ; i++){
+                console.log(searchedLayer[i])
+                // let featureID = searchedLayer[i].features.properties.Property
+                // if(featureID == id){
+                //     return searchedLayer[i]
+                // }
+            }
+            return false
+        }
+        
+        $('#search').click((e) =>{
+            e.preventDefault()
+            let id = $('#searchedValue').val()
+            let lyr = returnResById(id)
+            if(lyr) {
+                if(layerSearch){
+                    layerSearch.remove()                   
+                }
+                layerSearch = L.geoJSON(lyr.toGeoJson(), {style: {color: 'red', weight:10,opacity: 0.5}}).addTo(techMap)
+                techMap.fitBounds(lyr.getBounds().pad(1))
+            }else{
+                console.log('found not')
+            }
+        })
+    
+    
+
+    
 
 })
 
