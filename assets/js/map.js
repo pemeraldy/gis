@@ -53,12 +53,15 @@ let techMap,
     // Draw controller
     drawnItems = new L.FeatureGroup();
         techMap.addLayer(drawnItems);
+    
+        let drawned  = new L.FeatureGroup()
+        drawned.addTo(techMap) 
 
     baseLayers = {
         "Open Street Map" : leyerOSM,
         "Base Topo Map" : baseTopo,
         "Carto DB" : baseCartoDB,
-        // " Water Color" : baseWaterColor
+        " Water Color" : baseWaterColor
     }
 
     overlays  = {
@@ -68,11 +71,7 @@ let techMap,
     }
 
     baseMapContoller = L.control.layers(baseLayers, overlays).addTo(techMap)
-    
-    let drawned  = new L.FeatureGroup()
-    drawned.addTo(techMap)  
-
-    
+     
         
     // Easy Button
     easyBtn = L.easyButton('fa-globe', function(){
@@ -111,11 +110,6 @@ let techMap,
     zoomInOut.addEventListener('click', () =>{
         techMap.zoomOut()
     })
-
-  
-    // // Draw controller
-    // drawnItems = new L.FeatureGroup();
-    //     techMap.addLayer(drawnItems);
 
     // create draw control
     drawControl = new L.Control.Draw({
@@ -168,7 +162,35 @@ let techMap,
     measure = L.control.polylineMeasure().addTo(techMap);
 
     
+    // #########LEGEND TEMPLATES ###########
 
+    /*Legend specific*/
+    var legend = L.control({ position: "bottomleft" });
+
+    legend.onAdd = function(map) {
+      var div = L.DomUtil.create("div", "legend trans-open");
+      div.innerHTML += "<h4>Legend</h4>";
+      div.innerHTML += "<div class='anchor'>&gt</div>";
+      div.innerHTML += '<i style="background: #477AC2"></i><span>Water</span><br>';
+      div.innerHTML += '<i style="background: #448D40"></i><span>Forest</span><br>';
+      div.innerHTML += '<i style="background: #E6E696"></i><span>Land</span><br>';
+      div.innerHTML += '<i style="background: #E8E6E0"></i><span>Residential</span><br>';
+      
+      
+      
+    
+      return div;
+    };
+    
+    legend.addTo(techMap);
+    
+    // Control slide in n out of infoBar
+    const inforBarState = () =>{
+      let infBar = document.querySelector('.legend')
+      infBar.classList.toggle('trans-open')
+    }
+    const anchor = document.querySelector('.anchor') 
+    anchor.addEventListener('click', inforBarState)
 
     
 
@@ -177,7 +199,7 @@ let techMap,
 // ###########################
 //    outside ready function
 
-//  display data attributes
+//  display data attributes and control data presentations
     function dataMarker(json, latlng){
         let attr = json.properties
         // console.log(attr)
@@ -190,7 +212,13 @@ let techMap,
     function dataStyler(json, latlng){
         let attr = json.properties
         // console.log(attr)
-        return L.marker(latlng).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
-        Address:<i class="fas fa-home"></i> ${attr.address} <br> 
-        Wardcode: <i class="text-primary">${attr.wardcode}</i>`)
+        return L.marker(latlng).bindTooltip(`
+            <div class="t-tooltip">
+                <b>LGA:${attr.lga}</b> 
+                    <br> 
+                <i class="fas fa-home"></i> Address: ${attr.address} 
+                <br> 
+                Wardcode: <i class="text-primary"> ${attr.wardcode}</i>
+            </div>
+        `)
     }
