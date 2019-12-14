@@ -18,7 +18,8 @@ let techMap,
     drawControl,
     drawStyle,
     measureControl,
-    layerSearch
+    layerSearch,
+    mainSideBar
 
    $(document).ready(function(){
     //init setting
@@ -28,6 +29,7 @@ let techMap,
     
     // Scale display at bottom left
     L.control.scale().addTo(techMap)
+    drawStyle = L.control.styleEditor().addTo(techMap)
     //*********** BASE MAP OPTIONS ***********/
     leyerOSM = L.tileLayer.provider('OpenStreetMap')
     techMap.addLayer(leyerOSM)
@@ -45,11 +47,34 @@ let techMap,
         'pointToLayer': dataStyler
     }).addTo(techMap)
     
+    let lagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
+        'pointToLayer': dataStyler
+    }).addTo(techMap)
+
+    let States = L.geoJSON.ajax('data/Nigeria_states.geojson', {
+        'pointToLayer': dataStyler
+    }).addTo(techMap)
+
+    let lga = L.geoJSON.ajax('data/Nigeria_LGAs.geojson', {
+        'pointToLayer': dataStyler
+    }).addTo(techMap)
+
+    let nigeriaState = L.geoJSON.ajax('.geojson', {
+        'pointToLayer': dataMarker
+    }).addTo(techMap)
+    
     
     layerData.on('data:loaded', () =>{
         techMap.fitBounds(layerData.getBounds())
     })
 
+
+    
+
+
+    // ############### HEATMAP ######
+    // Heat map deals with points will later create a point extractor function
+        
     // Draw controller
     drawnItems = new L.FeatureGroup();
         techMap.addLayer(drawnItems);
@@ -67,16 +92,24 @@ let techMap,
     overlays  = {
         "Lagos Data": layerData,
         "Lagos Data2" : layerData2,
-        "live drawn": drawnItems
+        "live drawn": drawnItems,
+        // "heat map": heat,
+        "Lagos LGA": lagosLGA,
+        "States": States,
+        "Local Govt.": lga
     }
 
-    baseMapContoller = L.control.layers(baseLayers, overlays).addTo(techMap)
+    baseMapContoller = L.control.layers(baseLayers, overlays,{
+        collapse: false,
+        expand: false
+    }).addTo(techMap)
      
         
     // Easy Button
-    easyBtn = L.easyButton('fa-globe', function(){
-        console.log('hey')
-     }).addTo(techMap)
+    // easyBtn = L.easyButton('fa-globe', function(){
+    //     turf.buffer(layerData2.toGeoJSON(), 0.3, {unit:'kilometers'})
+    //     console.log('')
+    //  }).addTo(techMap)
 
      
     
@@ -151,7 +184,11 @@ let techMap,
                 console.log( layer)                
             }
         drawnItems.addLayer(layer);
+        let newGeo = JSON.stringify(layer.toGeoJSON())
+        
+        // sendDraw()
     });
+
 
     // drawStyle = L.control.styleEditor().addTo(techMap)
 
@@ -161,39 +198,89 @@ let techMap,
     // Measure control button
     measure = L.control.polylineMeasure().addTo(techMap);
 
-    
+    // ############### HEATMAP ######
+    // let heat = L.heatLayer(layerData2).addTo(techMap)
+
+
     // #########LEGEND TEMPLATES ###########
 
     /*Legend specific*/
-    var legend = L.control({ position: "bottomleft" });
+    let legend = L.control({ position: "bottomleft" });
 
-    legend.onAdd = function(map) {
+    legend.onAdd = function(layerdata) {
       var div = L.DomUtil.create("div", "legend trans-open");
-      div.innerHTML += "<h4>Legend</h4>";
-      div.innerHTML += "<div class='anchor'>&gt</div>";
-      div.innerHTML += '<i style="background: #477AC2"></i><span>Water</span><br>';
-      div.innerHTML += '<i style="background: #448D40"></i><span>Forest</span><br>';
-      div.innerHTML += '<i style="background: #E6E696"></i><span>Land</span><br>';
-      div.innerHTML += '<i style="background: #E8E6E0"></i><span>Residential</span><br>';
-      
-      
+      div.innerHTML += `<h4>Legend</h4>`;
+      div.innerHTML += `<div class='anchor'>&gt</div>`;
+      div.innerHTML += `<i style="background: #477AC2"></i><span>Lagos</span><br>`;
+      div.innerHTML += `<i style="background: #448D40"></i><span>Ibadan</span><br>`;
+      div.innerHTML += `<i style="background: #E6E696"></i><span>Kano</span><br>`;
+      div.innerHTML += `<i style="background: #E8E6E0"></i><span>Kaduna</span><br>`;
       
     
       return div;
     };
     
     legend.addTo(techMap);
+
+    // ********UTILITY SIDEBAR******
+
+    mainSideBar = L.control({ position: "bottomright" });
+
+    mainSideBar.onAdd = function() {
+      var div = L.DomUtil.create("div", "main-side-bar slide-left");
+      div.innerHTML += `<h4>Utilities</h4>`;
+      div.innerHTML += `<div class='anchor'>&lt</div>`;
+      div.innerHTML += `<i style="background: #477AC2"></i><span>Lagos</span><br>`;
+      div.innerHTML += `<div class="query-continer">
+                            <a id="do" class="btn btn-primary" href="#"> click</a>
+                        </div>`;
+      
+      return div;
+    };
     
-    // Control slide in n out of infoBar
-    const inforBarState = () =>{
-      let infBar = document.querySelector('.legend')
-      infBar.classList.toggle('trans-open')
+    mainSideBar.addTo(techMap);
+    
+
+
+    // Control slide in n out of infoBars
+    const inforBarState = (el,togglClass) =>{
+      let element = document.querySelector(`.${el}`)
+      element.classList.toggle(`${togglClass}`)
     }
-    const anchor = document.querySelector('.anchor') 
-    anchor.addEventListener('click', inforBarState)
-
     
+    const anchor = document.querySelector('.anchor') //anchor button on legend bar    
+    anchor.addEventListener('click', () => inforBarState('legend','trans-open'))
 
+    const sideBarAnchor = document.querySelector('.main-side-bar .anchor') //anchor button on utility side bar bar
+    sideBarAnchor.addEventListener('click', () => {
+        inforBarState('main-side-bar','slide-left')
+        console.log('heu')
+    })
+    
+      
+     
+      techMap.on('click', function(e) {
+        // let attr = json.properties
+            // console.log(e.target)
+            // return L.circleMarker(json.latlng).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
+            // Address: ${attr.address} <br> 
+            // Wardcode: <i class="text-success">${attr.wardcode}</i>`)
+        });
+
+
+        /***************Search Works****************/
+        function returnProj(){
+            var layer = layerData2.getLayers()
+            console.log(layer.feature)
+        }
+        let btn = document.getElementById('do').addEventListener('click', returnProj)
+
+        var searchLayer = L.layerGroup().addTo(techMap);
+        //... adding data in searchLayer ...
+        techMap.addControl( new L.Control.Search({layer: layerData}) );
+
+       
+       
 })
 
 // ###########################
@@ -203,7 +290,9 @@ let techMap,
     function dataMarker(json, latlng){
         let attr = json.properties
         // console.log(attr)
-        return L.circleMarker(latlng).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
+        return L.circleMarker(latlng,{
+            color: 'orange',
+        }).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
         Address: ${attr.address} <br> 
         Wardcode: <i class="text-success">${attr.wardcode}</i>`)
     }

@@ -66,33 +66,8 @@
     height: 600px; 
 }
 
-/* .leaflet-draw{
-    background: orange;
-    width: 200px;
-    transform: translateX(-200px);
-    transition: transform .250s linear
-}
-.show-right{
-    transform: translateX(0)
-} */
-/* a.leaflet-draw-draw-polyline{
-    padding: 20px;
-} */
 
-.leaflet-draw-toolbar a{
-    
-    color: orange
-}
 
-.mycontrol{
-    width: 250px;
-    height: 350px;
-    background: #fafbfd;
-    color: #999;
-    padding: 10px;
-    margin-left: 20px;
-    margin-bottom: 30px;
-}
 
 .legend {
     padding: 6px 8px;
@@ -107,7 +82,7 @@
     color: #555;
     transition: all .3s linear;
     opacity: 1 !important;
-    
+    display: block !important;
   }
   .trans-open{
     transform: translateX(-325px)
@@ -150,5 +125,101 @@
     color:#fff;
     text-align: center;
     font-weight: bold;
-    pointer: cursor;
+    cursor: pointer;
   }
+
+
+  .main-side-bar {
+    padding: 6px 8px;
+    width: 300px;
+    min-height: 400px;
+    font: 14px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    /*border-radius: 5px;*/
+    line-height: 24px;
+    color: #555;
+    transition: all .3s linear;
+    opacity: 1 !important;
+    display: block !important;
+  }
+  .slide-left{
+    transform: translateX(322px)
+  }
+  .main-side-bar h4 {
+    text-align: center;
+    font-size: 16px;
+    margin: 2px 12px 8px;
+    color: #777;
+  }
+  
+  .main-side-bar span {
+    position: relative;
+    bottom: 3px;
+  }
+  
+  .main-side-bar i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin: 0 8px 0 0;
+    opacity: 0.7;
+  }
+  
+  .main-side-bar i.icon {
+    background-size: 18px;
+    background-color: rgba(255, 255, 255, 1);
+  }
+  
+  
+  .main-side-bar .anchor{
+    width: 30px;
+    height: 30px;
+    background: orange;
+  /*   transform: translateX(200px); */
+    position: absolute;
+    top:0;
+    right: 101%;
+    padding: 5px;
+    color:#fff;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+
+
+
+/* Custormize draw control */
+
+.leaflet-draw-toolbar-top {
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.leaflet-draw-toolbar {
+    margin-top: 12px;
+    display: flex;
+    /* box-shadow: none; */
+}
+
+.leaflet-left .leaflet-control {
+    margin-left: 10px;
+    display: flex;
+}
+
+
+  
+.leaflet-draw-section {
+    position: relative;
+    margin-right: 5px;
+}
+
+ul.leaflet-draw-actions{
+    background: orange !important;
+    display: block;
+    margin-top: 100px
+}

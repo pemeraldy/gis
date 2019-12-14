@@ -30,26 +30,36 @@
   <link rel="stylesheet" href="./assets/js/plugins/easy-button.css">
   <link rel="stylesheet" href="./assets/js/plugins/leaflet-measure.css">
   <link rel="stylesheet" href="./assets/js/plugins/search/searchbox.min.css">
+  <link rel="stylesheet" href="./assets/js/plugins/Leaflet.PolylineMeasure.css">
+  <link rel="stylesheet" href="./assets/js/plugins/leaflet-search.min.css">
 
   <!-- leaflet Javascript -->
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
   crossorigin=""></script>
 
+  <!-- JQuery -->
   <script src="./assets/vendor/jquery/dist/jquery.min.js"></script>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.8.24/i18n/jquery-ui-i18n.min.js"></script> -->
 
+  <!-- TURF js -->
+  <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+  
   <!-- PLUGINS -->
   <script src="./assets/js/plugins/leaflet-sidebar.js"></script>
   <script src="./assets/js/plugins/Leaflet.PolylineMeasure.js"></script>
   <script src="./assets/js/plugins/leaflet-providers.js"></script>
   <script src="./assets/js/plugins/leaflet.ajax.min.js"></script>
+  <script src="./assets/js/plugins/leaflet-heat.js"></script>
   <script src="./assets/js/plugins/easy-button.js"></script>
+  <script src="./assets/js/plugins/leaflet-search.min.js"></script>
   <script src="./assets/js/plugins/leaflet-omnivore.min.js"></script>
   <script src="./assets/js/plugins/leaflet.filelayer.js"></script>
   <script src="./assets/js/plugins/leaflet-measure.js"></script>
-  <script src="./assets/js/plugins/search/leaflet.customsearchbox.min.js"></script>
+  <script src="./assets/js/plugins/L.Control.SlideMenu.js"></script>
   
+  <script src="./assets/js/plugins/search/leaflet.customsearchbox.min.js"></script>
+  <script src="https://npmcdn.com/@turf/turf@5.1.6/turf.min.js"></script>
   
   <!-- Drawer js n Css -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
@@ -77,8 +87,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <!-- Brand -->
-      <a class="navbar-brand text-light pt-0" href="./index.html">
-        <!-- <img src="./assets/img/brand/blue.png" class="navbar-brand-img" alt="..."> -->
+      <a class="navbar-brand text-light pt-0" href="./index.html">        
         Techmatrix
       </a>
       <!-- User -->
@@ -97,8 +106,7 @@
         <li class="nav-item dropdown">
           <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="media align-items-center">
-              <span class="avatar avatar-sm rounded-circle">
-                <!-- <img alt="Image placeholder" src="./assets/img/theme/team-1-800x800.jpg"> -->
+              <span class="avatar avatar-sm rounded-circle">              
               </span>
             </div>
           </a>
@@ -136,8 +144,7 @@
         <div class="navbar-collapse-header d-md-none">
           <div class="row">
             <div class="col-6 collapse-brand">
-              <a href="./index.html">
-                <!-- <img src="./assets/img/brand/blue.png"> -->
+              <a href="./index.html">                
               </a>
             </div>
             <div class="col-6 collapse-close">
@@ -251,9 +258,6 @@
                                 <div class="search-map-input">
                                     <input id="searchedValue" class="input-control" type="text"  placeholder="search map">
                                 </div>
-                                <div class="btn btn-primary">
-                                  <button id="search" type="submit">Search</button>
-                                </div>
                             </form>
                         </ul>
 
@@ -349,6 +353,10 @@
               </div>
             </div>
           </div>
+
+
+           <!-- Tab panes -->
+
    
   <!-- Argon Scripts -->
   <!-- Core -->
