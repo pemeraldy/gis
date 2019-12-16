@@ -45,7 +45,7 @@ let techMap,
     }).addTo(techMap)
 
     let layerData2 = L.geoJSON.ajax('data/hospital.geojson', {
-        'pointToLayer': dataStyler,
+        'pointToLayer': dataMarker,
         onEachFeature: popUpData
     }).addTo(techMap)
     
@@ -56,7 +56,8 @@ let techMap,
 
     let States = L.geoJSON.ajax('data/Nigeria_states.geojson', {
         'pointToLayer': dataStyler,
-        onEachFeature: stateAttribute
+        onEachFeature: stateAttribute,
+        style: style
     }).addTo(techMap)
 
     let lga = L.geoJSON.ajax('data/Nigeria_LGAs.geojson', {
@@ -284,18 +285,26 @@ let techMap,
 
     legend.onAdd = function(layerdata) {
       var div = L.DomUtil.create("div", "legend trans-open");
-      div.innerHTML += `<h4>Legend</h4>`;
+      div.innerHTML += `<h2>Legend</h2>`;
       div.innerHTML += `<div class='anchor'>&gt</div>`;
-      div.innerHTML += `<i style="background: #477AC2"></i><span>Hospitals</span><br>`;
-      div.innerHTML += `<i style="background: #448D40"></i><span>Wards</span><br>`;
-      div.innerHTML += `<i style="background: #E6E696"></i><span>LGA</span><br>`;
-      div.innerHTML += `<i style="background: #E8E6E0"></i><span>States</span><br>`;
+      div.innerHTML += `<div style="margin-bottom: 10px"><i class="fas fa-capsules fa-2x" style="color: #477AC2"></i><span style="margin-left: 10px">Phamacy</span></div>`;
+      div.innerHTML += `<div style="margin-bottom: 10px"><i class="fas fa-flask fa-2x" style="color: #477AC2"></i><span style="margin-left: 10px">Laboratory</span></div>`;
+      div.innerHTML += `<div style="margin-bottom: 10px"><i class="fas fa-hospital fa-2x" style="color: #477AC2"></i><span style="margin-left: 10px">Hospitals</span></div>`;
+      div.innerHTML += `<div style="margin-bottom: 10px"><i class="fas fa-capsules fa-2x" style="color: #477AC2"></i><span style="margin-left: 10px">PPMV</span></div>`;
       
-    
       return div;
     };
     
     legend.addTo(techMap);
+
+
+    // ******DYNAMICALLY ADD LAYER *************
+    // $('#collapseOne').click(function addNewLayer() {
+    //     //create new layer
+    //     var imageOverlayNew = new L.imageOverlay(imageOverlayUrlNew, bounds);
+    //     //add it to a control
+    //     layerControl.addOverlay(imageOverlayNew, newLayerName);
+    // });
 
     // ********UTILITY SIDEBAR******
 
@@ -384,23 +393,7 @@ let techMap,
 
 
         /***************Search Works****************/
-        function returnProj(feat, layer){
-            techMap.removeLayer(layerData)
-        }
-
         
-        function addLayer(feat, layer){
-            techMap.addLayer(layerData)
-            L.geoJSON(layerData, {
-                style: function (feature) {
-                    return {color: feature.properties.color};
-                },
-                filter: function(feature,layer){
-                    console.log(feature.properties)
-                }
-            })
-
-        }
         // let btn = document.getElementById('do').addEventListener('click', returnProj)
         // let btn2 = document.getElementById('remove').addEventListener('click', addLayer)
 
@@ -419,11 +412,20 @@ let techMap,
     function dataMarker(json, latlng){
         let attr = json.properties
         // console.log(attr)
-        return L.circleMarker(latlng,{
-            color: 'red',
-        }).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
-        Address: ${attr.address} <br> 
-        Wardcode: <i class="text-success">${attr.wardcode}</i>`)
+        if(attr.type == 'PPMV'){
+            return L.marker(latlng,{
+                icon: iconPPMV,
+            }).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
+            Address: ${attr.address} <br> 
+            Wardcode: <i class="text-success">${attr.wardcode}</i>`)
+        }else{
+            return L.marker(latlng,{
+                icon: iconHospital,
+            }).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
+            Address: ${attr.address} <br> 
+            Wardcode: <i class="text-success">${attr.wardcode}</i>`)
+        }
+        
     }
 
     function highlightFeature(e) {
@@ -473,10 +475,12 @@ let techMap,
     }
 
     function popUpData(feature, ltlng){
+        let feat = feature
+        let att = feature.properties 
         let res = []
-        if(feature.properties){
-            res.push(feature.name)
-            console.log('from popup data',feature.properties)
+        if(att){
+            res.push(att.name)
+            console.log('from popup data',res,feat)
         }
     }
     let styleOne = {
@@ -484,3 +488,26 @@ let techMap,
         "weight": 1,
         "opacity": 0.65
     }
+
+    // ************ASIGN CUSTOM MARKERS*************
+   let iconPPMV = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='color:#fff;' class='marker-pin-two'></div><i class='fas fa-capsules awesome fa-3x'>",
+            iconSize: [30, 42],
+            iconAnchor: [15, 42]
+        });
+
+        let iconHospital = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div background-color:#4838cc;' class='marker-pin-one'></div><i class='fas fa-hospital awesome fa-3x'>",
+            iconSize: [30, 42],
+            iconAnchor: [15, 42]
+        });
+
+        let iconLaboratory = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='color:#fff;' class='marker-pin-one'></div><i class='fas fa-flask awesome fa-3x'>",
+            iconSize: [30, 42],
+            iconAnchor: [15, 42]
+        });
+
