@@ -73,6 +73,56 @@ let techMap,
 
 
     ////////// Autocomplete search
+    let url = States,
+    arr =[],arr1 = []
+    $('#autocomplete').autocomplete()
+
+    function style(feature) {
+        return {
+            fillColor: 'green', 
+            fillOpacity: 0.5,  
+            weight: 2,
+            opacity: 1,
+            color: '#ffffff',
+            dashArray: '3'
+        };
+    }
+
+    var highlight = {
+        'fillColor': 'yellow',
+        'weight': 2,
+        'opacity': 1
+    };
+
+
+    function forEachFeature(feature, layer) {
+        // Tagging each state poly with their name for the search control.
+        layer._leaflet_id = feature.properties.statename;
+
+        var popupContent = "<p><b>STATE: </b>"+ feature.properties.statename +
+            "</br>REGION: "+ feature.properties.statecode 
+            
+        layer.bindPopup(popupContent);
+
+        layer.on("click", function (e) { 
+            stateLayer.setStyle(style); //resets layer colors
+            layer.setStyle(highlight);  //highlights selected.
+        }); 
+    }
+
+    var stateLayer = L.geoJson(null, {onEachFeature: forEachFeature, style: style});
+
+    $.getJSON(null, function(data) {
+            stateLayer.addData(data);
+        
+            for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
+                arr1.push({label:data.features[i].properties.statename, value:""});
+            }
+        addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
+        });
+
+    stateLayer.addTo(techMap);
+
 	function addDataToAutocomplete(newArr) {
 		arr = arr.concat(newArr);
 		
@@ -255,13 +305,12 @@ let techMap,
       var div = L.DomUtil.create("div", "main-side-bar slide-left");
     div.innerHTML += `<h4>Utilities</h4>`;
     div.innerHTML += `<div class='anchor'>&lt</div>`;
-    div.innerHTML += `<i style="background: #477AC2"></i><span>Lagos</span><br>`;
-    div.innerHTML += `<div class="query-continer">
-                            <a id="do" class="btn btn-primary" href="#"> Remove layer</a>
-                        </div>`;
-    div.innerHTML += `<div class="query-continer">
-            <a id="remove" class="btn btn-primary" href="#"> add Layer</a>
-        </div>`;
+    // div.innerHTML += `<div class="query-continer">
+    //                         <a id="do" class="btn btn-primary" href="#"> Remove layer</a>
+    //                     </div>`;
+    // div.innerHTML += `<div class="query-continer">
+    //         <a id="remove" class="btn btn-primary" href="#"> add Layer</a>
+    //     </div>`;
 
     div.innerHTML += `<div class="accordion" id="accordionExample">`
     div.innerHTML += `<div class="card ">
@@ -352,8 +401,8 @@ let techMap,
             })
 
         }
-        let btn = document.getElementById('do').addEventListener('click', returnProj)
-        let btn2 = document.getElementById('remove').addEventListener('click', addLayer)
+        // let btn = document.getElementById('do').addEventListener('click', returnProj)
+        // let btn2 = document.getElementById('remove').addEventListener('click', addLayer)
 
         // var searchLayer = L.layerGroup().addTo(techMap);
         // //... adding data in searchLayer ...
