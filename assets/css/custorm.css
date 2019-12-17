@@ -63,7 +63,7 @@
 
 /* map */
 #mapid { 
-    height: 600px; 
+    height: calc(100vh - 175px); 
 }
 
 
@@ -280,4 +280,5 @@ ul.leaflet-draw-actions{
 .custom-div-icon i.awesome {
    margin: 12px auto;
    font-size: 17px;
+   color: white
 }

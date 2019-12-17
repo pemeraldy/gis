@@ -417,7 +417,7 @@ let techMap,
                 icon: iconPPMV,
             }).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
             Address: ${attr.address} <br> 
-            Wardcode: <i class="text-success">${attr.wardcode}</i>`)
+            Wardcode: <i class="text-success">${attr.wardcode}</i>`,{direction: 'top'})
         }else{
             return L.marker(latlng,{
                 icon: iconHospital,
@@ -471,7 +471,7 @@ let techMap,
                 <br> 
                 Wardcode: <i class="text-primary"> ${attr.wardcode}</i>
             </div>
-        `)
+        `,{direction: 'top'})
     }
 
     function popUpData(feature, ltlng){
