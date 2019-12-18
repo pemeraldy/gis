@@ -51,7 +51,7 @@ $(document).ready(function () {
         "Open Street Map": leyerOSM,
         "Base Topo Map": baseTopo,
         "Carto DB": baseCartoDB,
-        // " Water Color" : baseWaterColor
+        "Water Color" : baseWaterColor
     }
 
     let drawnItm = new L.featureGroup()
