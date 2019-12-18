@@ -348,7 +348,7 @@ function dataMarker(json, latlng) {
             icon: iconPPMV,
         }).bindTooltip(`<b>LGA:${attr.lga}</b> <br>
         Address: ${attr.address} <br>
-        Wardcode: <i class="text-success">${attr.wardcode}</i>`)
+        Wardcode: <i class="text-success">${attr.wardcode}</i>`,{direction: 'top'})
     } else {
         return L.marker(latlng, {
             icon: iconHospital,
@@ -382,7 +382,7 @@ function stateAttribute(feat, layer) {
     }).bindTooltip(`<div class="card"> ${feat.properties.statename}</div>`)
 }
 
-function dataStyler(json, latlng) {
+function dataStyler(json, latlng){
     let attr = json.properties
     // console.log(attr)
     return L.marker(latlng).bindTooltip(`
@@ -393,7 +393,7 @@ function dataStyler(json, latlng) {
             <br>
             Wardcode: <i class="text-primary"> ${attr.wardcode}</i>
         </div>
-    `)
+    `,{direction: 'top'})
 }
 
 function popUpData(feature, ltlng) {
