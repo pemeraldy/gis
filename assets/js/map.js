@@ -270,7 +270,7 @@ let techMap,
       div.innerHTML += `<div class='anchor'><i class="fas fa-chevron-right"></i></div>`;
       div.innerHTML += `<div class="legend-content">
                             <div class="card" style="width: 18rem;">
-                                <img id="feat-img" class="card-img-top" src="https://picsum.photos/seed/picsum/300/300" alt="Card image cap">
+                                <img id="feat-img" class="card-img-top" src="https://picsum.photos/seed/picsum/100/100" alt="Card image cap">
                                 <div class="card-body">
                                     <h5 class="card-title" id="feat-name">Name of City</h5>
                                     <p class="card-text">
@@ -520,18 +520,13 @@ function feat1 (feature, layer) {
     layer.on('click', e =>{
         let coords = e.target.feature.geometry.coordinates
         onMapClick(coords)
-//         id="feat-add
-        // id="feat-num
-        // id="feat-lga
-        // id="feat-sta
+
+        document.querySelector('.legend').classList.remove('trans-open')
         document.getElementById('feat-name').innerHTML = feature.properties.name
         document.getElementById('feat-add').innerHTML = feature.properties.address
         document.getElementById('feat-num').innerHTML = feature.properties.phone_number
         document.getElementById('feat-lga').innerHTML = feature.properties.lga
         document.getElementById('feat-state').innerHTML = feature.properties.state
-
-        const anchor = document.querySelector('.anchor') //anchor button on legend bar    
-    anchor.addEventListener('click', () => inforBarState('legend','trans-open'))
 
     })
 }
