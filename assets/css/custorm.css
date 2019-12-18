@@ -71,7 +71,7 @@
 
 .legend {
     padding: 6px 8px;
-    width: auto;
+    width: 300px;
     height: auto;
     max-height:350px;
     /* overflow: hidden; */
@@ -87,6 +87,7 @@
   }
   .legend-content{
     overflow-y: scroll ;
+    overflow-x: hidden;
     height: 300px;
   }
   .trans-open{
@@ -125,7 +126,7 @@
   /*   transform: translateX(200px); */
     position: absolute;
     top:0;
-    left: 103%;
+    left: 101%;
     padding: 5px;
     color:#fff;
     text-align: center;
