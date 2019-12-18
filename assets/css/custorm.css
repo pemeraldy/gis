@@ -71,18 +71,23 @@
 
 .legend {
     padding: 6px 8px;
-    width: 300px;
-    min-height: 400px;
+    width: auto;
+    height: auto;
+    max-height:350px;
+    /* overflow: hidden; */
     font: 14px Arial, Helvetica, sans-serif;
     background: white;
     background: rgba(255, 255, 255, 0.8);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    /*border-radius: 5px;*/
     line-height: 24px;
     color: #555;
     transition: all .3s linear;
     opacity: 1 !important;
     display: block !important;
+  }
+  .legend-content{
+    overflow-y: scroll ;
+    height: 300px;
   }
   .trans-open{
     transform: translateX(-325px)
@@ -120,7 +125,7 @@
   /*   transform: translateX(200px); */
     position: absolute;
     top:0;
-    left: 101%;
+    left: 103%;
     padding: 5px;
     color:#fff;
     text-align: center;
@@ -132,7 +137,7 @@
   .main-side-bar {
     padding: 6px 8px;
     width: 300px;
-    min-height: 400px;
+    min-height: 200px;
     font: 14px Arial, Helvetica, sans-serif;
     background: white;
     background: rgba(255, 255, 255, 0.8);
