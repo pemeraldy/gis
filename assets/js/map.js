@@ -20,7 +20,8 @@ let techMap,
     measureControl,
     layerSearch,
     mainSideBar,
-    legend
+    legend,
+    layerMarkerCluster
 
    $(document).ready(function(){
     //init setting
@@ -266,20 +267,13 @@ let techMap,
      if(featPoint == undefined){
         return false
     }else {
-      div.innerHTML += `<h2>Legend</h2>`;
+      div.innerHTML += `<h2>Features</h2>`;
       div.innerHTML += `<div class='anchor'><i class="fas fa-chevron-right"></i></div>`;
       div.innerHTML += `<div class="legend-content">
                             <div class="card" style="width: 18rem;">
-                                <img id="feat-img" class="card-img-top" src="" alt="pharmacy image">
+                                
                                 <div class="card-body">
-                                    <h2 class="card-title" id="feat-name">Name of City</h2>
-                                    <div class="card-text">
-                                        <p class="text-info">Address:<b id="feat-add"></b></p>
-                                        <button class="btn btn-info disabled btn-sm">Number</button>:<b id="feat-num"></b> <br><br>
-                                        <button class="btn btn-info disabled btn-sm">LGA</button>:<b id="feat-lga"></b> <br><br>
-                                        <button class="btn btn-info disabled btn-sm">State</button>: <span id="feat-state"></span> <br><br>
-                                        <span class="badge badge-info">Address again</span><br>
-                                    </div>                                    
+                                    <h2 class="card-title" id="feat-name">Click a layer/point to view properties</h2>                                                                   
                                 </div>
                             </div>
                            
@@ -519,40 +513,48 @@ function feat1 (feature, layer) {
 
     layer.on('click', e =>{
         let coords = e.target.feature.geometry.coordinates
+        document.querySelector('.legend').classList.remove('trans-open')
         
         if(feature.geometry.type == "MultiPolygon"){
             console.log(feature)
-            document.querySelector('.legend').classList.remove('trans-open')
+            
             document.querySelector('.legend-content').innerHTML = `
             <div class="card" style="width: 18rem;">
-            <img id="feat-img" class="card-img-top" src="" alt="pharmacy image">
+            <img id="feat-img" class="card-img-top" src="" alt="image of state">
             <div class="card-body">
                 <h2 class="card-title" id="feat-name">${feature.properties.statename}</h2>
                 <div class="card-text">
                     <p class="text-info">State:<b id="feat-add">${feature.properties.statename}</b></p>
-                    <button class="btn btn-info disabled btn-sm">Geo Zone</button>:<b id="feat-num"></b>${feature.properties.geozone} <br><br>
-                    <button class="btn btn-info disabled btn-sm">LGA</button>:<b id="feat-lga"></b> <br><br>
-                    <span class="badge badge-info">${feature.properties.statecode}</span><br>
+                    <button class="btn btn-info disabled btn-sm">Capital</button>:<b id="feat-num">${feature.properties.capcity}</b> <br><br>
+                    <button class="btn btn-info disabled btn-sm">Geozone</button>:<b id="feat-lga">${feature.properties.geozone}</b> <br><br>
+                    <span class="badge badge-info">State code:${feature.properties.statecode}</span><br>
                 </div>                                    
             </div>
         </div>
 
             `
-            // document.querySelector('.legend').classList.remove('trans-open')
-            // document.getElementById('feat-name').innerHTML = feature.properties.statename
-            // document.getElementById('feat-add').innerHTML = feature.properties.capcity
-            // document.getElementById('feat-num').innerHTML = feature.properties.geozone
-            // document.getElementById('feat-lga').innerHTML = feature.properties.statecode
             
-        }else{
+        }else if(feature.geometry.type == "Point"){
             onMapClick(coords)            
-            document.querySelector('.legend').classList.remove('trans-open')
-            document.getElementById('feat-img').src = feature.properties.photo
-            document.getElementById('feat-name').innerHTML = feature.properties.name
-            document.getElementById('feat-add').innerHTML = feature.properties.address
-            document.getElementById('feat-num').innerHTML = feature.properties.phone_number
-            document.getElementById('feat-lga').innerHTML = feature.properties.lga
-            document.getElementById('feat-state').innerHTML = feature.properties.state
+            document.querySelector('.legend-content').innerHTML = `
+                <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="${feature.properties.photo}" alt="feature image">
+                <div class="card-body">
+                    <h3 class="card-title">${feature.properties.name}</h3>
+                    <p class="card-text">
+                        <button class="btn btn-info disabled btn-sm">Address</button>: ${feature.properties.address} <br>
+                        <button class="btn btn-info disabled btn-sm">Number</button>: ${feature.properties.phone_number} <br>
+                        <button class="btn btn-info disabled btn-sm">LGA</button>: ${feature.properties.lga} <br>
+                        <button class="btn btn-info disabled btn-sm">State</button>: ${feature.properties.state} <br>
+                        <span class="badge badge-default">${feature.properties.address}</span>
+                    </p>
+                    <a href="#" class="btn btn-primary">A link</a>
+                </div>
+            </div>
+            
+            `
+        }else{
+            document.querySelector('.legend-content').innerHTML = ` <h2>Click a Layer to display properties</h2> `
         }
 
     })
@@ -563,20 +565,20 @@ function feat1 (feature, layer) {
     
 //     let div = L.DomUtil.create("div", "points-info")
 //     div.innerHTML += `
-//         <div class="card" style="width: 18rem;">
-//             <img class="card-img-top" src="https://picsum.photos/seed/picsum/300/300" alt="Card image cap">
-//             <div class="card-body">
-//                 <h5 class="card-title">${featPoint.properties.name}</h5>
-//                 <p class="card-text">
-//                     <button class="btn btn-info disabled btn-sm">Address</button>: ${featPoint.properties.address} <br>
-//                     <button class="btn btn-info disabled btn-sm">Number</button>: ${featPoint.properties.phone_number} <br>
-//                     <button class="btn btn-info disabled btn-sm">LGA</button>: ${featPoint.properties.lga} <br>
-//                     <button class="btn btn-info disabled btn-sm">State</button>: ${featPoint.properties.state} <br>
-//                     <span class="badge badge-default">${featPoint.properties.address}</span>
-//                 </p>
-//                 <a href="#" class="btn btn-primary">A link</a>
-//             </div>
-//         </div>
+        // <div class="card" style="width: 18rem;">
+        //     <img class="card-img-top" src="https://picsum.photos/seed/picsum/300/300" alt="Card image cap">
+        //     <div class="card-body">
+        //         <h5 class="card-title">${featPoint.properties.name}</h5>
+        //         <p class="card-text">
+        //             <button class="btn btn-info disabled btn-sm">Address</button>: ${featPoint.properties.address} <br>
+        //             <button class="btn btn-info disabled btn-sm">Number</button>: ${featPoint.properties.phone_number} <br>
+        //             <button class="btn btn-info disabled btn-sm">LGA</button>: ${featPoint.properties.lga} <br>
+        //             <button class="btn btn-info disabled btn-sm">State</button>: ${featPoint.properties.state} <br>
+        //             <span class="badge badge-default">${featPoint.properties.address}</span>
+        //         </p>
+        //         <a href="#" class="btn btn-primary">A link</a>
+        //     </div>
+        // </div>
 //     `
 //     return div
 // }
