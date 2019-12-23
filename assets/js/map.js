@@ -2,8 +2,7 @@
 let techMap,
     leyerOSM,
     zoomInBtn,
-    zoomOutBtn,
-    easyBtn,
+    zoomOutBtn,    
     measure,
     baseWaterColor,
     baseTopo,
@@ -72,6 +71,7 @@ let techMap,
     
     layerData.on('data:loaded', () =>{
         techMap.fitBounds(layerData.getBounds())
+        layerMarkerCluster.addLayer(layerData)
     })
 
 
@@ -159,18 +159,10 @@ let techMap,
 
     baseMapContoller = L.control.layers(baseLayers, overlays,{
         collapse: false,
-        expand: false
-    }).addTo(techMap)
+        expand: true
+    })
      
         
-    // Easy Button
-    // easyBtn = L.easyButton('fa-globe', function(){
-    //     turf.buffer(layerData2.toGeoJSON(), 0.3, {unit:'kilometers'})
-    //     console.log('')
-    //  }).addTo(techMap)
-
-     
-    
 
     // get user location using the capital L key
     techMap.on('keypress', function(e){
@@ -267,7 +259,7 @@ let techMap,
      if(featPoint == undefined){
         return false
     }else {
-      div.innerHTML += `<h2>Features</h2>`;
+      div.innerHTML += `<h2>Feature Info</h2>`;
       div.innerHTML += `<div class='anchor'><i class="fas fa-chevron-right"></i></div>`;
       div.innerHTML += `<div class="legend-content">
                             <div class="card" style="width: 18rem;">
@@ -310,35 +302,71 @@ let techMap,
     //     </div>`;
 
     div.innerHTML += `<div class="accordion" id="accordionExample">`
-    div.innerHTML += `<div class="card ">
+    div.innerHTML += `<div class="card base-map ">
         <div class="card-header" id="headingOne">
         <h2 class="mb-0">
             <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            Buffer Area
+                Base Maps
             </button>
         </h2>
         </div>
 
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-        <div class="card-body">
-            Anim p
+        <div class="card-body map-thumb-wrapper">
+                <div id="osm" class="map-thumb">
+                    <img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/5/10/10" alt="open street map">
+                    <div class="map-thumb-tag">OSM</div>
+                </div>
+
+                <div id="cartoDb" class="map-thumb">
+                    <img src="https://b.basemaps.cartocdn.com/dark_nolabels/5/15/10@2x.png" alt=" carto db">
+                    <div class="map-thumb-tag">Carto DB</div>
+                </div>
+                
+                <div id="openTopo" class="map-thumb">
+                    <img src="https://b.tile.opentopomap.org/5/15/10.png" alt="open topo">
+                    <div class="map-thumb-tag">Open Topo</div>
+                </div>
+
+                <div id="waterpaint" class="map-thumb">
+                    <img src="https://stamen-tiles-b.a.ssl.fastly.net/watercolor/5/15/10.jpg" alt="open topo">
+                    <div class="map-thumb-tag">Open Topo</div>
+                </div>
+
         </div>
         </div>
+        </div>
+        
     </div>`  
         div.innerHTML += `<div class="card">
-        <div class="card-header" id="headingTwo">
-        <h2 class="mb-0">
-            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-            Query Search
-            </button>
-        </h2>
-        </div>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-        <div class="card-body">
-            Buffer Area 
-        </div>
-        </div>
-    </div>`
+            <div class="card-header" id="headingTwo">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Buffer Tool
+                </button>
+            </h2>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class="card-body">
+                Buffer Area 
+            </div>
+            </div>
+        </div>`
+
+        div.innerHTML += `<div class="card">
+            <div class="card-header" id="heading3">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapseTwo">
+                Query Search
+                </button>
+            </h2>
+            </div>
+            <div id="collapse3" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class="card-body">
+                Buffer Area 
+            </div>
+            </div>
+        </div>`
     div.innerHTML += `</div>`                         
     div.innerHTML += `</div>`         //end div for query side bar                
                        
@@ -348,7 +376,21 @@ let techMap,
     
     mainSideBar.addTo(techMap); //Add created side bar to map
     
+    document.getElementById('osm').addEventListener('click', () =>{
+        L.tileLayer.provider('OpenStreetMap').addTo(techMap)
+     })
+     document.getElementById('cartoDb').addEventListener('click', () =>{
+        L.tileLayer.provider('CartoDB.DarkMatter').addTo(techMap)
+     })
+     document.getElementById('openTopo').addEventListener('click', () =>{
+        L.tileLayer.provider('OpenTopoMap').addTo(techMap)
+     })
+     document.getElementById('waterpaint').addEventListener('click', () =>{
+        L.tileLayer.provider('Stamen.Watercolor').addTo(techMap)
+     })
+     
 
+     
 
     // Control slide in n out of infoBars
     const inforBarState = (el,togglClass) =>{
@@ -542,13 +584,13 @@ function feat1 (feature, layer) {
                 <div class="card-body">
                     <h3 class="card-title">${feature.properties.name}</h3>
                     <p class="card-text">
-                        <button class="btn btn-info disabled btn-sm">Address</button>: ${feature.properties.address} <br>
-                        <button class="btn btn-info disabled btn-sm">Number</button>: ${feature.properties.phone_number} <br>
-                        <button class="btn btn-info disabled btn-sm">LGA</button>: ${feature.properties.lga} <br>
-                        <button class="btn btn-info disabled btn-sm">State</button>: ${feature.properties.state} <br>
+                        <div class="">Address: ${feature.properties.address}</div> 
+                        <div class="">Number: ${feature.properties.phone_number} </div>
+                        <div class="">LGA: ${feature.properties.lga} </div>
+                        <div class="">State: ${feature.properties.state}</div> 
                         <span class="badge badge-default">${feature.properties.address}</span>
                     </p>
-                    <a href="#" class="btn btn-primary">A link</a>
+                    <a href="#" class="btn btn-success btn-sm">More...</a>
                 </div>
             </div>
             
@@ -587,3 +629,8 @@ function feat1 (feature, layer) {
 // function pointsInfoAdder(){
 //     pointsInfo.addTo(techMap)
 // }
+
+// CUSTOM BASE MAP CONTROL
+//  document.getElementById('osm').addEventListener('click', () =>{
+//     L.tileLayer.provider('CartoDB.DarkMatter').addTo(techMap)
+//  })

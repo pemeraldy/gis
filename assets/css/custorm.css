@@ -288,3 +288,64 @@ ul.leaflet-draw-actions{
    font-size: 17px;
    color: white
 }
+
+
+.leaflet-top.leaflet-left{  
+  /* background: rebeccapurple; */
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+
+
+/* Base MAp LEGENDS */
+button[data-target="#collapseOne"], button[data-target="#collapseTwo"], button[data-target="#collapse3"]{
+  width: 100%;
+}
+.main-side-bar .card-header{
+  height: 50px;
+  padding: 0;
+}
+.base-map{
+  max-height: 200px;
+  overflow-y: scroll;
+}
+.card .map-thumb{
+  position: relative;
+  width: 100px;
+  height: 100px;
+/*   background: blue; */
+  margin: 5px;
+}
+.map-thumb::before{
+  content:'';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #222;
+  top:0;
+  opacity: 0.3;
+}
+.card .map-thumb img{
+/*   border: 2px solid red;; */
+  display: block;
+  width: 100%;
+}
+.map-thumb-tag{
+  position: absolute;
+  bottom:10%;
+  left:0;
+  right:0;
+  height: 25%;
+  text-align: center;
+  color: #fff;
+  font-size: 10px;
+
+  padding: 5px;
+}
+.map-thumb-wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
