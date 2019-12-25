@@ -10,6 +10,7 @@ let techMap,
     baseMapContoller,
     baseLayers,
     overlays,
+    overlaysArray,
     featureGRP,
     drawController,
     layerData,
@@ -26,7 +27,7 @@ let techMap,
     //init setting
     techMap = L.map('mapid', {
         zoomControl:false
-    }).setView([6.6088, 3.2545], 9);
+    }).setView([6.465422, 3.406448], 5);
     
     // Scale display at bottom left
     L.control.scale().addTo(techMap)
@@ -39,44 +40,51 @@ let techMap,
     baseTopo = L.tileLayer.provider('OpenTopoMap')
     baseCartoDB = L.tileLayer.provider('CartoDB.DarkMatter')
 
+    overlaysArray = []
     // ######## AJAX data Calls #########
     layerData = L.geoJSON.ajax('data/PPMV.geojson', {
         'pointToLayer': dataMarker,
         onEachFeature: feat1
-    }).addTo(techMap)
+    })
+
+    // techMap.on('click', (e) => console.log(e.target))
 
     let layerData2 = L.geoJSON.ajax('data/hospital.geojson', {
         'pointToLayer': dataMarker,
         onEachFeature: popUpData
-    }).addTo(techMap)
+    })
     
     let lagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
         'pointToLayer': dataStyler,
         onEachFeature: popUpData
-    }).addTo(techMap)
+    })
 
-    let States = L.geoJSON.ajax('data/Nigeria_states.geojson', {
+    let states = L.geoJSON.ajax('data/Nigeria_states.geojson', {
         'pointToLayer': dataStyler,
         onEachFeature: feat1,
         style: style
-    }).addTo(techMap)
+    })
 
     let lga = L.geoJSON.ajax('data/Nigeria_LGAs.geojson', {
         'pointToLayer': dataStyler,
         style: styleOne
-    }).addTo(techMap)
+    })
 
     
     
-    
-    layerData.on('data:loaded', () =>{
-        techMap.fitBounds(layerData.getBounds())
-        layerMarkerCluster.addLayer(layerData)
+    // When Data Has Successfully Loaded
+    layerData.on('data:loaded', () =>{        
+        overlaysArray.push(layerData)
+        
+    })
+    states.on('data:loaded', () =>{
+        overlaysArray.push(states)
+        states.fitBounds(states.getBounds())
     })
 
 
     ////////// Autocomplete search
-    let url = States,
+    let url = states,
     arr =[],arr1 = []
     $('#autocomplete').autocomplete()
 
@@ -138,6 +146,8 @@ let techMap,
         techMap.addLayer(drawnItems);
     
         let drawned  = new L.FeatureGroup()
+        let drawnedJSON = drawned.toGeoJSON()
+        console.log(drawnedJSON)
         drawned.addTo(techMap) 
 
     baseLayers = {
@@ -153,7 +163,7 @@ let techMap,
         "live drawn": drawnItems,
         // "heat map": heat,
         "Lagos LGA": lagosLGA,
-        "States": States,
+        "States": states,
         "Local Govt.": lga
     }
 
@@ -223,7 +233,7 @@ let techMap,
         
             if (type === 'circle') {
                 layer.bindTooltip('<b>Radius: </b>'+ (layer._mRadius/1000).toFixed(3)+' km');
-                console.log(layer._mRadius, e, layer)                
+                console.log(e, layer.toGeoJSON())                
             }
             if (type === 'rectangle') {
                 layer.bindTooltip('width: '+e.sourceTarget._size.x +'km <br/> Height '+e.sourceTarget._size.y+'km');
@@ -234,7 +244,8 @@ let techMap,
                 console.log( layer)                
             }
         drawnItems.addLayer(layer);
-        let newGeo = JSON.stringify(layer.toGeoJSON())
+        let newGeo = layer.toGeoJSON()
+        // console.log(newGeo)
         
         // sendDraw()
     });
@@ -243,7 +254,7 @@ let techMap,
     // drawStyle = L.control.styleEditor().addTo(techMap)
 
     // Measure area and line
-    measureControl = new L.Control.Measure({position: 'topright', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters'});
+    measureControl = new L.Control.Measure({position: 'topleft', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters'});
     measureControl.addTo(techMap);
     // Measure control button
     measure = L.control.polylineMeasure().addTo(techMap);
@@ -411,20 +422,25 @@ let techMap,
      
       techMap.on('click', function(e) {
         // let attr = json.properties
-      
+            console.log(e)
             // console.log(e.target)
             // return L.circleMarker(json.latlng).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
             // Address: ${attr.address} <br> 
             // Wardcode: <i class="text-success">${attr.wardcode}</i>`)
         });
 
-
+        
              
        
 })
 
 // ############# GLOBLA SCOPE -- OUTSIDE IFFE##############
-//    
+
+// toggle Draw Controller
+function toggleDraw(){
+    drawControl._container.style.display =  
+    drawControl._container.style.display == 'none' ? 'flex' : 'none'
+}
 
 //  display data attributes and control data presentations
     function dataMarker(json, latlng){
