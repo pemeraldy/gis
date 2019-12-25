@@ -1,11 +1,59 @@
-@media (max-width: 767.98px){
+/* @media (max-width: 767.98px){
 .navbar-nav .nav-link {
     padding: .625rem 0;
     color: #fff !important;
   }
 
-
+  #navbar-default .navbar-bar{
+    flex-direction: row !important;
+    background: red;
+  }
+  #zoom-tool{
+    background: red;
+    flex-direction: row !important;
+  }
 }
+@media (max-width: 812px){
+  
+    
+    .utility{
+      padding: 0 !important;
+    }
+  
+    #zoom-tool{
+      flex-direction: row !important;
+      margin-left: auto;
+    }
+    #zoom-tool li{
+      margin: 0 10px;
+    }
+  }
+
+@media (max-width: 370px){
+  .navbar-nav .nav-link {
+      padding: .625rem 0;
+      color: #fff !important;
+    }
+  }
+
+  @media (max-width: 767.98px){
+    .navbar-collapse{
+      opacity: 1 !important;
+      width: 100%;
+      display: flex;
+      
+    }
+
+    #navbar-default .navbar-bar{
+      flex-direction: row !important;
+      background: red;
+    }
+  } */
+
+
+/* #sidenav-main{
+  width:150px;
+} */
 .map-name{
   height:50px !important;
 }

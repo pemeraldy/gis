@@ -95,7 +95,7 @@
     <div class="container-fluid">
       <!-- Toggler -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <i class="fas fa-bars" style="color: #fff;"></i>
       </button>
       <!-- Brand -->
       <a class="navbar-brand text-light pt-0" href="./index.html">        
@@ -250,23 +250,7 @@
                     
                     
                     <!-- collapsed nav -->
-                    <div class="collapse navbar-collapse" id="navbar-default">
-                        <div class="navbar-collapse-header">
-                            <div class="row">
-                                <div class="col-6 collapse-brand">
-                                        <a href="index.html">
-                                        <img src=" ../../assets/img/brand/blue.png">
-                                    </a>
-                                </div>
-                                <div class="col-6 collapse-close">
-                                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-default" aria-controls="navbar-default" aria-expanded="false" aria-label="Toggle navigation">
-                                        <span></span>
-                                        <span></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="collapse navbar-collapse" id="navbar-default">                      
                         <!-- Search map -->
                         <ul class="navbar-nav  search-map">
                             <form action="">
@@ -306,17 +290,17 @@
                         </ul>
                         
                         <!-- Zoom in and out -->
-                        <ul class="navbar-nav ml-lg-auto">
+                        <ul class="navbar-nav ml-lg-auto" id="zoom-tool">
 
                             <li id="zoom-out" class="nav-item">
                                 <a class="nav-link nav-link-icon" href="#">
-                                    <i class="far fa-minus-square "></i>                                    
+                                  <i class="fas fa-search-minus"></i>                                    
                                 </a>
                             </li> 
 
                             <li id="zoom-in" class="nav-item">
                                 <a class="nav-link nav-link-icon" href="#">
-                                    <i  class="far fa-plus-square "></i>
+                                  <i class="fas fa-search-plus"></i>
                                 </a>
                             </li> 
                                                                                   
