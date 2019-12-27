@@ -55,15 +55,17 @@ $(document).ready(function () {
     }).addTo(techMap)
     layerData.on('data:loaded', () => {
         techMap.fitBounds(layerData.getBounds())
-        // console.log(layerData)
+        console.log(layerData)
     })
 
     // PPMV
     layerPPMV = L.geoJSON.ajax('data/PPMV.geojson', {
         'pointToLayer': dataMarker,
+        'onEachFeature': feat1
     }).addTo(techMap)
     layerPPMV.on('data:loaded', () => {
-        techMap.fitBounds(layerPPMV.getBounds())
+        techMap.fitBounds(layerPPMV.getBounds());
+        
     })
 
     // CP
@@ -77,6 +79,7 @@ $(document).ready(function () {
     // Hospital
     layerHospital = L.geoJSON.ajax('data/hospital.geojson', {
         'pointToLayer': dataMarker,
+        'onEachFeature': feat1
     })
     layerHospital.on('data:loaded', () => {
         techMap.fitBounds(layerHospital.getBounds())
@@ -85,6 +88,7 @@ $(document).ready(function () {
     // Laboratory
     layerLaboratory = L.geoJSON.ajax('data/laboratory.geojson', {
         'pointToLayer': dataMarker,
+        'onEachFeature': feat1
     }).addTo(techMap)
     layerLaboratory.on('data:loaded', () => {
         techMap.fitBounds(layerLaboratory.getBounds())
@@ -166,7 +170,7 @@ $(document).ready(function () {
         for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
             arr1.push({ label: data.features[i].properties.statename, value: "" });
         }
-        addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
+        // addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
     });
 
     stateLayer.addTo(techMap);
@@ -546,14 +550,9 @@ function feat1(feature, layer) {
                     <span class="badge badge-info">${feature.properties.statecode}</span><br>
                 </div>
             </div>
-        </div>
+        </div>`
 
-            `
-            // document.querySelector('.legend').classList.remove('trans-open')
-            // document.getElementById('feat-name').innerHTML = feature.properties.statename
-            // document.getElementById('feat-add').innerHTML = feature.properties.capcity
-            // document.getElementById('feat-num').innerHTML = feature.properties.geozone
-            // document.getElementById('feat-lga').innerHTML = feature.properties.statecode
+
 
         } else {
             onMapClick(coords)
