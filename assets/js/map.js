@@ -98,21 +98,24 @@ $(document).ready(function () {
     layerLagos = L.geoJSON.ajax('data/lagos_state.geojson', {
         'pointToLayer': dataMarker,
     }).addTo(techMap)
+
     layerLagos.on('data:loaded', () => {
         techMap.fitBounds(layerLagos.getBounds())
-    })
+    }).addTo(techMap)
 
     // lagos State LGA
     layerLagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
         'pointToLayer': dataMarker,
     })
+
     layerLagosLGA.on('data:loaded', () => {
         techMap.fitBounds(layerLagosLGA.getBounds())
     })
 
     // States Layer
     statesLayer = L.geoJSON.ajax('states', {
-        'pointToLayer': dataStyler,
+        // 'pointToLayer': dataStyler,
+        'pointToLayer': dataMarker,
     })
 
     // LGAs layer
@@ -402,13 +405,17 @@ $(document).ready(function () {
 
 function dataMarker(json, latlng) {
     let attr = json.properties
-    console.log(attr)
+    console.log(json.type)
+
+    // console.log(attr)
+    console.log(json.geometry)
     if (attr.type == 'PPMV') {
         return L.marker(latlng, {
             icon: iconPPMV,
         }).bindTooltip(`<b>LGA:${attr.lga}</b> <br>
         Address: ${attr.address} <br>
         Wardcode: <i class="text-success">${attr.wardcode}</i>`, { direction: 'top' })
+
     } else if(attr.type_of_facility == 'Laboratory'){
         return L.marker(latlng, {
             icon: iconLaboratory,
@@ -531,8 +538,9 @@ function onMapClick(coords) {
 // end of code for click marker.
 
 function feat1(feature, layer) {
-
+    
     layer.on('click', e => {
+        // console.log(layer)
         let coords = e.target.feature.geometry.coordinates
 
         if (feature.geometry.type == "MultiPolygon") {
@@ -554,7 +562,26 @@ function feat1(feature, layer) {
 
 
 
-        } else {
+        }else if (feature.geometry.type == "Point") {
+            console.log(feature)
+            let details = feature.properties
+            document.querySelector('.legend').classList.remove('trans-open')
+            document.querySelector('.legend-content').innerHTML = `
+            <div class="card" style="width: 18rem;">
+            <img id="feat-img" class="card-img-top" src="" alt="pharmacy image">
+            <div class="card-body">
+                <h2 class="card-title" id="feat-name">${feature.properties.name}</h2>
+                <div class="card-text">
+                    <p class="">State: <b>${feature.properties.state}</b></p>
+                    <p class="text-info">Phone:<b id="">${feature.properties.phone_number}</b></p>
+                    <p class="">Address:<b id="">${feature.properties.address}</b></p>
+                    <p class="">LGA:<b>${feature.properties.lga}</b></p>
+                    <span class="badge badge-info">${feature.properties.statecode}</span><br>
+                </div>
+            </div>
+        </div>`
+        }
+         else {
             onMapClick(coords)
             document.querySelector('.legend').classList.remove('trans-open')
             document.getElementById('feat-img').src = feature.properties.photo
