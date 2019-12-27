@@ -576,6 +576,8 @@ function feat1(feature, layer) {
                     <p class="text-info">Phone:<b id="">${feature.properties.phone_number}</b></p>
                     <p class="">Address:<b id="">${feature.properties.address}</b></p>
                     <p class="">LGA:<b>${feature.properties.lga}</b></p>
+                    <p class="">LGA Code:<b>${feature.properties.lgacode}</b></p>
+                    <p class="">Ward:<b>${feature.properties.ward}</b></p>
                     <span class="badge badge-info">${feature.properties.statecode}</span><br>
                 </div>
             </div>
