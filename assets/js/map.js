@@ -409,14 +409,21 @@ $(document).ready(function () {
 
 function dataMarker(json, latlng) {
     let attr = json.properties
-    // console.log(attr)
+    console.log(attr)
     if (attr.type == 'PPMV') {
         return L.marker(latlng, {
             icon: iconPPMV,
         }).bindTooltip(`<b>LGA:${attr.lga}</b> <br>
         Address: ${attr.address} <br>
         Wardcode: <i class="text-success">${attr.wardcode}</i>`, { direction: 'top' })
-    } else {
+    } else if(attr.type_of_facility == 'Laboratory'){
+        return L.marker(latlng, {
+            icon: iconLaboratory,
+        }).bindTooltip(`<b>LGA:${attr.name}</b> <br>
+        Address: ${attr.address} <br>
+        Wardcode: <i class="text-success">${attr.address}</i>`, { direction: 'top' })
+    }
+    else {
         return L.marker(latlng, {
             icon: iconHospital,
         }).bindTooltip(`<b>LGA:${attr.lga}</b> <br>
