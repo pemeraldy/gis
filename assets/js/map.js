@@ -308,7 +308,7 @@ $(document).ready(function () {
         if (featPoint == undefined) {
             return false
         } else {
-            div.innerHTML += `<h2>Legend</h2>`;
+            div.innerHTML += `<h2>Feature Info</h2>`;
             div.innerHTML += `<div class='anchor'><i class="fas fa-chevron-right"></i></div>`;
             div.innerHTML += `<div class="legend-content">
                             <div class="card" style="width: 18rem;">
@@ -317,9 +317,9 @@ $(document).ready(function () {
                                     <h2 class="card-title" id="feat-name">Name of City</h2>
                                     <div class="card-text">
                                         <p class="text-info">Address:<b id="feat-add"></b></p>
-                                        <button class="btn btn-info disabled btn-sm">Number</button>:<b id="feat-num"></b> <br><br>
-                                        <button class="btn btn-info disabled btn-sm">LGA</button>:<b id="feat-lga"></b> <br><br>
-                                        <button class="btn btn-info disabled btn-sm">State</button>: <span id="feat-state"></span> <br><br>
+                                        <p class="btn btn-info disabled btn-sm">Number:<b id="feat-num"></p> 
+                                        <p class="btn btn-info disabled btn-sm">LGA:<b id="feat-lga"></p> 
+                                        <p class="btn btn-info disabled btn-sm">State : <b id="feat-state"></b></p> 
                                         <span class="badge badge-info">Address again</span><br>
                                     </div>
                                 </div>
@@ -340,14 +340,7 @@ $(document).ready(function () {
     mainSideBar.onAdd = function () {
         var div = L.DomUtil.create("div", "main-side-bar slide-left");
         div.innerHTML += `<h4>Utilities</h4>`;
-        div.innerHTML += `<div class='anchor'>&lt</div>`;
-        // div.innerHTML += `<div class="query-continer">
-        //                         <a id="do" class="btn btn-primary" href="#"> Remove layer</a>
-        //                     </div>`;
-        // div.innerHTML += `<div class="query-continer">
-        //         <a id="remove" class="btn btn-primary" href="#"> add Layer</a>
-        //     </div>`;
-
+        div.innerHTML += `<div class='anchor'>&lt</div>`;        
         div.innerHTML += `<div class="accordion" id="accordionExample">`
         div.innerHTML += `<div class="card ">
         <div class="card-header" id="headingOne">
@@ -552,8 +545,8 @@ function feat1(feature, layer) {
                 <h2 class="card-title" id="feat-name">${feature.properties.statename}</h2>
                 <div class="card-text">
                     <p class="text-info">State:<b id="feat-add">${feature.properties.statename}</b></p>
-                    <button class="btn btn-info disabled btn-sm">Geo Zone</button>:<b id="feat-num"></b>${feature.properties.geozone} <br><br>
-                    <button class="btn btn-info disabled btn-sm">LGA</button>:<b id="feat-lga"></b> <br><br>
+                    <p class="">Geo Zone:<b id="feat-num">${feature.properties.geozone} </b></p>
+                    <p class="">LGA</p>:<b id="feat-lga">${feature.properties.lga}</b>
                     <span class="badge badge-info">${feature.properties.statecode}</span><br>
                 </div>
             </div>
