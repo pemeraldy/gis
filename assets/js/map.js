@@ -582,8 +582,7 @@ function feat1(feature, layer) {
                 </div>
             </div>
         </div>`
-        }
-         else {
+        }else {
             onMapClick(coords)
             document.querySelector('.legend').classList.remove('trans-open')
             document.getElementById('feat-img').src = feature.properties.photo
