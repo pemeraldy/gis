@@ -548,7 +548,7 @@ function feat1(feature, layer) {
             document.querySelector('.legend').classList.remove('trans-open')
             document.querySelector('.legend-content').innerHTML = `
             <div class="card" style="width: 18rem;">
-            <img id="feat-img" class="card-img-top" src="" alt="pharmacy image">
+            <img id="feat-img" class="card-img-top" src="" alt="image">
             <div class="card-body">
                 <h2 class="card-title" id="feat-name">${feature.properties.statename}</h2>
                 <div class="card-text">
@@ -568,7 +568,7 @@ function feat1(feature, layer) {
             document.querySelector('.legend').classList.remove('trans-open')
             document.querySelector('.legend-content').innerHTML = `
             <div class="card" style="width: 18rem;">
-            <img id="feat-img" class="card-img-top" src="" alt="pharmacy image">
+            <img id="feat-img" class="card-img-top" src="" alt="image">
             <div class="card-body">
                 <h2 class="card-title" id="feat-name">${feature.properties.name}</h2>
                 <div class="card-text">
