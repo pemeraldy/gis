@@ -56,16 +56,16 @@ $(document).ready(function () {
     layerData.on('data:loaded', () => {
         techMap.fitBounds(layerData.getBounds())
         console.log(layerData)
-    })
+    }).addTo(techMap)
 
     // PPMV
     layerPPMV = L.geoJSON.ajax('data/PPMV.geojson', {
         'pointToLayer': dataMarker,
         'onEachFeature': feat1
-    }).addTo(techMap)
+    })
     layerPPMV.on('data:loaded', () => {
         techMap.fitBounds(layerPPMV.getBounds());
-        
+
     })
 
     // CP
@@ -89,7 +89,7 @@ $(document).ready(function () {
     layerLaboratory = L.geoJSON.ajax('data/laboratory.geojson', {
         'pointToLayer': dataMarker,
         'onEachFeature': feat1
-    }).addTo(techMap)
+    })
     layerLaboratory.on('data:loaded', () => {
         techMap.fitBounds(layerLaboratory.getBounds())
     })
@@ -97,11 +97,11 @@ $(document).ready(function () {
     // lagos State
     layerLagos = L.geoJSON.ajax('data/lagos_state.geojson', {
         'pointToLayer': dataMarker,
-    }).addTo(techMap)
+    })
 
     layerLagos.on('data:loaded', () => {
         techMap.fitBounds(layerLagos.getBounds())
-    }).addTo(techMap)
+    })
 
     // lagos State LGA
     layerLagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
@@ -116,7 +116,7 @@ $(document).ready(function () {
     statesLayer = L.geoJSON.ajax('states', {
         // 'pointToLayer': dataStyler,
         'pointToLayer': dataMarker,
-    })
+    }).addTo(techMap)
 
     // LGAs layer
     red = { // Define your style object
@@ -320,9 +320,9 @@ $(document).ready(function () {
                                     <h2 class="card-title" id="feat-name">Name of City</h2>
                                     <div class="card-text">
                                         <p class="text-info">Address:<b id="feat-add"></b></p>
-                                        <p class="btn btn-info disabled btn-sm">Number:<b id="feat-num"></p> 
-                                        <p class="btn btn-info disabled btn-sm">LGA:<b id="feat-lga"></p> 
-                                        <p class="btn btn-info disabled btn-sm">State : <b id="feat-state"></b></p> 
+                                        <p class="btn btn-info disabled btn-sm">Number:<b id="feat-num"></p>
+                                        <p class="btn btn-info disabled btn-sm">LGA:<b id="feat-lga"></p>
+                                        <p class="btn btn-info disabled btn-sm">State : <b id="feat-state"></b></p>
                                         <span class="badge badge-info">Address again</span><br>
                                     </div>
                                 </div>
@@ -343,7 +343,7 @@ $(document).ready(function () {
     mainSideBar.onAdd = function () {
         var div = L.DomUtil.create("div", "main-side-bar slide-left");
         div.innerHTML += `<h4>Utilities</h4>`;
-        div.innerHTML += `<div class='anchor'>&lt</div>`;        
+        div.innerHTML += `<div class='anchor'>&lt</div>`;
         div.innerHTML += `<div class="accordion" id="accordionExample">`
         div.innerHTML += `<div class="card ">
         <div class="card-header" id="headingOne">
@@ -538,7 +538,7 @@ function onMapClick(coords) {
 // end of code for click marker.
 
 function feat1(feature, layer) {
-    
+
     layer.on('click', e => {
         // console.log(layer)
         let coords = e.target.feature.geometry.coordinates
@@ -568,7 +568,7 @@ function feat1(feature, layer) {
             document.querySelector('.legend').classList.remove('trans-open')
             document.querySelector('.legend-content').innerHTML = `
             <div class="card" style="width: 18rem;">
-            <img id="feat-img" class="card-img-top" src="" alt="image">
+            <img id="feat-img" class="card-img-top" src="${feature.properties.photo}" alt="image">
             <div class="card-body">
                 <h2 class="card-title" id="feat-name">${feature.properties.name}</h2>
                 <div class="card-text">
@@ -582,7 +582,8 @@ function feat1(feature, layer) {
                 </div>
             </div>
         </div>`
-        }else {
+        }
+         else {
             onMapClick(coords)
             document.querySelector('.legend').classList.remove('trans-open')
             document.getElementById('feat-img').src = feature.properties.photo
