@@ -291,8 +291,12 @@ ul.leaflet-draw-actions{
 
 
 
-
-
+@media (max-width: 767.98px){
+  .navbar-nav .nav-link {
+      padding: .625rem 0;
+      color: #FFF !important;
+  }
+}
 
 /* COlor */
 /* #153590 -- main blue */
