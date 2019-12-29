@@ -13,7 +13,7 @@ let techMap,
     overlaysArray,
     featureGRP,
     drawController,
-    layerData,
+    layerPPMV,
     drawnItems,
     drawControl,
     drawStyle,
@@ -32,6 +32,8 @@ let techMap,
     // Scale display at bottom left
     L.control.scale().addTo(techMap)
     // drawStyle = L.control.styleEditor().addTo(techMap)
+
+
     //*********** BASE MAP OPTIONS ***********/
     leyerOSM = L.tileLayer.provider('OpenStreetMap')
     techMap.addLayer(leyerOSM)
@@ -41,15 +43,15 @@ let techMap,
     baseCartoDB = L.tileLayer.provider('CartoDB.DarkMatter')
 
     overlaysArray = []
-    // ######## AJAX data Calls #########
-    layerData = L.geoJSON.ajax('data/PPMV.geojson', {
+
+    // ######## data AJAX  Calls #########
+    layerPPMV = L.geoJSON.ajax('data/PPMV.geojson', {
         'pointToLayer': dataMarker,
         onEachFeature: feat1
     })
 
-    // techMap.on('click', (e) => console.log(e.target))
 
-    let layerData2 = L.geoJSON.ajax('data/hospital.geojson', {
+    let layerHospital = L.geoJSON.ajax('data/hospital.geojson', {
         'pointToLayer': dataMarker,
         onEachFeature: popUpData
     })
@@ -73,21 +75,22 @@ let techMap,
     
     
     // When Data Has Successfully Loaded
-    layerData.on('data:loaded', () =>{        
-        overlaysArray.push(layerData)
+    layerPPMV.on('data:loaded', () =>{        
+        overlaysArray.push(layerPPMV)
         
     })
+
     states.on('data:loaded', () =>{
         overlaysArray.push(states)
-        states.fitBounds(states.getBounds())
+        // states.fitBounds(states.getBounds())
     })
 
 
     ////////// Autocomplete search
-    let url = states,
-    arr =[],arr1 = []
-    $('#autocomplete').autocomplete()
+    
 
+
+    /**STYLING FUNCTIONS**/
     function style(feature) {
         return {
             fillColor: 'green', 
@@ -107,8 +110,9 @@ let techMap,
 
 
     function forEachFeature(feature, layer) {
+
         // Tagging each state poly with their name for the search control.
-        layer._leaflet_id = feature.properties.statename;
+        // layer._leaflet_id = feature.properties.statename;
 
         let popupContent = "<p><b>STATE: </b>"+ feature.properties.statename +
             "</br>REGION: "+ feature.properties.statecode 
@@ -116,15 +120,15 @@ let techMap,
         layer.bindPopup(popupContent);
 
         layer.on("click", function (e) { 
-            stateLayer.setStyle(style); //resets layer colors
+            states.setStyle(style); //resets layer colors
             layer.setStyle(highlight);  //highlights selected.
         }); 
     }
 
-    let stateLayer = L.geoJson(null, {onEachFeature: forEachFeature, style: style});
-
-    $.getJSON(null, function(data) {
-            stateLayer.addData(data);
+    // let stateLayer = L.geoJson(states, {onEachFeature: forEachFeature, style: style});
+    //     stateLayer.addTo(techMap)
+    $.getJSON(states, function(data) {
+            states.addData(data);
         
             for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
                 arr1.push({label:data.features[i].properties.statename, value:""});
@@ -132,7 +136,7 @@ let techMap,
         addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
         });
 
-    stateLayer.addTo(techMap);
+    states.addTo(techMap);
 
 	
 	
@@ -147,7 +151,7 @@ let techMap,
     
         let drawned  = new L.FeatureGroup()
         let drawnedJSON = drawned.toGeoJSON()
-        console.log(drawnedJSON)
+        // console.log(drawnedJSON)
         drawned.addTo(techMap) 
 
     baseLayers = {
@@ -158,8 +162,8 @@ let techMap,
     }
 
     overlays  = {
-        "Lagos Data": layerData,
-        "Lagos Data2" : layerData2,
+        "Lagos PPMV": layerPPMV,
+        "Hospital" : layerHospital,
         "live drawn": drawnItems,
         // "heat map": heat,
         "Lagos LGA": lagosLGA,
@@ -299,124 +303,115 @@ let techMap,
 
     // ********UTILITY SIDEBAR******
 
-    mainSideBar = L.control({ position: "bottomright" });
+    // mainSideBar = L.control({ position: "bottomright" });
 
-    mainSideBar.onAdd = function() {
-      let div = L.DomUtil.create("div", "main-side-bar slide-left");
-    div.innerHTML += `<h4>Utilities</h4>`;
-    div.innerHTML += `<div class='anchor'>&lt</div>`;
-    // div.innerHTML += `<div class="query-continer">
-    //                         <a id="do" class="btn btn-primary" href="#"> Remove layer</a>
-    //                     </div>`;
-    // div.innerHTML += `<div class="query-continer">
-    //         <a id="remove" class="btn btn-primary" href="#"> add Layer</a>
-    //     </div>`;
+    // mainSideBar.onAdd = function() {
+    //   let div = L.DomUtil.create("div", "main-side-bar slide-left")
+    // div.innerHTML += `<h4>Utilities</h4>`;
+    // div.innerHTML += `<div class='anchor'>&lt</div>`    
+    // div.innerHTML += `<div class="accordion" id="accordionExample">`
+    // div.innerHTML += `<div class="card base-map ">
+    //     <div class="card-header" id="headingOne">
+    //     <h2 class="mb-0">
+    //         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+    //             Base Maps
+    //         </button>
+    //     </h2>
+    //     </div>
 
-    div.innerHTML += `<div class="accordion" id="accordionExample">`
-    div.innerHTML += `<div class="card base-map ">
-        <div class="card-header" id="headingOne">
-        <h2 class="mb-0">
-            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                Base Maps
-            </button>
-        </h2>
-        </div>
+    //     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+    //     <div class="card-body map-thumb-wrapper">
+    //             <div id="osm" class="map-thumb">
+    //                 <img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/5/10/10" alt="open street map">
+    //                 <div class="map-thumb-tag">OSM</div>
+    //             </div>
 
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-        <div class="card-body map-thumb-wrapper">
-                <div id="osm" class="map-thumb">
-                    <img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/5/10/10" alt="open street map">
-                    <div class="map-thumb-tag">OSM</div>
-                </div>
-
-                <div id="cartoDb" class="map-thumb">
-                    <img src="https://b.basemaps.cartocdn.com/dark_nolabels/5/15/10@2x.png" alt=" carto db">
-                    <div class="map-thumb-tag">Carto DB</div>
-                </div>
+    //             <div id="cartoDb" class="map-thumb">
+    //                 <img src="https://b.basemaps.cartocdn.com/dark_nolabels/5/15/10@2x.png" alt=" carto db">
+    //                 <div class="map-thumb-tag">Carto DB</div>
+    //             </div>
                 
-                <div id="openTopo" class="map-thumb">
-                    <img src="https://b.tile.opentopomap.org/5/15/10.png" alt="open topo">
-                    <div class="map-thumb-tag">Open Topo</div>
-                </div>
+    //             <div id="openTopo" class="map-thumb">
+    //                 <img src="https://b.tile.opentopomap.org/5/15/10.png" alt="open topo">
+    //                 <div class="map-thumb-tag">Open Topo</div>
+    //             </div>
 
-                <div id="waterpaint" class="map-thumb">
-                    <img src="https://stamen-tiles-b.a.ssl.fastly.net/watercolor/5/15/10.jpg" alt="open topo">
-                    <div class="map-thumb-tag">Open Topo</div>
-                </div>
+    //             <div id="waterpaint" class="map-thumb">
+    //                 <img src="https://stamen-tiles-b.a.ssl.fastly.net/watercolor/5/15/10.jpg" alt="open topo">
+    //                 <div class="map-thumb-tag">Open Topo</div>
+    //             </div>
 
-        </div>
-        </div>
-        </div>
+    //     </div>
+    //     </div>
+    //     </div>
         
-    </div>`  
-        div.innerHTML += `<div class="card">
-            <div class="card-header" id="headingTwo">
-            <h2 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Buffer Tool
-                </button>
-            </h2>
-            </div>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-            <div class="card-body">
-                Buffer Area 
-            </div>
-            </div>
-        </div>`
+    // </div>`  
+    //     div.innerHTML += `<div class="card">
+    //         <div class="card-header" id="headingTwo">
+    //         <h2 class="mb-0">
+    //             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+    //                 Buffer Tool
+    //             </button>
+    //         </h2>
+    //         </div>
+    //         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    //         <div class="card-body">
+    //             Buffer Area 
+    //         </div>
+    //         </div>
+    //     </div>`
 
-        div.innerHTML += `<div class="card">
-            <div class="card-header" id="heading3">
-            <h2 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapseTwo">
-                Query Search
-                </button>
-            </h2>
-            </div>
-            <div id="collapse3" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-            <div class="card-body">
-                Buffer Area 
-            </div>
-            </div>
-        </div>`
-    div.innerHTML += `</div>`                         
-    div.innerHTML += `</div>`         //end div for query side bar                
+    //     div.innerHTML += `<div class="card">
+    //         <div class="card-header" id="heading3">
+    //         <h2 class="mb-0">
+    //             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapseTwo">
+    //             Query Search
+    //             </button>
+    //         </h2>
+    //         </div>
+    //         <div id="collapse3" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    //         <div class="card-body">
+    //             Buffer Area 
+    //         </div>
+    //         </div>
+    //     </div>`
+    // div.innerHTML += `</div>`                         
+    // div.innerHTML += `</div>`                     
                        
 
-      return div;
-    };
+    //   return div;
+    // };
     
-    mainSideBar.addTo(techMap); //Add created side bar to map
+    // mainSideBar.addTo(techMap)
     
-    document.getElementById('osm').addEventListener('click', () =>{
-        L.tileLayer.provider('OpenStreetMap').addTo(techMap)
-     })
-     document.getElementById('cartoDb').addEventListener('click', () =>{
-        L.tileLayer.provider('CartoDB.DarkMatter').addTo(techMap)
-     })
-     document.getElementById('openTopo').addEventListener('click', () =>{
-        L.tileLayer.provider('OpenTopoMap').addTo(techMap)
-     })
-     document.getElementById('waterpaint').addEventListener('click', () =>{
-        L.tileLayer.provider('Stamen.Watercolor').addTo(techMap)
-     })
+    // document.getElementById('osm').addEventListener('click', () =>{
+    //     L.tileLayer.provider('OpenStreetMap').addTo(techMap)
+    //  })
+    //  document.getElementById('cartoDb').addEventListener('click', () =>{
+    //     L.tileLayer.provider('CartoDB.DarkMatter').addTo(techMap)
+    //  })
+    //  document.getElementById('openTopo').addEventListener('click', () =>{
+    //     L.tileLayer.provider('OpenTopoMap').addTo(techMap)
+    //  })
+    //  document.getElementById('waterpaint').addEventListener('click', () =>{
+    //     L.tileLayer.provider('Stamen.Watercolor').addTo(techMap)
+    //  })
      
 
      
 
     // Control slide in n out of infoBars
-    const inforBarState = (el,togglClass) =>{
-      let element = document.querySelector(`.${el}`)
-      element.classList.toggle(`${togglClass}`)
-    }
+    // const inforBarState = (el,togglClass) =>{
+    //   let element = document.querySelector(`.${el}`)
+    //   element.classList.toggle(`${togglClass}`)
+    // }
     
     const anchor = document.querySelector('.anchor') //anchor button on legend bar    
     anchor.addEventListener('click', () => inforBarState('legend','trans-open'))
 
-    const sideBarAnchor = document.querySelector('.main-side-bar .anchor') //anchor button on utility side bar bar
-    sideBarAnchor.addEventListener('click', () => {
-        inforBarState('main-side-bar','slide-left')
-        console.log('heu')
-    })
+    // const sideBarAnchor = document.querySelector('.main-side-bar .anchor') //anchor button on utility side bar
+    // sideBarAnchor.addEventListener('click', () => inforBarState('main-side-bar','slide-left'))
+    
     
       
      
@@ -430,7 +425,7 @@ let techMap,
         });
 
         
-             
+       fillLayer()      
        
 })
 
@@ -438,9 +433,20 @@ let techMap,
 
 // toggle Draw Controller
 function toggleDraw(){
-    drawControl._container.style.display =  
-    drawControl._container.style.display == 'none' ? 'flex' : 'none'
+    drawControl._container.style.display = drawControl._container.style.display == 'none' ? 'flex' : 'none'
 }
+
+// TOGGLE SIDE BARS
+const inforBarState = (el,togglClass) =>{
+    let element = document.querySelector(`.${el}`)
+    element.classList.toggle(`${togglClass}`)
+  }
+
+  const sideAnchor = document.querySelector('.sidebar-anchor') //anchor button on legend bar
+    
+  sideAnchor.addEventListener('click', () => inforBarState('sidebar', 'side-open'))
+
+
 
 //  display data attributes and control data presentations
     function dataMarker(json, latlng){
@@ -506,7 +512,7 @@ function toggleDraw(){
         let res = []
         if(att){
             res.push(att.name)
-            console.log('from popup data',res,feat)
+            // console.log('from popup data',res,feat)
         }
     }
     let styleOne = {
@@ -567,6 +573,7 @@ function toggleDraw(){
 	}
 // end of code for click marker.
 
+
 function feat1 (feature, layer) {
 
     layer.on('click', e =>{
@@ -574,7 +581,7 @@ function feat1 (feature, layer) {
         document.querySelector('.legend').classList.remove('trans-open')
         
         if(feature.geometry.type == "MultiPolygon"){
-            console.log(feature)
+            // console.log(feature)
             
             document.querySelector('.legend-content').innerHTML = `
             <div class="card" style="width: 18rem;">
@@ -619,34 +626,22 @@ function feat1 (feature, layer) {
 }
 
 /*********HELPER FUNCs FOR INFO DIV************/
-// const pointsInfo = (featPoint) =>{
-    
-//     let div = L.DomUtil.create("div", "points-info")
-//     div.innerHTML += `
-        // <div class="card" style="width: 18rem;">
-        //     <img class="card-img-top" src="https://picsum.photos/seed/picsum/300/300" alt="Card image cap">
-        //     <div class="card-body">
-        //         <h5 class="card-title">${featPoint.properties.name}</h5>
-        //         <p class="card-text">
-        //             <button class="btn btn-info disabled btn-sm">Address</button>: ${featPoint.properties.address} <br>
-        //             <button class="btn btn-info disabled btn-sm">Number</button>: ${featPoint.properties.phone_number} <br>
-        //             <button class="btn btn-info disabled btn-sm">LGA</button>: ${featPoint.properties.lga} <br>
-        //             <button class="btn btn-info disabled btn-sm">State</button>: ${featPoint.properties.state} <br>
-        //             <span class="badge badge-default">${featPoint.properties.address}</span>
-        //         </p>
-        //         <a href="#" class="btn btn-primary">A link</a>
-        //     </div>
-        // </div>
-//     `
-//     return div
-// }
 
-// pointsInfo.addTo(techMap)
-// function pointsInfoAdder(){
-//     pointsInfo.addTo(techMap)
-// }
 
-// CUSTOM BASE MAP CONTROL
-//  document.getElementById('osm').addEventListener('click', () =>{
-//     L.tileLayer.provider('CartoDB.DarkMatter').addTo(techMap)
-//  })
+function fillLayer(){
+    document.querySelector('#pills-profile').innerHTML = ''
+
+    for(key of Object.keys(overlays)){
+        let el = document.createElement('div')
+        el.innerText = key
+
+        el.addEventListener('click', loadLayer)
+
+        document.querySelector('#pills-profile').append(el)
+
+    }
+}
+function loadLayer(e){
+    techMap.addLayer(overlays[e.target.innerText])
+}
+

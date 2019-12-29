@@ -1,59 +1,6 @@
-/* @media (max-width: 767.98px){
-.navbar-nav .nav-link {
-    padding: .625rem 0;
-    color: #fff !important;
-  }
-
-  #navbar-default .navbar-bar{
-    flex-direction: row !important;
-    background: red;
-  }
-  #zoom-tool{
-    background: red;
-    flex-direction: row !important;
-  }
+body{
+  overflow: hidden;
 }
-@media (max-width: 812px){
-  
-    
-    .utility{
-      padding: 0 !important;
-    }
-  
-    #zoom-tool{
-      flex-direction: row !important;
-      margin-left: auto;
-    }
-    #zoom-tool li{
-      margin: 0 10px;
-    }
-  }
-
-@media (max-width: 370px){
-  .navbar-nav .nav-link {
-      padding: .625rem 0;
-      color: #fff !important;
-    }
-  }
-
-  @media (max-width: 767.98px){
-    .navbar-collapse{
-      opacity: 1 !important;
-      width: 100%;
-      display: flex;
-      
-    }
-
-    #navbar-default .navbar-bar{
-      flex-direction: row !important;
-      background: red;
-    }
-  } */
-
-
-/* #sidenav-main{
-  width:150px;
-} */
 .map-name{
   height:50px !important;
 }
@@ -379,7 +326,7 @@ button[data-target="#collapseOne"], button[data-target="#collapseTwo"], button[d
 /*   background: blue; */
   margin: 5px;
 }
-.map-thumb::before{
+/* .map-thumb::before{
   content:'';
   position: absolute;
   width: 100%;
@@ -387,7 +334,7 @@ button[data-target="#collapseOne"], button[data-target="#collapseTwo"], button[d
   background: #222;
   top:0;
   opacity: 0.3;
-}
+} */
 .card .map-thumb img{
 /*   border: 2px solid red;; */
   display: block;
@@ -415,4 +362,105 @@ button[data-target="#collapseOne"], button[data-target="#collapseTwo"], button[d
 
 .leaflet-control-measure{
   margin-top: 20px !important;
+}
+
+/* DOM SIDEBAR */
+.side-open{
+  transform: translateX(120%)
+}
+.sidebar{
+width:320px;
+/*   min-height: 300px; */
+background: #FCFCFC;
+position: absolute;
+right: 5%;
+bottom: 5%;
+padding: 10px;
+-webkit-box-shadow: -9px 7px 47px -14px rgba(0,0,0,0.55);
+-moz-box-shadow: -9px 7px 47px -14px rgba(0,0,0,0.55);
+box-shadow: -9px 7px 47px -14px rgba(0,0,0,0.55);
+transition: transform 0.4s ease-in-out;
+z-index: 10000;
+}
+
+.sidebar-inner{
+width:100%;
+height: 100%;
+min-height: 200px;
+/*   background: red; */
+position: relative;
+bottom: -2%;
+}
+
+.sidebar-header{
+margin-right: auto
+}
+.sidebar-anchor{
+background: blue;
+padding: 10px;
+height: 35px;
+line-height: 10px;
+color: #fff;
+position: absolute;
+right: 100%;
+}
+
+.sidebar-inner .tab-content{
+min-height: 200px;
+max-height:400px;
+overflow-y: scroll;
+}
+
+
+/* CUSTOMIZE SCROLL BAR */
+/* width */
+::-webkit-scrollbar {
+width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+background: #f1f1f1; 
+display: none
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: #888; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: #555; 
+}
+
+.map-thumb{
+padding: 5px;
+display: flex;
+align-items: center;
+height: 60px;
+/*   background: red; */
+transition: all .4s ease;
+}
+.base-active{
+background: #7e8a9773;
+
+}
+
+.map-thumb:hover{
+background: #f5f5f5;
+}
+.map-img{
+max-width: 100%;
+height: auto;
+}
+.img-map{
+width: 50px;
+height: 50px;
+margin-right: 10px
+}
+.map-desc{
+color: #333;
+}
+.sidebar hr{
+  padding-top: 0 !important;
 }

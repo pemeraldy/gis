@@ -313,22 +313,66 @@
         </div>
         <!-- end Header -->
 
-    <!-- Page content -->
+   
     
-    <!-- MAP -->
+   
     
-    <!-- <div class="leaflet-control leaflet-bottom leaflet-left mycontrol">
-      <div class="leaflet-bar leaflet-control"><a title="Turn on PolylineMeasure" class="polyline-measure-unicode-icon" id="polyline-measure-control">↦</a></div>
-    </div> -->
-
-  <!-- main map component -->
-    <div class="">
-            <div id="mapid">
-
+          <!-- RIGHT SIDEBAR -->
+          <div class="sidebar side-open">
+            <div class="d-flex "><h2 class="sidebar-header">Map Legend</h2> <span class="sidebar-anchor"><i class="fas fa-chevron-right"></i></span></div>
+            <hr style="margin-top: 0 !important;">
+            <div class="sidebar-inner">
+              <div class="tab-content" id="pills-tabContent">
+              <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-">
+                
+          <div id="osm" class="map-thumb">
+              <div class="img-map">
+                <img  class="map-img img-rounded" src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/5/10/10" alt="open street map">
+              </div>
+              <div class="map-desc">Open Street Map</div>
             </div>  
-    </div>
+            <div id="osm" class="map-thumb base-active">
+              <div class="img-map">
+                <img  class="map-img img-rounded" src="https://b.tile.opentopomap.org/5/15/10.png" alt="open street map">
+              </div>
+              <div class="map-desc">Open Topo Map</div>
+            </div>
+                
+            <div id="cartoDb" class="map-thumb">
+                        <div class="img-map">
+                          <img class="map-img" src="https://b.basemaps.cartocdn.com/dark_nolabels/5/15/10@2x.png" alt=" carto db">
+                          </div>
+                            <div class="map-desc">Carto DB</div>
+              </div>
+                
+        </div>
+              <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">Layers</div>
+              <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>
+            </div>
+            
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Base maps</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Layers</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Measure</a>
+              </li>
+            </ul>
+            </div>
+          </div>
+          <!-- RIGHT SIDEBAR ENDS -->
 
-    </div>
+        <!-- main map component -->
+          <div class="">
+                  <div id="mapid">
+
+                  </div>  
+          </div>
+
+          </div>
 
     <!-- Modal -->
           
