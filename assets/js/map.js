@@ -21,7 +21,8 @@ let techMap,
     layerSearch,
     mainSideBar,
     legend,
-    layerMarkerCluster
+    layerMarkerCluster,
+    layerHospital
 
    $(document).ready(function(){
     //init setting
@@ -51,9 +52,9 @@ let techMap,
     })
 
 
-    let layerHospital = L.geoJSON.ajax('data/hospital.geojson', {
+     layerHospital = L.geoJSON.ajax('data/hospital.geojson', {
         'pointToLayer': dataMarker,
-        onEachFeature: popUpData
+        onEachFeature: feat1
     })
     
     let lagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
@@ -259,9 +260,13 @@ let techMap,
 
     // Measure area and line
     measureControl = new L.Control.Measure({position: 'topleft', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters'});
+    let oldContainer =  measureControl.getContainer()
+    let newMeasureToolCont = document.querySelector('#pills-contact');
+    newMeasureToolCont.append(oldContainer);
     measureControl.addTo(techMap);
+
     // Measure control button
-    measure = L.control.polylineMeasure().addTo(techMap);
+    // measure = L.control.polylineMeasure().addTo(techMap);
 
     
     // ######### Feature INfo Bar ###########
@@ -578,10 +583,15 @@ function feat1 (feature, layer) {
 
     layer.on('click', e =>{
         let coords = e.target.feature.geometry.coordinates
+        let props = feature.properties
         document.querySelector('.legend').classList.remove('trans-open')
-        
+        // console.log(props)
         if(feature.geometry.type == "MultiPolygon"){
-            // console.log(feature)
+            for(let key in props){
+                let value = props[key]
+                console.log(`<b> ${key}</b>:${value}`)
+            }
+            
             
             document.querySelector('.legend-content').innerHTML = `
             <div class="card" style="width: 18rem;">
@@ -601,6 +611,12 @@ function feat1 (feature, layer) {
             
         }else if(feature.geometry.type == "Point"){
             onMapClick(coords)            
+            // console.log(feature.properties)
+            
+            for(let key in props){
+                let value = props[key]
+                console.log(`this is ${key} and ${value}`)
+            }
             document.querySelector('.legend-content').innerHTML = `
                 <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="${feature.properties.photo}" alt="feature image">
@@ -627,13 +643,17 @@ function feat1 (feature, layer) {
 
 /*********HELPER FUNCs FOR INFO DIV************/
 
-
+//fill container with a list of loaded layers
 function fillLayer(){
     document.querySelector('#pills-profile').innerHTML = ''
 
     for(key of Object.keys(overlays)){
         let el = document.createElement('div')
+        let checked = document.createElement('i')
+        checked.classList.add('fas')
+        // checked.classList.add('fa-check-square')
         el.innerText = key
+        el.append(checked)
         el.classList.add('inactive')
         el.classList.add('layer')
         el.addEventListener('click', loadLayer)
@@ -643,18 +663,25 @@ function fillLayer(){
     }
 }
 function loadLayer(e){
+    // removeCheck()
    e.target.classList.contains('inactive') ? techMap.addLayer(overlays[e.target.innerText]) : techMap.removeLayer(overlays[e.target.innerText])
-   e.target.classList.toggle('inactive') 
+   e.target.classList.toggle('inactive')
+   e.target.lastElementChild.classList.toggle('fa-check-square')
+   e.target.lastElementChild.style.fontSize = '22px'
+// console.log(e.target.lastElementChild)
 }
+
 
 const mapThumb = document.querySelectorAll('.map-thumb')
 
+// TOGGLE ACTIVE CLASS FOR BASE MAPS
 mapThumb.forEach( thum =>{
     
     thum.addEventListener('click', function(e){
 
     mapThumb.forEach(thum => thum.classList.remove('base-active'))
-thum.classList.toggle('base-active')
+    thum.classList.toggle('base-active')
+    
 } )
     
 })
@@ -663,7 +690,7 @@ thum.classList.toggle('base-active')
 const sideBarBtns = document.querySelectorAll('.sidebar .nav-link')
 const sideBarHeader = document.querySelector('.sidebar-header')
 sideBarBtns.forEach( btn =>{
-    
+    // Set Header of Side Bar on CLick of BTNS
     btn.addEventListener('click', (e) => { sideBarHeader.innerText = btn.innerText } )
     
 })
