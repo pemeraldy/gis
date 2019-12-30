@@ -384,15 +384,15 @@ let techMap,
     
     // mainSideBar.addTo(techMap)
     
-    // document.getElementById('osm').addEventListener('click', () =>{
-    //     L.tileLayer.provider('OpenStreetMap').addTo(techMap)
-    //  })
-    //  document.getElementById('cartoDb').addEventListener('click', () =>{
-    //     L.tileLayer.provider('CartoDB.DarkMatter').addTo(techMap)
-    //  })
-    //  document.getElementById('openTopo').addEventListener('click', () =>{
-    //     L.tileLayer.provider('OpenTopoMap').addTo(techMap)
-    //  })
+    document.getElementById('osm').addEventListener('click', () =>{
+        L.tileLayer.provider('OpenStreetMap').addTo(techMap)
+     })
+     document.getElementById('cartoDb').addEventListener('click', () =>{
+        L.tileLayer.provider('CartoDB.DarkMatter').addTo(techMap)
+     })
+     document.getElementById('openTopo').addEventListener('click', () =>{
+        L.tileLayer.provider('OpenTopoMap').addTo(techMap)
+     })
     //  document.getElementById('waterpaint').addEventListener('click', () =>{
     //     L.tileLayer.provider('Stamen.Watercolor').addTo(techMap)
     //  })
@@ -634,7 +634,8 @@ function fillLayer(){
     for(key of Object.keys(overlays)){
         let el = document.createElement('div')
         el.innerText = key
-
+        el.classList.add('inactive')
+        el.classList.add('layer')
         el.addEventListener('click', loadLayer)
 
         document.querySelector('#pills-profile').append(el)
@@ -642,6 +643,28 @@ function fillLayer(){
     }
 }
 function loadLayer(e){
-    techMap.addLayer(overlays[e.target.innerText])
+   e.target.classList.contains('inactive') ? techMap.addLayer(overlays[e.target.innerText]) : techMap.removeLayer(overlays[e.target.innerText])
+   e.target.classList.toggle('inactive') 
 }
+
+const mapThumb = document.querySelectorAll('.map-thumb')
+
+mapThumb.forEach( thum =>{
+    
+    thum.addEventListener('click', function(e){
+
+    mapThumb.forEach(thum => thum.classList.remove('base-active'))
+thum.classList.toggle('base-active')
+} )
+    
+})
+
+// SIDE BAR crumbs BUTTONS
+const sideBarBtns = document.querySelectorAll('.sidebar .nav-link')
+const sideBarHeader = document.querySelector('.sidebar-header')
+sideBarBtns.forEach( btn =>{
+    
+    btn.addEventListener('click', (e) => { sideBarHeader.innerText = btn.innerText } )
+    
+})
 

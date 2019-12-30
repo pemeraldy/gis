@@ -464,3 +464,10 @@ color: #333;
 .sidebar hr{
   padding-top: 0 !important;
 }
+
+/* Layer Bar */
+.layer{
+  border-bottom: 1px dashed #1a174d;
+  padding: 5px 0  0 5px;
+  margin-top: 2px;
+}
