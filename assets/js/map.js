@@ -33,16 +33,6 @@ let techMap,
 
 $(document).ready(function () {
     //init setting
-<<<<<<< HEAD
-    techMap = L.map('mapid', { zoomControl: false }).setView([6.6088, 3.2545], 9);
-
-    //######## adding markers to map at will for position purpose#######
-    // techMap.on("click", function(e){
-    //     new L.Marker([e.latlng.lat, e.latlng.lng]).addTo(techMap);
-    //  })
-    // Scale display at bottom left
-    L.control.scale().addTo(techMap)
-=======
     techMap = L.map('mapid', {
         zoomControl:false
     }).setView([6.465422, 3.406448], 5);
@@ -51,7 +41,6 @@ $(document).ready(function () {
     L.control.scale().addTo(techMap)
     // drawStyle = L.control.styleEditor().addTo(techMap)
 
->>>>>>> master
 
     //*********** BASE MAP OPTIONS ***********/
     leyerOSM = L.tileLayer.provider('OpenStreetMap')
@@ -61,86 +50,6 @@ $(document).ready(function () {
     baseTopo = L.tileLayer.provider('OpenTopoMap')
     baseCartoDB = L.tileLayer.provider('CartoDB.DarkMatter')
 
-<<<<<<< HEAD
-
-    // ######## AJAX data Calls #########
-    // Dataset layer
-    layerData = L.geoJSON.ajax('features', {
-        'pointToLayer': dataMarker,
-    }).addTo(techMap)
-    layerData.on('data:loaded', () => {
-        techMap.fitBounds(layerData.getBounds())
-        console.log(layerData)
-    }).addTo(techMap)
-
-    // PPMV
-    layerPPMV = L.geoJSON.ajax('data/PPMV.geojson', {
-        'pointToLayer': dataMarker,
-        'onEachFeature': feat1
-    })
-    layerPPMV.on('data:loaded', () => {
-        techMap.fitBounds(layerPPMV.getBounds());
-
-    })
-
-    // CP
-    layerCP = L.geoJSON.ajax('data/CP.geojson', {
-        'pointToLayer': dataMarker,
-    })
-    layerCP.on('data:loaded', () => {
-        techMap.fitBounds(layerCP.getBounds())
-    })
-
-    // Hospital
-    layerHospital = L.geoJSON.ajax('data/hospital.geojson', {
-        'pointToLayer': dataMarker,
-        'onEachFeature': feat1
-    })
-    layerHospital.on('data:loaded', () => {
-        techMap.fitBounds(layerHospital.getBounds())
-    })
-
-    // Laboratory
-    layerLaboratory = L.geoJSON.ajax('data/laboratory.geojson', {
-        'pointToLayer': dataMarker,
-        'onEachFeature': feat1
-    })
-    layerLaboratory.on('data:loaded', () => {
-        techMap.fitBounds(layerLaboratory.getBounds())
-    })
-
-    // lagos State
-    layerLagos = L.geoJSON.ajax('data/lagos_state.geojson', {
-        'pointToLayer': dataMarker,
-    })
-
-    layerLagos.on('data:loaded', () => {
-        techMap.fitBounds(layerLagos.getBounds())
-    })
-
-    // lagos State LGA
-    layerLagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
-        'pointToLayer': dataMarker,
-    })
-
-    layerLagosLGA.on('data:loaded', () => {
-        techMap.fitBounds(layerLagosLGA.getBounds())
-    })
-
-    // States Layer
-    statesLayer = L.geoJSON.ajax('states', {
-        // 'pointToLayer': dataStyler,
-        'pointToLayer': dataMarker,
-    }).addTo(techMap)
-
-    // LGAs layer
-    red = { // Define your style object
-        "color": "#ff0000"
-    }
-    lgasLayer = L.geoJSON.ajax('lgas', {
-        'pointToLayer': dataMarker,
-        'style': red,
-=======
     overlaysArray = []
 
     // ######## data AJAX  Calls #########
@@ -182,19 +91,12 @@ $(document).ready(function () {
     states.on('data:loaded', () =>{
         overlaysArray.push(states)
         // states.fitBounds(states.getBounds())
->>>>>>> master
     })
 
 
     ////////// Autocomplete search
-<<<<<<< HEAD
-    // let url = statesLayer,
-    //     arr = [], arr1 = []
-    // $('#autocomplete').autocomplete()
-=======
     
 
->>>>>>> master
 
     /**STYLING FUNCTIONS**/
     function style(feature) {
@@ -221,15 +123,6 @@ $(document).ready(function () {
         // Tagging each state poly with their name for the search control.
         // layer._leaflet_id = feature.properties.statename;
 
-<<<<<<< HEAD
-        let popupContent = "<p><b>STATE: </b>" + feature.properties.statename +
-            "</br>REGION: " + feature.properties.statecode
-
-        layer.bindPopup(popupContent);
-
-        layer.on("click", function (e) {
-            stateLayer.setStyle(style); //resets layer colors
-=======
         let popupContent = "<p><b>STATE: </b>"+ feature.properties.statename +
             "</br>REGION: "+ feature.properties.statecode 
             
@@ -237,30 +130,10 @@ $(document).ready(function () {
 
         layer.on("click", function (e) { 
             states.setStyle(style); //resets layer colors
->>>>>>> master
             layer.setStyle(highlight);  //highlights selected.
         });
     }
 
-<<<<<<< HEAD
-    $.getJSON(null, function (data) {
-        stateLayer.addData(data);
-
-        for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
-            arr1.push({ label: data.features[i].properties.statename, value: "" });
-        }
-        // addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
-    });
-
-    stateLayer.addTo(techMap);
-
-    // Draw controller
-    drawnItems = new L.FeatureGroup()
-    techMap.addLayer(drawnItems)
-    // console.log(drawnItems)
-    // let drawned = new L.FeatureGroup()
-    // drawned.addTo(techMap)
-=======
     // let stateLayer = L.geoJson(states, {onEachFeature: forEachFeature, style: style});
     //     stateLayer.addTo(techMap)
     $.getJSON(states, function(data) {
@@ -289,7 +162,6 @@ $(document).ready(function () {
         let drawnedJSON = drawned.toGeoJSON()
         // console.log(drawnedJSON)
         drawned.addTo(techMap) 
->>>>>>> master
 
     baseLayers = {
         "Open Street Map": leyerOSM,
@@ -298,19 +170,6 @@ $(document).ready(function () {
         "Water Color": baseWaterColor
     }
 
-<<<<<<< HEAD
-    overlays = {
-        "States": statesLayer,
-        "LGAs": lgasLayer,
-        "Lagos": layerLagos,
-        "LagosLGAs": layerLagosLGA,
-        "PPMV": layerPPMV,
-        "CP": layerCP,
-        "Hospital": layerHospital,
-        "Laboratory": layerLaboratory,
-        "Dataset": layerData,
-        "Draw Layer": drawnItems
-=======
     overlays  = {
         "Lagos PPMV": layerPPMV,
         "Hospital" : layerHospital,
@@ -319,24 +178,14 @@ $(document).ready(function () {
         "Lagos LGA": lagosLGA,
         "States": states,
         "Local Govt.": lga
->>>>>>> master
     }
 
     baseMapContoller = L.control.layers(baseLayers, overlays, {
         collapse: false,
-<<<<<<< HEAD
-        expand: false
-    }).addTo(techMap)    // console.log(drawnItems)
-
-    // easyBtn = L.easyButton('fa-globe', function () {
-    //     console.log('hey')
-    // }).addTo(techMap)
-=======
         expand: true
     })
      
         
->>>>>>> master
 
     // get user location using the capital L key
     techMap.on('keypress', function (e) {
@@ -396,25 +245,6 @@ $(document).ready(function () {
     techMap.on('draw:created', function (e) {
         let type = e.layerType,
             layer = e.layer
-<<<<<<< HEAD
-
-        if (type === 'circle') {
-            layer.bindTooltip('<b>Radius: </b>' + (layer._mRadius / 1000).toFixed(3) + ' km');
-            // console.log(layer._mRadius, e, layer)
-        }
-        if (type === 'rectangle') {
-            layer.bindTooltip('width: ' + e.sourceTarget._size.x + 'km <br/> Height ' + e.sourceTarget._size.y + 'km');
-            // console.log(e, layer, e.sourceTarget._size)
-        }
-        if (type === 'polygon') {
-            layer.bindTooltip('');
-            // console.log(layer)
-        }
-
-        drawnItems.addLayer(layer);
-        // let newGeo = JSON.stringify(layer.toGeoJSON())
-
-=======
         
             if (type === 'circle') {
                 layer.bindTooltip('<b>Radius: </b>'+ (layer._mRadius/1000).toFixed(3)+' km');
@@ -433,20 +263,12 @@ $(document).ready(function () {
         // console.log(newGeo)
         
         // sendDraw()
->>>>>>> master
     });
 
 
     drawStyle = L.control.styleEditor().addTo(techMap)
 
     // Measure area and line
-<<<<<<< HEAD
-    measureControl = new L.Control.Measure({ position: 'topright', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters' });
-    measureControl.addTo(techMap);
-    measure = L.control.polylineMeasure().addTo(techMap);
-
-    // #########LEGEND TEMPLATES ###########
-=======
     measureControl = new L.Control.Measure({position: 'topleft', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters'});
     let oldContainer =  measureControl.getContainer()
     let newMeasureToolCont = document.querySelector('#pills-contact');
@@ -458,40 +280,10 @@ $(document).ready(function () {
 
     
     // ######### Feature INfo Bar ###########
->>>>>>> master
 
     // ######### Feature INfo Bar ###########
 
     /*Legend specific*/
-<<<<<<< HEAD
-    legend = L.control({ position: "bottomleft" });
-
-    legend.onAdd = function (featPoint) {
-        let div = L.DomUtil.create("div", "legend trans-open");
-        if (featPoint == undefined) {
-            return false
-        } else {
-            div.innerHTML += `<h2>Feature Info</h2>`;
-            div.innerHTML += `<div class='anchor'><i class="fas fa-chevron-right"></i></div>`;
-            div.innerHTML += `<div class="legend-content">
-                            <div class="card" style="width: 18rem;">
-                                <img id="feat-img" class="card-img-top" src="" alt="pharmacy image">
-                                <div class="card-body">
-                                    <h2 class="card-title" id="feat-name">Name of City</h2>
-                                    <div class="card-text">
-                                        <p class="text-info">Address:<b id="feat-add"></b></p>
-                                        <p class="btn btn-info disabled btn-sm">Number:<b id="feat-num"></p>
-                                        <p class="btn btn-info disabled btn-sm">LGA:<b id="feat-lga"></p>
-                                        <p class="btn btn-info disabled btn-sm">State : <b id="feat-state"></b></p>
-                                        <span class="badge badge-info">Address again</span><br>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>`
-
-            return div;
-=======
   legend = L.control({ position: "bottomleft" });
 
     legend.onAdd = function(featPoint) {
@@ -512,80 +304,9 @@ $(document).ready(function () {
                         </div>`
 
       return div;
->>>>>>> master
         }
     };
 
-<<<<<<< HEAD
-    legend.addTo(techMap);
-
-    // ********UTILITY SIDEBAR******
-
-    mainSideBar = L.control({ position: "bottomright" });
-
-    mainSideBar.onAdd = function () {
-        var div = L.DomUtil.create("div", "main-side-bar slide-left");
-        div.innerHTML += `<h4>Utilities</h4>`;
-        div.innerHTML += `<div class='anchor'>&lt</div>`;
-        div.innerHTML += `<div class="accordion" id="accordionExample">`
-        div.innerHTML += `<div class="card ">
-        <div class="card-header" id="headingOne">
-        <h2 class="mb-0">
-            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            Buffer Area
-            </button>
-        </h2>
-        </div>
-
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-        <div class="card-body">
-            Anim p
-        </div>
-        </div>
-    </div>`
-        div.innerHTML += `<div class="card">
-        <div class="card-header" id="headingTwo">
-        <h2 class="mb-0">
-            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-            Query Search
-            </button>
-        </h2>
-        </div>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-        <div class="card-body">
-            Buffer Area
-        </div>
-        </div>
-    </div>`
-        div.innerHTML += `</div>`
-        div.innerHTML += `</div>`         //end div for query side bar
-
-
-        return div;
-    };
-    mainSideBar.addTo(techMap); //Add created side bar to map
-
-    // Control slide in n out of infoBars
-    const inforBarState = (el, togglClass) => {
-        let element = document.querySelector(`.${el}`)
-        element.classList.toggle(`${togglClass}`)
-    }
-
-    const anchor = document.querySelector('.anchor') //anchor button on legend bar
-    anchor.addEventListener('click', () => inforBarState('legend', 'trans-open'))
-
-    const sideBarAnchor = document.querySelector('.main-side-bar .anchor') //anchor button on utility side bar bar
-    sideBarAnchor.addEventListener('click', () => {
-        inforBarState('main-side-bar', 'slide-left')
-        console.log('heu')
-    })
-
-})
-
-
-// ###########################
-//    outside ready function
-=======
     // ******DYNAMICALLY ADD LAYER *************
     // $('#collapseOne').click(function addNewLayer() {
     //     //create new layer
@@ -740,7 +461,6 @@ const inforBarState = (el,togglClass) =>{
   sideAnchor.addEventListener('click', () => inforBarState('map-sidebar', 'side-open'))
 
 
->>>>>>> master
 
 function dataMarker(json, latlng) {
     let attr = json.properties
@@ -762,17 +482,6 @@ function dataMarker(json, latlng) {
         Address: ${attr.address} <br>
         Wardcode: <i class="text-success">${attr.address}</i>`, { direction: 'top' })
     }
-<<<<<<< HEAD
-    else {
-        return L.marker(latlng, {
-            icon: iconHospital,
-        }).bindTooltip(`<b>LGA:${attr.lga}</b> <br>
-        Address: ${attr.address} <br>
-        Wardcode: <i class="text-success">${attr.wardcode}</i>`)
-    }
-
-}
-=======
 
     function highlightFeature(e) {
         let layer = e.target;
@@ -797,22 +506,10 @@ function dataMarker(json, latlng) {
             // click: zoomToFeature
         }).bindTooltip(`<div class="card"> ${feat.properties.statename}</div>`)
     }
->>>>>>> master
 
 function highlightFeature(e) {
     var layer = e.target;
 
-<<<<<<< HEAD
-    layer.setStyle({
-        weight: 2,
-        color: 'yellow',
-        dashArray: '',
-        fillOpacity: 0.4
-    });
-
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        layer.bringToFront();
-=======
     function popUpData(feature, ltlng){
         let feat = feature
         let att = feature.properties 
@@ -821,7 +518,6 @@ function highlightFeature(e) {
             res.push(att.name)
             // console.log('from popup data',res,feat)
         }
->>>>>>> master
     }
 }
 
@@ -903,89 +599,6 @@ function onMapClick(coords) {
         techMap.removeLayer(clickmark);
     };
 
-<<<<<<< HEAD
-    clickmark = L.circleMarker([lat, lng], {
-        radius: 8,
-        //opacity: 1,
-        color: "yellow",
-        fillColor: "yellow",
-        fillOpacity: 0.8
-    }
-    ).addTo(techMap);
-}
-// end of code for click marker.
-
-function feat1(feature, layer) {
-
-    layer.on('click', e => {
-        // console.log(layer)
-        let coords = e.target.feature.geometry.coordinates
-
-        if (feature.geometry.type == "MultiPolygon") {
-            console.log(feature)
-            document.querySelector('.legend').classList.remove('trans-open')
-            document.querySelector('.legend-content').innerHTML = `
-            <div class="card" style="width: 18rem;">
-            <img id="feat-img" class="card-img-top" src="" alt="image">
-            <div class="card-body">
-                <h2 class="card-title" id="feat-name">${feature.properties.statename}</h2>
-                <div class="card-text">
-                    <p class="text-info">State:<b id="feat-add">${feature.properties.statename}</b></p>
-                    <p class="">Geo Zone:<b id="feat-num">${feature.properties.geozone} </b></p>
-                    <p class="">LGA</p>:<b id="feat-lga">${feature.properties.lga}</b>
-                    <span class="badge badge-info">${feature.properties.statecode}</span><br>
-                </div>
-            </div>
-        </div>`
-
-
-
-        }else if (feature.geometry.type == "Point") {
-            console.log(feature)
-            let details = feature.properties
-            document.querySelector('.legend').classList.remove('trans-open')
-            document.querySelector('.legend-content').innerHTML = `
-            <div class="card" style="width: 18rem;">
-            <img id="feat-img" class="card-img-top" src="${feature.properties.photo}" alt="image">
-            <div class="card-body">
-                <h2 class="card-title" id="feat-name">${feature.properties.name}</h2>
-                <div class="card-text">
-                    <p class="">State: <b>${feature.properties.state}</b></p>
-                    <p class="text-info">Phone:<b id="">${feature.properties.phone_number}</b></p>
-                    <p class="">Address:<b id="">${feature.properties.address}</b></p>
-                    <p class="">LGA:<b>${feature.properties.lga}</b></p>
-                    <p class="">LGA Code:<b>${feature.properties.lgacode}</b></p>
-                    <p class="">Ward:<b>${feature.properties.ward}</b></p>
-                    <span class="badge badge-info">${feature.properties.statecode}</span><br>
-                </div>
-            </div>
-        </div>`
-        }
-         else {
-            onMapClick(coords)
-            document.querySelector('.legend').classList.remove('trans-open')
-            document.getElementById('feat-img').src = feature.properties.photo
-            document.getElementById('feat-name').innerHTML = feature.properties.name
-            document.getElementById('feat-add').innerHTML = feature.properties.address
-            document.getElementById('feat-num').innerHTML = feature.properties.phone_number
-            document.getElementById('feat-lga').innerHTML = feature.properties.lga
-            document.getElementById('feat-state').innerHTML = feature.properties.state
-        }
-
-    })
-}
-// save drawn items layer
-$(".save-map").click(function (e) {
-    $.ajax({
-        type: 'POST',
-        url: '/drawnSave',
-        data: drawnItems,
-        success: function (data) {
-            alert(data.success);
-        }
-    });
-});
-=======
     // ************ASIGN CUSTOM MARKERS*************
    let iconPPMV = L.divIcon({
             className: 'custom-div-icon',
@@ -1155,4 +768,3 @@ sideBarBtns.forEach( btn =>{
     
 })
 
->>>>>>> master
