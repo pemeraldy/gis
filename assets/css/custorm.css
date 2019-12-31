@@ -477,3 +477,16 @@ color: #333;
   display: flex;
   justify-content: space-between;
 }
+
+
+/* COlor */
+/* #153590 -- main blue */
+.class-white{
+  color: white !important;
+}
+.head-img{
+  /* background: linear-gradient(87deg, #5e72e4 0, #825ee4 0.52), url('../img/brand/bgMap.png') !important; */
+
+ background:linear-gradient(to bottom, rgba(0, 0, 46, 0.836), rgba(0, 0, 34, 0.73)),
+url('../img/brand/bgMap.png') !important;
+}
