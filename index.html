@@ -33,8 +33,13 @@
   <link rel="stylesheet" href="./assets/js/plugins/search/searchbox.min.css">
   <link rel="stylesheet" href="./assets/js/plugins/Leaflet.PolylineMeasure.css">
   <link rel="stylesheet" href="./assets/js/plugins/leaflet-search.min.css">
+<<<<<<< HEAD
   <!-- <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.css">
   <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.Default.css"> -->
+=======
+  <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.css">
+  <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.Default.css">
+>>>>>>> master
 
   <!-- leaflet Javascript -->
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
@@ -62,8 +67,13 @@
   <script src="./assets/js/plugins/leaflet.filelayer.js"></script>
   <script src="./assets/js/plugins/leaflet-measure.js"></script>
   <script src="./assets/js/plugins/L.Control.SlideMenu.js"></script>
+<<<<<<< HEAD
   <!-- <script src="./assets/js/plugins/leaflet.markercluster.js"></script>
   <script src="./assets/js/plugins/leaflet-marker-bounce.js"></script> -->
+=======
+  <script src="./assets/js/plugins/leaflet.markercluster.js"></script>
+  <script src="./assets/js/plugins/leaflet-marker-bounce.js"></script>
+>>>>>>> master
   
   <script src="./assets/js/plugins/search/leaflet.customsearchbox.min.js"></script>
   <script src="https://npmcdn.com/@turf/turf@5.1.6/turf.min.js"></script>
@@ -122,7 +132,29 @@
             </div>
           </a>
           <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+<<<<<<< HEAD
             
+=======
+            <!-- <div class=" dropdown-header noti-title">
+              <h6 class="text-overflow m-0">Welcome!</h6>
+            </div>
+            <a href="./examples/profile.html" class="dropdown-item">
+              <i class="ni ni-single-02"></i>
+              <span>My profile</span>
+            </a>
+            <a href="./examples/profile.html" class="dropdown-item">
+              <i class="ni ni-settings-gear-65"></i>
+              <span>Settings</span>
+            </a>
+            <a href="./examples/profile.html" class="dropdown-item">
+              <i class="ni ni-calendar-grid-58"></i>
+              <span>Activity</span>
+            </a>
+            <a href="./examples/profile.html" class="dropdown-item">
+              <i class="ni ni-support-16"></i>
+              <span>Support</span>
+            </a> -->
+>>>>>>> master
             <div class="dropdown-divider"></div>
             <a href="#!" class="dropdown-item">
               <i class="ni ni-user-run"></i>
@@ -147,7 +179,21 @@
             </div>
           </div>
         </div>
+<<<<<<< HEAD
         
+=======
+        <!-- Form -->
+        <!-- <form class="mt-4 mb-3 d-md-none">
+          <div class="input-group input-group-rounded input-group-merge">
+            <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search" aria-label="Search">
+            <div class="input-group-prepend">
+              <div class="input-group-text">
+                <span class="fa fa-search">Search me</span>
+              </div>
+            </div>
+          </div>
+        </form> -->
+>>>>>>> master
         <!-- Navigation -->
         <ul class="navbar-nav bg-gradient-default">
           <li class="nav-item">
@@ -157,11 +203,28 @@
           </li>
           
           <li class="nav-item">
+<<<<<<< HEAD
             <a class="nav-link text-light" href="./tables.html">
               <i class="fas fa-table text-orange"></i> Tables
             </a>
           </li>
          
+=======
+            <a class="nav-link text-light" href="./examples/maps.html">
+              <i class="fas fa-table text-orange"></i> Tables
+            </a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link text-light" href="./examples/profile.html">
+              <i class="fas fa-eye text-yellow"></i> Visualization
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="./tables.html">
+              <i class="ni ni-settings text-red"></i> Tools
+            </a>
+          </li> -->
+>>>>>>> master
         </ul>
         <!-- Divider -->
         <hr class="my-3">
@@ -271,23 +334,73 @@
         </div>
         <!-- end Header -->
 
-    <!-- Page content -->
+   
     
-    <!-- MAP -->
+   
     
-    <!-- <div class="leaflet-control leaflet-bottom leaflet-left mycontrol">
-      <div class="leaflet-bar leaflet-control"><a title="Turn on PolylineMeasure" class="polyline-measure-unicode-icon" id="polyline-measure-control">↦</a></div>
-    </div> -->
+          <!-- RIGHT SIDEBAR -->
+          <div class="map-sidebar side-open">
+            <div class="d-flex "><h2 class="sidebar-header">Map Legend</h2> <span class="sidebar-anchor"><i class="fas fa-chevron-left"></i></span></div>
+            <hr style="margin-top: 0 !important;">
+            <div class="sidebar-inner">
+              <div class="tab-content" id="pills-tabContent">
+              <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-">
+                
+          <div id="osm" class="map-thumb base-active">
+              <div class="img-map">
+                <img  class="map-img img-rounded" src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/5/10/10" alt="open street map">
+              </div>
+              <div class="map-desc">Open Street Map</div>
+            </div>  
+            <div id="openTopo" class="map-thumb">
+              <div class="img-map">
+                <img  class="map-img img-rounded" src="https://b.tile.opentopomap.org/5/15/10.png" alt="open street map">
+              </div>
+              <div class="map-desc">Open Topo Map</div>
+            </div>
+                
+            <div id="cartoDb" class="map-thumb">
+                        <div class="img-map">
+                          <img class="map-img" src="https://b.basemaps.cartocdn.com/dark_nolabels/5/15/10@2x.png" alt=" carto db">
+                          </div>
+                            <div class="map-desc">Carto DB</div>
+              </div>
+                
+        </div>
+              <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">Layers</div>
+              <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>
+            </div>
+            
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Base maps</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Layers</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Measure</a>
+              </li>
+            </ul>
+            </div>
+          </div>
+          <!-- RIGHT SIDEBAR ENDS -->
 
+<<<<<<< HEAD
   <!-- main map component -->
     <div class="">
         
             <div id="mapid">
+=======
+        <!-- main map component -->
+          <div class="">
+                  <div id="mapid">
+>>>>>>> master
 
-            </div>  
-    </div>
+                  </div>  
+          </div>
 
-    </div>
+          </div>
 
     <!-- Modal -->
           

@@ -1,5 +1,15 @@
+body{
+  overflow: hidden;
+  width: 100vw;
+}
+.map-name{
+  height:50px !important;
+}
+.utility .collapse{
+  display:flex !important;
+}
 .utility{
-    height: 70px;
+    height: 44px;
     background: white !important;
     color: #ddd !important;
 }
@@ -29,7 +39,7 @@
     top:0;
     right: -70px;
     color: blue;
-    
+
 }
 .input-control{
     background: transparent;
@@ -62,8 +72,13 @@
 
 
 /* map */
+<<<<<<< HEAD
 #mapid { 
     height: calc(100vh - 125px); 
+=======
+#mapid {
+    height: calc(100vh - 105px);
+>>>>>>> master
 }
 
 
@@ -72,17 +87,23 @@
 .legend {
     padding: 6px 8px;
     width: 300px;
-    min-height: 400px;
+    height: auto;
+    max-height:350px;
+    /* overflow: hidden; */
     font: 14px Arial, Helvetica, sans-serif;
     background: white;
     background: rgba(255, 255, 255, 0.8);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    /*border-radius: 5px;*/
     line-height: 24px;
     color: #555;
     transition: all .3s linear;
     opacity: 1 !important;
     display: block !important;
+  }
+  .legend-content{
+    overflow-y: scroll ;
+    overflow-x: hidden;
+    height: 300px;
   }
   .trans-open{
     transform: translateX(-325px)
@@ -93,12 +114,12 @@
     margin: 2px 12px 8px;
     color: #777;
   }
-  
+
   .legend span {
     position: relative;
     bottom: 3px;
   }
-  
+
   .legend i {
     width: 18px;
     height: 18px;
@@ -106,18 +127,21 @@
     margin: 0 8px 0 0;
     opacity: 0.7;
   }
-  
+
   .legend i.icon {
     background-size: 18px;
     background-color: rgba(255, 255, 255, 1);
   }
-  
-  
+
+
   .legend .anchor{
-    width: 30px;
-    height: 30px;
-    background: orange;
-  /*   transform: translateX(200px); */
+    padding: 10px;
+    height: 35px;
+    line-height: 10px;
+    /* width: 30px; */
+    /* height: 30px; */
+    background: rgb(0, 9, 138);
+    /* padding: 10px;   */
     position: absolute;
     top:0;
     left: 101%;
@@ -129,10 +153,10 @@
   }
 
 
-  .main-side-bar {
+  .map-sidebar .main-side-bar {
     padding: 6px 8px;
     width: 300px;
-    min-height: 400px;
+    min-height: 200px;
     font: 14px Arial, Helvetica, sans-serif;
     background: white;
     background: rgba(255, 255, 255, 0.8);
@@ -147,33 +171,33 @@
   .slide-left{
     transform: translateX(322px)
   }
-  .main-side-bar h4 {
+  .map-sidebar .main-side-bar h4 {
     text-align: center;
     font-size: 16px;
     margin: 2px 12px 8px;
     color: rgb(1, 6, 80);
   }
-  
-  .main-side-bar span {
+
+  .map-sidebar .main-side-bar span {
     position: relative;
     bottom: 3px;
   }
-  
-  .main-side-bar i {
+
+  .map-sidebar .main-side-bar i {
     width: 18px;
     height: 18px;
     float: left;
     margin: 0 8px 0 0;
     opacity: 0.7;
   }
-  
-  .main-side-bar i.icon {
+
+  .map-sidebar .main-side-bar i.icon {
     background-size: 18px;
     background-color: rgba(255, 255, 255, 1);
   }
-  
-  
-  .main-side-bar .anchor{
+
+
+  .map-sidebar .main-side-bar .anchor{
     width: 30px;
     height: 30px;
     background: orange;
@@ -211,7 +235,7 @@
 }
 
 
-  
+
 .leaflet-draw-section {
     position: relative;
     margin-right: 5px;
@@ -284,6 +308,7 @@ ul.leaflet-draw-actions{
 }
 
 
+<<<<<<< HEAD
 
 
 
@@ -310,3 +335,179 @@ ul.leaflet-draw-actions{
 url('../img/brand/bgMap.png') !important;
 }
 
+=======
+.leaflet-top.leaflet-left{
+  /* background: rebeccapurple; */
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+
+
+/* Base MAp LEGENDS */
+.map-sidebar button[data-target="#collapseOne"], button[data-target="#collapseTwo"], button[data-target="#collapse3"]{
+  width: 100%;
+}
+.main-side-bar .card-header{
+  height: 50px;
+  padding: 0;
+}
+.base-map{
+  max-height: 200px;
+  overflow-y: scroll;
+}
+.card .map-thumb{
+  position: relative;
+  width: 100px;
+  height: 100px;
+/*   background: blue; */
+  margin: 5px;
+}
+/* .map-thumb::before{
+  content:'';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #222;
+  top:0;
+  opacity: 0.3;
+} */
+.card .map-thumb img{
+/*   border: 2px solid red;; */
+  display: block;
+  width: 100%;
+}
+.map-thumb-tag{
+  position: absolute;
+  bottom:10%;
+  left:0;
+  right:0;
+  height: 25%;
+  text-align: center;
+  color: #fff;
+  font-size: 10px;
+
+  padding: 5px;
+}
+.map-thumb-wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+
+.leaflet-control-measure{
+  margin-top: 20px !important;
+}
+
+/* DOM SIDEBAR */
+.side-open{
+  transform: translateX(120%)
+}
+.map-sidebar {
+width:320px;
+  /* min-height: 300px; */
+background: #FCFCFC;
+position: absolute;
+right: 5%;
+bottom: 5%;
+padding: 10px;
+-webkit-box-shadow: -9px 7px 47px -14px rgba(0,0,0,0.55);
+-moz-box-shadow: -9px 7px 47px -14px rgba(0,0,0,0.55);
+box-shadow: -9px 7px 47px -14px rgba(0,0,0,0.55);
+transition: transform 0.4s ease-in-out;
+z-index: 10000;
+}
+
+.sidebar-inner{
+width:100%;
+height: 100%;
+min-height: 200px;
+/*   background: red; */
+position: relative;
+bottom: -2%;
+}
+
+.sidebar-header{
+margin-right: auto
+}
+.sidebar-anchor{
+background:  rgb(0, 9, 138);
+padding: 10px;
+height: 35px;
+line-height: 10px;
+color: #fff;
+position: absolute;
+right: 100%;
+}
+
+.sidebar-inner .tab-content{
+min-height: 200px;
+max-height:400px;
+overflow-y: scroll;
+}
+
+
+/* CUSTOMIZE SCROLL BAR */
+/* width */
+::-webkit-scrollbar {
+width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+background: #f1f1f1;
+display: none
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: #555;
+}
+
+.map-thumb{
+padding: 5px;
+display: flex;
+align-items: center;
+height: 60px;
+/*   background: red; */
+transition: all .4s ease;
+}
+.base-active{
+background: #7e8a9773;
+
+}
+
+.map-thumb:hover{
+background: #f5f5f5;
+}
+.map-img{
+max-width: 100%;
+height: auto;
+}
+.img-map{
+width: 50px;
+height: 50px;
+margin-right: 10px
+}
+.map-desc{
+color: #333;
+}
+.sidebar hr{
+  padding-top: 0 !important;
+}
+
+/* Layer Bar */
+.layer{
+  border-bottom: 1px dashed #1a174d;
+  padding: 5px 0  0 5px;
+  margin-top: 2px;
+  display: flex;
+  justify-content: space-between;
+}
+>>>>>>> master
