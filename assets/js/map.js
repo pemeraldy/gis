@@ -9,7 +9,8 @@ $.ajaxSetup({
 let techMap,
     leyerOSM,
     zoomInBtn,
-    zoomOutBtn,    
+    zoomOutBtn,
+    easyBtn,
     measure,
     baseWaterColor,
     baseTopo,
@@ -17,30 +18,27 @@ let techMap,
     baseMapContoller,
     baseLayers,
     overlays,
-    overlaysArray,
     featureGRP,
     drawController,
-    layerPPMV,
+    layerData,
     drawnItems,
     drawControl,
     drawStyle,
     measureControl,
     layerSearch,
-    mainSideBar,
-    legend,
-    layerMarkerCluster,
-    layerHospital
+    mainSideBar
 
 $(document).ready(function () {
     //init setting
-    techMap = L.map('mapid', {
-        zoomControl:false
-    }).setView([6.465422, 3.406448], 5);
-    
+    techMap = L.map('mapid', { zoomControl: false }).setView([6.6088, 3.2545], 9);
+
+    //######## adding markers to map at will for position purpose#######
+    // techMap.on("click", function(e){
+    //     new L.Marker([e.latlng.lat, e.latlng.lng]).addTo(techMap);
+    //  })
+
     // Scale display at bottom left
     L.control.scale().addTo(techMap)
-    // drawStyle = L.control.styleEditor().addTo(techMap)
-
 
     //*********** BASE MAP OPTIONS ***********/
     leyerOSM = L.tileLayer.provider('OpenStreetMap')
@@ -50,55 +48,92 @@ $(document).ready(function () {
     baseTopo = L.tileLayer.provider('OpenTopoMap')
     baseCartoDB = L.tileLayer.provider('CartoDB.DarkMatter')
 
-    overlaysArray = []
 
-    // ######## data AJAX  Calls #########
+    // ######## AJAX data Calls #########
+    // Dataset layer
+    layerData = L.geoJSON.ajax('features', {
+        'pointToLayer': dataMarker,
+    }).addTo(techMap)
+    layerData.on('data:loaded', () => {
+        techMap.fitBounds(layerData.getBounds())
+        console.log(layerData)
+    }).addTo(techMap)
+
+    // PPMV
     layerPPMV = L.geoJSON.ajax('data/PPMV.geojson', {
         'pointToLayer': dataMarker,
-        onEachFeature: feat1
+        'onEachFeature': feat1
+    })
+    layerPPMV.on('data:loaded', () => {
+        techMap.fitBounds(layerPPMV.getBounds());
+
     })
 
-
-     layerHospital = L.geoJSON.ajax('data/hospital.geojson', {
+    // CP
+    layerCP = L.geoJSON.ajax('data/CP.geojson', {
         'pointToLayer': dataMarker,
-        onEachFeature: feat1
     })
-    
-    let lagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
-        'pointToLayer': dataStyler,
-        onEachFeature: popUpData
+    layerCP.on('data:loaded', () => {
+        techMap.fitBounds(layerCP.getBounds())
     })
 
-    let states = L.geoJSON.ajax('data/Nigeria_states.geojson', {
-        'pointToLayer': dataStyler,
-        onEachFeature: feat1,
-        style: style
+    // Hospital
+    layerHospital = L.geoJSON.ajax('data/hospital.geojson', {
+        'pointToLayer': dataMarker,
+        'onEachFeature': feat1
+    })
+    layerHospital.on('data:loaded', () => {
+        techMap.fitBounds(layerHospital.getBounds())
     })
 
-    let lga = L.geoJSON.ajax('data/Nigeria_LGAs.geojson', {
-        'pointToLayer': dataStyler,
-        style: styleOne
+    // Laboratory
+    layerLaboratory = L.geoJSON.ajax('data/laboratory.geojson', {
+        'pointToLayer': dataMarker,
+        'onEachFeature': feat1
+    })
+    layerLaboratory.on('data:loaded', () => {
+        techMap.fitBounds(layerLaboratory.getBounds())
     })
 
-    
-    
-    // When Data Has Successfully Loaded
-    layerPPMV.on('data:loaded', () =>{        
-        overlaysArray.push(layerPPMV)
-        
+    // lagos State
+    layerLagos = L.geoJSON.ajax('data/lagos_state.geojson', {
+        'pointToLayer': dataMarker,
     })
 
-    states.on('data:loaded', () =>{
-        overlaysArray.push(states)
-        // states.fitBounds(states.getBounds())
+    layerLagos.on('data:loaded', () => {
+        techMap.fitBounds(layerLagos.getBounds())
+    })
+
+    // lagos State LGA
+    layerLagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
+        'pointToLayer': dataMarker,
+    })
+
+    layerLagosLGA.on('data:loaded', () => {
+        techMap.fitBounds(layerLagosLGA.getBounds())
+    })
+
+    // States Layer
+    statesLayer = L.geoJSON.ajax('states', {
+        // 'pointToLayer': dataStyler,
+        'pointToLayer': dataMarker,
+    }).addTo(techMap)
+
+    // LGAs layer
+    red = { // Define your style object
+        "color": "#ff0000"
+    }
+    lgasLayer = L.geoJSON.ajax('lgas', {
+        'pointToLayer': dataMarker,
+        'style': red,
     })
 
 
     ////////// Autocomplete search
-    
+    // let url = statesLayer,
+    //     arr = [], arr1 = []
+    // $('#autocomplete').autocomplete()
 
-
-    /**STYLING FUNCTIONS**/
     function style(feature) {
         return {
             fillColor: 'green',
@@ -119,49 +154,37 @@ $(document).ready(function () {
     let stateLayer = L.geoJson(null, { onEachFeature: forEachFeature, style: style });
 
     function forEachFeature(feature, layer) {
-
         // Tagging each state poly with their name for the search control.
-        // layer._leaflet_id = feature.properties.statename;
+        layer._leaflet_id = feature.properties.statename;
 
-        let popupContent = "<p><b>STATE: </b>"+ feature.properties.statename +
-            "</br>REGION: "+ feature.properties.statecode 
-            
+        let popupContent = "<p><b>STATE: </b>" + feature.properties.statename +
+            "</br>REGION: " + feature.properties.statecode
+
         layer.bindPopup(popupContent);
 
-        layer.on("click", function (e) { 
-            states.setStyle(style); //resets layer colors
+        layer.on("click", function (e) {
+            stateLayer.setStyle(style); //resets layer colors
             layer.setStyle(highlight);  //highlights selected.
         });
     }
 
-    // let stateLayer = L.geoJson(states, {onEachFeature: forEachFeature, style: style});
-    //     stateLayer.addTo(techMap)
-    $.getJSON(states, function(data) {
-            states.addData(data);
-        
-            for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
-                arr1.push({label:data.features[i].properties.statename, value:""});
-            }
-        addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
-        });
+    $.getJSON(null, function (data) {
+        stateLayer.addData(data);
 
-    states.addTo(techMap);
+        for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
+            arr1.push({ label: data.features[i].properties.statename, value: "" });
+        }
+        // addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
+    });
 
-	
-	
+    stateLayer.addTo(techMap);
 
-
-    // ############### HEATMAP ######
-    // Heat map deals with points will later create a point extractor function
-        
     // Draw controller
-    drawnItems = new L.FeatureGroup();
-        techMap.addLayer(drawnItems);
-    
-        let drawned  = new L.FeatureGroup()
-        let drawnedJSON = drawned.toGeoJSON()
-        // console.log(drawnedJSON)
-        drawned.addTo(techMap) 
+    drawnItems = new L.FeatureGroup()
+    techMap.addLayer(drawnItems)
+    // console.log(drawnItems)
+    // let drawned = new L.FeatureGroup()
+    // drawned.addTo(techMap)
 
     baseLayers = {
         "Open Street Map": leyerOSM,
@@ -170,22 +193,28 @@ $(document).ready(function () {
         "Water Color": baseWaterColor
     }
 
-    overlays  = {
-        "Lagos PPMV": layerPPMV,
-        "Hospital" : layerHospital,
-        "live drawn": drawnItems,
-        // "heat map": heat,
-        "Lagos LGA": lagosLGA,
-        "States": states,
-        "Local Govt.": lga
+    overlays = {
+        "States": statesLayer,
+        "LGAs": lgasLayer,
+        "Lagos": layerLagos,
+        "LagosLGAs": layerLagosLGA,
+        "PPMV": layerPPMV,
+        "CP": layerCP,
+        "Hospital": layerHospital,
+        "Laboratory": layerLaboratory,
+        "Dataset": layerData,
+        "Draw Layer": drawnItems
     }
 
-    baseMapContoller = L.control.layers(baseLayers, overlays, {
-        collapse: false,
-        expand: true
-    })
-     
-        
+    // baseMapContoller = L.control.layers(baseLayers, overlays, {
+    //     collapse: false,
+    //     expand: false
+    // }).addTo(techMap)
+     // console.log(drawnItems)
+
+    // easyBtn = L.easyButton('fa-globe', function () {
+    //     console.log('hey')
+    // }).addTo(techMap)
 
     // get user location using the capital L key
     techMap.on('keypress', function (e) {
@@ -245,205 +274,132 @@ $(document).ready(function () {
     techMap.on('draw:created', function (e) {
         let type = e.layerType,
             layer = e.layer
-        
-            if (type === 'circle') {
-                layer.bindTooltip('<b>Radius: </b>'+ (layer._mRadius/1000).toFixed(3)+' km');
-                console.log(e, layer.toGeoJSON())                
-            }
-            if (type === 'rectangle') {
-                layer.bindTooltip('width: '+e.sourceTarget._size.x +'km <br/> Height '+e.sourceTarget._size.y+'km');
-                console.log( e, layer, e.sourceTarget._size)                
-            }
-            if (type === 'polygon') {
-                layer.bindTooltip('');
-                console.log( layer)                
-            }
+
+        if (type === 'circle') {
+            layer.bindTooltip('<b>Radius: </b>' + (layer._mRadius / 1000).toFixed(3) + ' km');
+            // console.log(layer._mRadius, e, layer)
+        }
+        if (type === 'rectangle') {
+            layer.bindTooltip('width: ' + e.sourceTarget._size.x + 'km <br/> Height ' + e.sourceTarget._size.y + 'km');
+            // console.log(e, layer, e.sourceTarget._size)
+        }
+        if (type === 'polygon') {
+            layer.bindTooltip('');
+            // console.log(layer)
+        }
+
         drawnItems.addLayer(layer);
-        let newGeo = layer.toGeoJSON()
-        // console.log(newGeo)
-        
-        // sendDraw()
+        // let newGeo = JSON.stringify(layer.toGeoJSON())
+
     });
 
 
     drawStyle = L.control.styleEditor().addTo(techMap)
 
     // Measure area and line
-    measureControl = new L.Control.Measure({position: 'topleft', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters'});
-    let oldContainer =  measureControl.getContainer()
-    let newMeasureToolCont = document.querySelector('#pills-contact');
-    newMeasureToolCont.append(oldContainer);
+    measureControl = new L.Control.Measure({ position: 'topright', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters' });
     measureControl.addTo(techMap);
+    measure = L.control.polylineMeasure().addTo(techMap);
 
-    // Measure control button
-    // measure = L.control.polylineMeasure().addTo(techMap);
-
-    
-    // ######### Feature INfo Bar ###########
+    // #########LEGEND TEMPLATES ###########
 
     // ######### Feature INfo Bar ###########
 
     /*Legend specific*/
-  legend = L.control({ position: "bottomleft" });
+    legend = L.control({ position: "bottomleft" });
 
     legend.onAdd = function(featPoint) {
-      let div = L.DomUtil.create("div", "legend trans-open");
-     if(featPoint == undefined){
-        return false
-    }else {
-      div.innerHTML += `<h2>Feature Info</h2>`;
-      div.innerHTML += `<div class='anchor'><i class="fas fa-chevron-right"></i></div>`;
-      div.innerHTML += `<div class="legend-content">
-                            <div class="card" style="width: 18rem;">
-                                
-                                <div class="card-body">
-                                    <h2 class="card-title" id="feat-name">Click a layer/point to view properties</h2>                                                                   
-                                </div>
-                            </div>
-                           
-                        </div>`
+        let div = L.DomUtil.create("div", "legend trans-open");
+       if(featPoint == undefined){
+          return false
+      }else {
+        div.innerHTML += `<h2>Feature Info</h2>`;
+        div.innerHTML += `<div class='anchor'><i class="fas fa-chevron-right"></i></div>`;
+        div.innerHTML += `<div class="legend-content">
+                              <div class="card" style="width: 18rem;">
 
-      return div;
-        }
-    };
+                                  <div class="card-body">
+                                      <h2 class="card-title" id="feat-name">Click a layer/point to view properties</h2>
+                                  </div>
+                              </div>
 
-    // ******DYNAMICALLY ADD LAYER *************
-    // $('#collapseOne').click(function addNewLayer() {
-    //     //create new layer
-    //     let imageOverlayNew = new L.imageOverlay(imageOverlayUrlNew, bounds);
-    //     //add it to a control
-    //     layerControl.addOverlay(imageOverlayNew, newLayerName);
-    // });
+                          </div>`
+
+        return div;
+          }
+      };
+
+      legend.addTo(techMap);
 
     // ********UTILITY SIDEBAR******
 
     // mainSideBar = L.control({ position: "bottomright" });
 
-    // mainSideBar.onAdd = function() {
-    //   let div = L.DomUtil.create("div", "main-side-bar slide-left")
-    // div.innerHTML += `<h4>Utilities</h4>`;
-    // div.innerHTML += `<div class='anchor'>&lt</div>`    
-    // div.innerHTML += `<div class="accordion" id="accordionExample">`
-    // div.innerHTML += `<div class="card base-map ">
+    // mainSideBar.onAdd = function () {
+    //     var div = L.DomUtil.create("div", "main-side-bar slide-left");
+    //     div.innerHTML += `<h4>Utilities</h4>`;
+    //     div.innerHTML += `<div class='anchor'>&lt</div>`;
+    //     div.innerHTML += `<div class="accordion" id="accordionExample">`
+    //     div.innerHTML += `<div class="card ">
     //     <div class="card-header" id="headingOne">
     //     <h2 class="mb-0">
     //         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-    //             Base Maps
+    //         Buffer Area
     //         </button>
     //     </h2>
     //     </div>
 
     //     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-    //     <div class="card-body map-thumb-wrapper">
-    //             <div id="osm" class="map-thumb">
-    //                 <img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/5/10/10" alt="open street map">
-    //                 <div class="map-thumb-tag">OSM</div>
-    //             </div>
-
-    //             <div id="cartoDb" class="map-thumb">
-    //                 <img src="https://b.basemaps.cartocdn.com/dark_nolabels/5/15/10@2x.png" alt=" carto db">
-    //                 <div class="map-thumb-tag">Carto DB</div>
-    //             </div>
-                
-    //             <div id="openTopo" class="map-thumb">
-    //                 <img src="https://b.tile.opentopomap.org/5/15/10.png" alt="open topo">
-    //                 <div class="map-thumb-tag">Open Topo</div>
-    //             </div>
-
-    //             <div id="waterpaint" class="map-thumb">
-    //                 <img src="https://stamen-tiles-b.a.ssl.fastly.net/watercolor/5/15/10.jpg" alt="open topo">
-    //                 <div class="map-thumb-tag">Open Topo</div>
-    //             </div>
-
+    //     <div class="card-body">
+    //         Anim p
     //     </div>
     //     </div>
-    //     </div>
-        
-    // </div>`  
+    // </div>`
     //     div.innerHTML += `<div class="card">
-    //         <div class="card-header" id="headingTwo">
-    //         <h2 class="mb-0">
-    //             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-    //                 Buffer Tool
-    //             </button>
-    //         </h2>
-    //         </div>
-    //         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    //         <div class="card-body">
-    //             Buffer Area 
-    //         </div>
-    //         </div>
-    //     </div>`
+    //     <div class="card-header" id="headingTwo">
+    //     <h2 class="mb-0">
+    //         <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+    //         Query Search
+    //         </button>
+    //     </h2>
+    //     </div>
+    //     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    //     <div class="card-body">
+    //         Buffer Area
+    //     </div>
+    //     </div>
+    // </div>`
+    //     div.innerHTML += `</div>`
+    //     div.innerHTML += `</div>`         //end div for query side bar
 
-    //     div.innerHTML += `<div class="card">
-    //         <div class="card-header" id="heading3">
-    //         <h2 class="mb-0">
-    //             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapseTwo">
-    //             Query Search
-    //             </button>
-    //         </h2>
-    //         </div>
-    //         <div id="collapse3" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    //         <div class="card-body">
-    //             Buffer Area 
-    //         </div>
-    //         </div>
-    //     </div>`
-    // div.innerHTML += `</div>`                         
-    // div.innerHTML += `</div>`                     
-                       
 
-    //   return div;
+    //     return div;
     // };
-    
-    // mainSideBar.addTo(techMap)
-    
-    document.getElementById('osm').addEventListener('click', () =>{
-        L.tileLayer.provider('OpenStreetMap').addTo(techMap)
-     })
-     document.getElementById('cartoDb').addEventListener('click', () =>{
-        L.tileLayer.provider('CartoDB.DarkMatter').addTo(techMap)
-     })
-     document.getElementById('openTopo').addEventListener('click', () =>{
-        L.tileLayer.provider('OpenTopoMap').addTo(techMap)
-     })
-    //  document.getElementById('waterpaint').addEventListener('click', () =>{
-    //     L.tileLayer.provider('Stamen.Watercolor').addTo(techMap)
-    //  })
-     
-
-     
+    // mainSideBar.addTo(techMap); //Add created side bar to map
 
     // Control slide in n out of infoBars
-    // const inforBarState = (el,togglClass) =>{
-    //   let element = document.querySelector(`.${el}`)
-    //   element.classList.toggle(`${togglClass}`)
+    // const inforBarState = (el, togglClass) => {
+    //     let element = document.querySelector(`.${el}`)
+    //     element.classList.toggle(`${togglClass}`)
     // }
-    
-    const anchor = document.querySelector('.anchor') //anchor button on legend bar    
-    anchor.addEventListener('click', () => inforBarState('legend','trans-open'))
 
-    // const sideBarAnchor = document.querySelector('.main-side-bar .anchor') //anchor button on utility side bar
-    // sideBarAnchor.addEventListener('click', () => inforBarState('main-side-bar','slide-left'))
-    
-    
-      
-     
-      techMap.on('click', function(e) {
-        // let attr = json.properties
-            console.log(e)
-            // console.log(e.target)
-            // return L.circleMarker(json.latlng).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
-            // Address: ${attr.address} <br> 
-            // Wardcode: <i class="text-success">${attr.wardcode}</i>`)
-        });
+    const anchor = document.querySelector('.anchor') //anchor button on legend bar
+    anchor.addEventListener('click', () => inforBarState('legend', 'trans-open'))
 
-        
-       fillLayer()      
-       
+    // const sideBarAnchor = document.querySelector('.main-side-bar .anchor') //anchor button on utility side bar bar
+    // sideBarAnchor.addEventListener('click', () => {
+    //     inforBarState('main-side-bar', 'slide-left')
+    //     console.log('heu')
+    // })
+
+    fillLayer()
+
+
 })
 
-// ############# GLOBLA SCOPE -- OUTSIDE IFFE##############
+
+// ###########################
+//    outside ready function
 
 // toggle Draw Controller
 function toggleDraw(){
@@ -457,10 +413,8 @@ const inforBarState = (el,togglClass) =>{
   }
 
   const sideAnchor = document.querySelector('.sidebar-anchor') //anchor button on legend bar
-    
+
   sideAnchor.addEventListener('click', () => inforBarState('map-sidebar', 'side-open'))
-
-
 
 function dataMarker(json, latlng) {
     let attr = json.properties
@@ -482,42 +436,28 @@ function dataMarker(json, latlng) {
         Address: ${attr.address} <br>
         Wardcode: <i class="text-success">${attr.address}</i>`, { direction: 'top' })
     }
-
-    function highlightFeature(e) {
-        let layer = e.target;
-    
-        layer.setStyle({
-            weight: 2,
-            color: 'yellow',
-            dashArray: '',
-            fillOpacity: 0.4
-        });
-    
-        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-            layer.bringToFront();
-        }
+    else {
+        return L.marker(latlng, {
+            icon: iconHospital,
+        }).bindTooltip(`<b>LGA:${attr.lga}</b> <br>
+        Address: ${attr.address} <br>
+        Wardcode: <i class="text-success">${attr.wardcode}</i>`)
     }
 
-
-    function stateAttribute(feat, layer){
-        layer.on({
-            // mouseover: highlightFeature,
-            // mouseout: resetHighlight,
-            // click: zoomToFeature
-        }).bindTooltip(`<div class="card"> ${feat.properties.statename}</div>`)
-    }
+}
 
 function highlightFeature(e) {
     var layer = e.target;
 
-    function popUpData(feature, ltlng){
-        let feat = feature
-        let att = feature.properties 
-        let res = []
-        if(att){
-            res.push(att.name)
-            // console.log('from popup data',res,feat)
-        }
+    layer.setStyle({
+        weight: 2,
+        color: 'yellow',
+        dashArray: '',
+        fillOpacity: 0.4
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
     }
 }
 
@@ -599,58 +539,16 @@ function onMapClick(coords) {
         techMap.removeLayer(clickmark);
     };
 
-    // ************ASIGN CUSTOM MARKERS*************
-   let iconPPMV = L.divIcon({
-            className: 'custom-div-icon',
-            html: "<div style='color:#fff;' class='marker-pin-two'></div><i class='fas fa-capsules awesome fa-3x'>",
-            iconSize: [30, 42],
-            iconAnchor: [15, 42]
-        })
-
-        let iconHospital = L.divIcon({
-            className: 'custom-div-icon',
-            html: "<div background-color:#4838cc;' class='marker-pin-one'></div><i class='fas fa-hospital awesome fa-3x'>",
-            iconSize: [30, 42],
-            iconAnchor: [15, 42]
-        });
-
-        let iconLaboratory = L.divIcon({
-            className: 'custom-div-icon',
-            html: "<div style='color:#fff;' class='marker-pin-one'></div><i class='fas fa-flask awesome fa-3x'>",
-            iconSize: [30, 42],
-            iconAnchor: [15, 42]
-        });
-
-
-
-        /*********CUSTOM FUNCTONS**********/
-
-        // click marker
-  let clickmark;
-
-  // When you click on a circle, it calls the onMapClick function and passes the layers coordinates.
-  // I grab the coords which are X,Y, and I need to flip them to latLng for a marker,  
-  function onMapClick(coords) {
-		console.log(coords);
-		let thecoords = coords.toString().split(',');
-		let lat = thecoords[1];
-        let lng = thecoords[0];
-        console.log('click mark',clickmark)
-		//if prior marker exists, remove it.
-		if (clickmark != undefined) {
-		  techMap.removeLayer(clickmark);
-		};
-  
-		 clickmark = L.circleMarker([lat,lng],{
-			radius: 8,
-			//opacity: 1,
-			color: "yellow",
-			fillColor:  "yellow",
-			fillOpacity: 0.8}
-		 ).addTo(techMap);
-	}
+    clickmark = L.circleMarker([lat, lng], {
+        radius: 8,
+        //opacity: 1,
+        color: "yellow",
+        fillColor: "yellow",
+        fillOpacity: 0.8
+    }
+    ).addTo(techMap);
+}
 // end of code for click marker.
-
 
 function feat1 (feature, layer) {
 
@@ -664,8 +562,8 @@ function feat1 (feature, layer) {
                 let value = props[key]
                 console.log(`<b> ${key}</b>:${value}`)
             }
-            
-            
+
+
             document.querySelector('.legend-content').innerHTML = `
             <div class="card" style="width: 18rem;">
             <img id="feat-img" class="card-img-top" src="" alt="image of state">
@@ -676,16 +574,16 @@ function feat1 (feature, layer) {
                     <button class="btn btn-info disabled btn-sm">Capital</button>:<b id="feat-num">${feature.properties.capcity}</b> <br><br>
                     <button class="btn btn-info disabled btn-sm">Geozone</button>:<b id="feat-lga">${feature.properties.geozone}</b> <br><br>
                     <span class="badge badge-info">State code:${feature.properties.statecode}</span><br>
-                </div>                                    
+                </div>
             </div>
         </div>
 
             `
-            
+
         }else if(feature.geometry.type == "Point"){
-            onMapClick(coords)            
+            onMapClick(coords)
             // console.log(feature.properties)
-            
+
             for(let key in props){
                 let value = props[key]
                 console.log(`this is ${key} and ${value}`)
@@ -696,16 +594,16 @@ function feat1 (feature, layer) {
                 <div class="card-body">
                     <h3 class="card-title">${feature.properties.name}</h3>
                     <p class="card-text">
-                        <div class="">Address: ${feature.properties.address}</div> 
+                        <div class="">Address: ${feature.properties.address}</div>
                         <div class="">Number: ${feature.properties.phone_number} </div>
                         <div class="">LGA: ${feature.properties.lga} </div>
-                        <div class="">State: ${feature.properties.state}</div> 
+                        <div class="">State: ${feature.properties.state}</div>
                         <span class="badge badge-default">${feature.properties.address}</span>
                     </p>
                     <a href="#" class="btn btn-success btn-sm">More...</a>
                 </div>
             </div>
-            
+
             `
         }else{
             document.querySelector('.legend-content').innerHTML = ` <h2>Click a Layer to display properties</h2> `
@@ -749,14 +647,14 @@ const mapThumb = document.querySelectorAll('.map-thumb')
 
 // TOGGLE ACTIVE CLASS FOR BASE MAPS
 mapThumb.forEach( thum =>{
-    
+
     thum.addEventListener('click', function(e){
 
     mapThumb.forEach(thum => thum.classList.remove('base-active'))
     thum.classList.toggle('base-active')
-    
+
 } )
-    
+
 })
 
 // SIDE BAR crumbs BUTTONS
@@ -765,6 +663,16 @@ const sideBarHeader = document.querySelector('.sidebar-header')
 sideBarBtns.forEach( btn =>{
     // Set Header of Side Bar on CLick of BTNS
     btn.addEventListener('click', (e) => { sideBarHeader.innerText = btn.innerText } )
-    
-})
 
+})
+// save drawn items layer
+$(".save-map").click(function (e) {
+    $.ajax({
+        type: 'POST',
+        url: '/drawnSave',
+        data: drawnItems,
+        success: function (data) {
+            alert(data.success);
+        }
+    });
+});
