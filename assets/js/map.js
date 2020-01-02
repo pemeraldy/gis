@@ -667,10 +667,12 @@ sideBarBtns.forEach( btn =>{
 })
 // save drawn items layer
 $(".save-map").click(function (e) {
+    geom = drawnItems.toGeoJSON();
+    console.log(geom)
     $.ajax({
         type: 'POST',
         url: '/drawnSave',
-        data: drawnItems,
+        data: geom,
         success: function (data) {
             alert(data.success);
         }
