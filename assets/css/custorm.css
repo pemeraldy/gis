@@ -327,6 +327,7 @@ button[data-target="#collapseOne"], button[data-target="#collapseTwo"], button[d
   position: relative;
   width: 100px;
   height: 100px;
+  cursor: pointer;
 /*   background: blue; */
   margin: 5px;
 }
@@ -476,4 +477,5 @@ color: #333;
   margin-top: 2px;
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
 }
