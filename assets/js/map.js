@@ -449,7 +449,7 @@ const inforBarState = (el,togglClass) =>{
 
   const sideAnchor = document.querySelector('.sidebar-anchor') //anchor button on legend bar
     
-  sideAnchor.addEventListener('click', () => inforBarState('sidebar', 'side-open'))
+  sideAnchor.addEventListener('click', () => inforBarState('map-sidebar', 'side-open'))
 
 
 
