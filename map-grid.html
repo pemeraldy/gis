@@ -109,10 +109,10 @@
             <i class="ni ni-bell-55"></i>
           </a>
           <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right" aria-labelledby="navbar-default_dropdown_1">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">...</a>
+            <a class="dropdown-item" href="#">...</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
+            <a class="dropdown-item" href="#">...</a>
           </div>
         </li> -->
         <li class="nav-item dropdown">
@@ -272,13 +272,12 @@
                         </ul>
 
                         <!-- Toggle private/public -->
-                        <ul class="navbar-nav ml-lg-auto">
-                            <label class="custom-toggle private">
-                                <!-- <span style="display:inline-block; margin-left: 20px;">Hello</span> -->
+                        <!-- <ul class="navbar-nav ml-lg-auto">
+                            <label class="custom-toggle private">                               
                                 <input type="checkbox" checked data-toggle="modal" data-target="#exampleModal">
                                 <span class="custom-toggle-slider rounded-circle"></span>
                             </label>
-                        </ul>
+                        </ul> -->
                         
                         <!-- download and share -->
                         <ul class="navbar-nav ml-lg-auto">
@@ -300,22 +299,7 @@
                             </li>                                                        
                         </ul>
                         
-                        <!-- Zoom in and out -->
-                        <!-- <ul class="navbar-nav ml-lg-auto" id="zoom-tool">
-
-                            <li id="zoom-out" class="nav-item">
-                                <a class="nav-link nav-link-icon" href="#">
-                                  <i class="fas fa-search-minus"></i>                                    
-                                </a>
-                            </li> 
-
-                            <li id="zoom-in" class="nav-item">
-                                <a class="nav-link nav-link-icon" href="#">
-                                  <i class="fas fa-search-plus"></i>
-                                </a>
-                            </li> 
-                                                                                  
-                        </ul> -->
+                        
                         
                     </div> 
                     
@@ -324,230 +308,55 @@
         </div>
         <!-- end Header -->
 
-    <!-- Page content -->
-    
-    
-
-  <!-- main feature table -->
-    <div class="table-wrap">
-        <div class="container-fluid mt-4">
-            <!-- Table -->
-            <div class="row">
-                <div class="col">
-                <div class="card shadow">
-                  <div class="card-header border-0">
-                    <h3 class="mb-0">Map feature table</h3>
-                  </div>
-                  <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
-                      <thead class="thead-light">
-                        <tr>
-                          <th scope="col">{table head1}</th>
-                          <th scope="col">{table head2}</th>
-                          <th scope="col">{table head3}</th>
-                          <th scope="col">{table head4}</th>
-                          <th scope="col">{table head5}</th>
-                          <th scope="col"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row">
-                            <div class="media align-items-center">                              
-                              <div class="media-body">
-                                <span class="mb-0 text-sm">Data</span>
-                              </div>
+   <!-- MAP GRID STARTS -->
+          <div class="container-fluid mt-4">
+              <div class="row">
+                  <!-- <div class="col-sm-1"></div> -->                 
+                 <div class="col-sm-4 mb-3">
+                    <div class="card map-grid" >
+                        <div class="card-body">
+                            <h5 class="card-title">Uplaod Map</h5>
+                            <div class="">
+                                <img class="card-img" src="https://picsum.photos/1000" alt="map...">
                             </div>
-                          </th>
-                          <td>
-                            70.03 N
-                          </td>
-                          <td>
-                            <span class="badge badge-dot mr-4">
-                              <i class="bg-warning"></i> 89.9 S
-                            </span>
-                          </td>
-                          <td>
-                            <div class="avatar-group">
-                              PPMV
+                            
+                          </div>
+                      </div>
+                 </div>
+
+                 <div class="col-sm-4 mb-3">
+                    <div class="card map-grid">
+                        <div class="card-body">
+                            <h5 class="card-title">Map title</h5>
+                            <div class="">
+                                <img class="card-img" src="https://picsum.photos/1000" alt="map...">
                             </div>
-                          </td>
-                          <td>
-                            <div class="d-flex align-items-center">
-                              <span class="mr-2">60%</span>
-                              <div>
-                                <div class="progress">
-                                  <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                </div>
-                              </div>
+                            
+                            <div class="mt-2">
+                                <a href="#" class="card-link">public</a>
+                            <a href="#" class="card-link">Private</a>
                             </div>
-                          </td>
-                          <td class="text-right">
-                            <div class="dropdown">
-                              <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-ellipsis-v"></i>
-                              </a>
-                              <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="#">Delete</a>
-                                <a class="dropdown-item" href="#">Update</a>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-
-                        <tr>
-                            <th scope="row">
-                              <div class="media align-items-center">                              
-                                <div class="media-body">
-                                  <span class="mb-0 text-sm">Data</span>
-                                </div>
-                              </div>
-                            </th>
-                            <td>
-                              70.03 N
-                            </td>
-                            <td>
-                              <span class="badge badge-dot mr-4">
-                                <i class="bg-warning"></i> 89.9 S
-                              </span>
-                            </td>
-                            <td>
-                              <div class="avatar-group">
-                                PPMV
-                              </div>
-                            </td>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <span class="mr-2">60%</span>
-                                <div>
-                                  <div class="progress">
-                                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-right">
-                              <div class="dropdown">
-                                <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                  <a class="dropdown-item" href="#">Edit</a>
-                                  <a class="dropdown-item" href="#">Delete</a>
-                                  <a class="dropdown-item" href="#">Update</a>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-
-                          <tr>
-                            <th scope="row">
-                              <div class="media align-items-center">                              
-                                <div class="media-body">
-                                  <span class="mb-0 text-sm">Data</span>
-                                </div>
-                              </div>
-                            </th>
-                            <td>
-                              70.03 N
-                            </td>
-                            <td>
-                              <span class="badge badge-dot mr-4">
-                                <i class="bg-warning"></i> 89.9 S
-                              </span>
-                            </td>
-                            <td>
-                              <div class="avatar-group">
-                                PPMV
-                              </div>
-                            </td>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <span class="mr-2">60%</span>
-                                <div>
-                                  <div class="progress">
-                                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-right">
-                              <div class="dropdown">
-                                <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                  <a class="dropdown-item" href="#">Edit</a>
-                                  <a class="dropdown-item" href="#">Delete</a>
-                                  <a class="dropdown-item" href="#">Update</a>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-
-                          <tr>
-                            <th scope="row">
-                              <div class="media align-items-center">                              
-                                <div class="media-body">
-                                  <span class="mb-0 text-sm">Data</span>
-                                </div>
-                              </div>
-                            </th>
-                            <td>
-                              70.03 N
-                            </td>
-                            <td>
-                              <span class="badge badge-dot mr-4">
-                                <i class="bg-warning"></i> 89.9 S
-                              </span>
-                            </td>
-                            <td>
-                              <div class="avatar-group">
-                                PPMV
-                              </div>
-                            </td>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <span class="mr-2">60%</span>
-                                <div>
-                                  <div class="progress">
-                                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-right">
-                              <div class="dropdown">
-                                <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                  <a class="dropdown-item" href="#">Edit</a>
-                                  <a class="dropdown-item" href="#">Delete</a>
-                                  <a class="dropdown-item" href="#">Update</a>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        
-                      </tbody>
-                    </table>
-                  </div>
-            
-    </div>
-
+                          </div>
+                      </div>
                 </div>
-            </div>
 
-        </div>
-    </div>
-    <!-- Modal -->
-          
-          
-
-
-           <!-- Tab panes -->
+                <div class="col-sm-4 mb-3">
+                    <div class="card map-grid">
+                        <div class="card-body">
+                            <h5 class="card-title">Map Title</h5>
+                            <div class="">
+                                <img class="card-img" src="https://picsum.photos/1000" alt="map...">
+                            </div>
+                            
+                            <div class="mt-2">
+                                <a href="#" class="card-link">public</a>
+                            <a href="#" class="card-link">Private</a>
+                            </div>
+                          </div>
+                      </div>
+                </div>
+              
+          </div>
 
    
   <!-- Argon Scripts -->

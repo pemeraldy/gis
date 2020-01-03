@@ -10,8 +10,7 @@
   <!-- Favicon -->
   <!-- <link href="./assets/img/brand/favicon.png" rel="icon" type="image/png"> -->
   <!-- Fonts -->
-  <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"> -->
-  <link href="https://fonts.googleapis.com/css?family=Poppins:100,300,300i,400,500,700,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
   <!-- Icons -->
   <link href="./assets/vendor/nucleo/css/nucleo.css" rel="stylesheet">
   <link href="./assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
@@ -33,8 +32,8 @@
   <link rel="stylesheet" href="./assets/js/plugins/search/searchbox.min.css">
   <link rel="stylesheet" href="./assets/js/plugins/Leaflet.PolylineMeasure.css">
   <link rel="stylesheet" href="./assets/js/plugins/leaflet-search.min.css">
-  <!-- <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.css">
-  <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.Default.css"> -->
+  <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.css">
+  <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.Default.css">
 
   <!-- leaflet Javascript -->
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
@@ -62,8 +61,8 @@
   <script src="./assets/js/plugins/leaflet.filelayer.js"></script>
   <script src="./assets/js/plugins/leaflet-measure.js"></script>
   <script src="./assets/js/plugins/L.Control.SlideMenu.js"></script>
-  <!-- <script src="./assets/js/plugins/leaflet.markercluster.js"></script>
-  <script src="./assets/js/plugins/leaflet-marker-bounce.js"></script> -->
+  <script src="./assets/js/plugins/leaflet.markercluster.js"></script>
+  <script src="./assets/js/plugins/leaflet-marker-bounce.js"></script>
   
   <script src="./assets/js/plugins/search/leaflet.customsearchbox.min.js"></script>
   <script src="https://npmcdn.com/@turf/turf@5.1.6/turf.min.js"></script>
@@ -166,51 +165,9 @@
             </div>
           </div>
         </div>
-        <!-- Form -->
-        <!-- <form class="mt-4 mb-3 d-md-none">
-          <div class="input-group input-group-rounded input-group-merge">
-            <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search" aria-label="Search">
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <span class="fa fa-search">Search me</span>
-              </div>
-            </div>
-          </div>
-        </form> -->
+        
         <!-- Navigation -->
-        <ul class="navbar-nav bg-gradient-default">
-            <li class="nav-item">
-              <a class="nav-link text-light" href="#">
-                <i class="fas fa-tachometer-alt"></i> Dashboard
-              </a>
-            </li>
-  
-            <li class="nav-item" style="height: 44px">
-              <a class="nav-link text-light collapse " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-users"></i> User Management 
-              </a>
-              <div class="dropdown">                
-                  <div class="dropdown-menu dropdown-menu dropdown-menu-arrow" x-placement="top-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-161px, -60px, 0px);">
-                    <a class="dropdown-item" href="#"><i class="fas fa-unlock-alt"></i> Permision</a>
-                    <a class="dropdown-item" href="#"><i class="fas fa-briefcase"></i>Role</a>
-                    <a class="dropdown-item" href="#"><i class="fas fa-user"></i>User</a>
-                  </div>
-              </div>
-            </li>
-  
-  
-            <li class="nav-item">
-              <a class="nav-link text-light" href="#">
-                <i class="fas fa-table"></i> Data
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-light" href="#">
-                <i class="fas fa-map"></i> Maps
-              </a>
-            </li>
-            
-          </ul>
+       
         <!-- Divider -->
         <hr class="my-3">
         <!-- Heading -->
@@ -301,7 +258,7 @@
                         </ul>
                         
                         <!-- Zoom in and out -->
-                        <!-- <ul class="navbar-nav ml-lg-auto" id="zoom-tool">
+                        <ul class="navbar-nav ml-lg-auto" id="zoom-tool">
 
                             <li id="zoom-out" class="nav-item">
                                 <a class="nav-link nav-link-icon" href="#">
@@ -315,7 +272,7 @@
                                 </a>
                             </li> 
                                                                                   
-                        </ul> -->
+                        </ul>
                         
                     </div> 
                     
@@ -324,227 +281,89 @@
         </div>
         <!-- end Header -->
 
-    <!-- Page content -->
+   
     
+   
     
-
-  <!-- main feature table -->
-    <div class="table-wrap">
-        <div class="container-fluid mt-4">
-            <!-- Table -->
-            <div class="row">
-                <div class="col">
-                <div class="card shadow">
-                  <div class="card-header border-0">
-                    <h3 class="mb-0">Map feature table</h3>
-                  </div>
-                  <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
-                      <thead class="thead-light">
-                        <tr>
-                          <th scope="col">{table head1}</th>
-                          <th scope="col">{table head2}</th>
-                          <th scope="col">{table head3}</th>
-                          <th scope="col">{table head4}</th>
-                          <th scope="col">{table head5}</th>
-                          <th scope="col"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row">
-                            <div class="media align-items-center">                              
-                              <div class="media-body">
-                                <span class="mb-0 text-sm">Data</span>
-                              </div>
-                            </div>
-                          </th>
-                          <td>
-                            70.03 N
-                          </td>
-                          <td>
-                            <span class="badge badge-dot mr-4">
-                              <i class="bg-warning"></i> 89.9 S
-                            </span>
-                          </td>
-                          <td>
-                            <div class="avatar-group">
-                              PPMV
-                            </div>
-                          </td>
-                          <td>
-                            <div class="d-flex align-items-center">
-                              <span class="mr-2">60%</span>
-                              <div>
-                                <div class="progress">
-                                  <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td class="text-right">
-                            <div class="dropdown">
-                              <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-ellipsis-v"></i>
-                              </a>
-                              <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="#">Delete</a>
-                                <a class="dropdown-item" href="#">Update</a>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-
-                        <tr>
-                            <th scope="row">
-                              <div class="media align-items-center">                              
-                                <div class="media-body">
-                                  <span class="mb-0 text-sm">Data</span>
-                                </div>
-                              </div>
-                            </th>
-                            <td>
-                              70.03 N
-                            </td>
-                            <td>
-                              <span class="badge badge-dot mr-4">
-                                <i class="bg-warning"></i> 89.9 S
-                              </span>
-                            </td>
-                            <td>
-                              <div class="avatar-group">
-                                PPMV
-                              </div>
-                            </td>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <span class="mr-2">60%</span>
-                                <div>
-                                  <div class="progress">
-                                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-right">
-                              <div class="dropdown">
-                                <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                  <a class="dropdown-item" href="#">Edit</a>
-                                  <a class="dropdown-item" href="#">Delete</a>
-                                  <a class="dropdown-item" href="#">Update</a>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-
-                          <tr>
-                            <th scope="row">
-                              <div class="media align-items-center">                              
-                                <div class="media-body">
-                                  <span class="mb-0 text-sm">Data</span>
-                                </div>
-                              </div>
-                            </th>
-                            <td>
-                              70.03 N
-                            </td>
-                            <td>
-                              <span class="badge badge-dot mr-4">
-                                <i class="bg-warning"></i> 89.9 S
-                              </span>
-                            </td>
-                            <td>
-                              <div class="avatar-group">
-                                PPMV
-                              </div>
-                            </td>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <span class="mr-2">60%</span>
-                                <div>
-                                  <div class="progress">
-                                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-right">
-                              <div class="dropdown">
-                                <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                  <a class="dropdown-item" href="#">Edit</a>
-                                  <a class="dropdown-item" href="#">Delete</a>
-                                  <a class="dropdown-item" href="#">Update</a>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-
-                          <tr>
-                            <th scope="row">
-                              <div class="media align-items-center">                              
-                                <div class="media-body">
-                                  <span class="mb-0 text-sm">Data</span>
-                                </div>
-                              </div>
-                            </th>
-                            <td>
-                              70.03 N
-                            </td>
-                            <td>
-                              <span class="badge badge-dot mr-4">
-                                <i class="bg-warning"></i> 89.9 S
-                              </span>
-                            </td>
-                            <td>
-                              <div class="avatar-group">
-                                PPMV
-                              </div>
-                            </td>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <span class="mr-2">60%</span>
-                                <div>
-                                  <div class="progress">
-                                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-right">
-                              <div class="dropdown">
-                                <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                  <a class="dropdown-item" href="#">Edit</a>
-                                  <a class="dropdown-item" href="#">Delete</a>
-                                  <a class="dropdown-item" href="#">Update</a>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        
-                      </tbody>
-                    </table>
-                  </div>
-            
-    </div>
-
-                </div>
+          <!-- RIGHT SIDEBAR -->
+          <div class="map-sidebar side-open">
+            <div class="d-flex "><h2 class="sidebar-header">Map Legend</h2> <span class="sidebar-anchor"><i class="fas fa-chevron-left"></i></span></div>
+            <hr style="margin-top: 0 !important;">
+            <div class="sidebar-inner">
+              <div class="tab-content" id="pills-tabContent">
+              <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-">
+                
+          <div id="osm" class="map-thumb base-active">
+              <div class="img-map">
+                <img  class="map-img img-rounded" src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/5/10/10" alt="open street map">
+              </div>
+              <div class="map-desc">Open Street Map</div>
+            </div>  
+            <div id="openTopo" class="map-thumb">
+              <div class="img-map">
+                <img  class="map-img img-rounded" src="https://b.tile.opentopomap.org/5/15/10.png" alt="open street map">
+              </div>
+              <div class="map-desc">Open Topo Map</div>
             </div>
-
+                
+            <div id="cartoDb" class="map-thumb">
+                        <div class="img-map">
+                          <img class="map-img" src="https://b.basemaps.cartocdn.com/dark_nolabels/5/15/10@2x.png" alt=" carto db">
+                          </div>
+                            <div class="map-desc">Carto DB</div>
+              </div>
+                
         </div>
-    </div>
+              <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">Layers</div>
+              <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>
+            </div>
+            
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Base maps</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Layers</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Measure</a>
+              </li>
+            </ul>
+            </div>
+          </div>
+          <!-- RIGHT SIDEBAR ENDS -->
+
+        <!-- main map component -->
+          <div class="">
+                  <div id="mapid">
+
+                  </div>  
+          </div>
+
+          </div>
+
     <!-- Modal -->
           
-          
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title" id="exampleModalLabel">Make map public</h1>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Your map is about to be made public and will be accessible to public viewers</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Ok</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
 
            <!-- Tab panes -->
@@ -552,14 +371,14 @@
    
   <!-- Argon Scripts -->
   <!-- Core -->
-  <script src="./assets/vendor/jquery/dist/jquery.min.js"></script>
+  <!-- <script src="./assets/vendor/jquery/dist/jquery.min.js"></script> -->
   <script src="./assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Optional JS -->
   <!-- <script src="./assets/vendor/chart.js/dist/Chart.min.js"></script>
   <script src="./assets/vendor/chart.js/dist/Chart.extension.js"></script> -->
   <!-- Argon JS -->
   <script src="./assets/js/argon.js?v=1.0.0"></script>
-  <!-- <script src="./assets/js/map.js"></script>  -->
+  <script src="./assets/js/map.js"></script>
 </body>
 
 </html>
