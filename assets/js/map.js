@@ -14,6 +14,9 @@ let techMap,
     featureGRP,
     drawController,
     layerPPMV,
+    lagosLGA,
+    states,
+    lga,
     drawnItems,
     drawControl,
     drawStyle,
@@ -22,7 +25,9 @@ let techMap,
     mainSideBar,
     legend,
     layerMarkerCluster,
-    layerHospital
+    layerHospital,
+    searchControl, 
+    sites
 
    $(document).ready(function(){
     //init setting
@@ -57,18 +62,18 @@ let techMap,
         onEachFeature: feat1
     })
     
-    let lagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
+    lagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
         'pointToLayer': dataStyler,
         onEachFeature: popUpData
     })
 
-    let states = L.geoJSON.ajax('data/Nigeria_states.geojson', {
+    states = L.geoJSON.ajax('data/Nigeria_states.geojson', {
         'pointToLayer': dataStyler,
         onEachFeature: feat1,
         style: style
     })
 
-    let lga = L.geoJSON.ajax('data/Nigeria_LGAs.geojson', {
+    lga = L.geoJSON.ajax('data/Nigeria_LGAs.geojson', {
         'pointToLayer': dataStyler,
         style: styleOne
     })
@@ -177,11 +182,18 @@ let techMap,
         expand: true
     })
      
-        
+    
+    searchControl = L.control.search({
+        layer: layerPPMV,
+        initial: false,
+        propertyName: 'name' // Specify which property is searched into.
+      })
+      .addTo(techMap,{position:"topright"});
+
 
     // get user location using the capital L key
     techMap.on('keypress', function(e){
-        console.log(e)
+        // console.log(e)
         if(e.originalEvent.key === 'L'){
             techMap.locate()
         }
@@ -265,8 +277,145 @@ let techMap,
     newMeasureToolCont.append(oldContainer);
     measureControl.addTo(techMap);
 
-    // Measure control button
-    // measure = L.control.polylineMeasure().addTo(techMap);
+    
+    // ################## trying buffer
+    var theMarker;
+    var theCircle;
+    var geojsonLayer
+    sites = L.geoJson(null, {
+			
+        pointToLayer: function(feature, latlng) {
+            return L.circleMarker(latlng, {
+            radius: 4, //expressed in pixels circle size
+            color: "red", 
+            stroke: true,
+            weight: 7,		//outline width  increased width to look like a filled circle.
+            fillOpcaity: 1
+            });
+            },
+            
+        onEachFeature: function (feature, layer) {
+        
+            layer.bindTooltip(feature.properties.Team);
+
+            layer.on('click', function (e) {
+                lat = e.latlng.lat;
+                lon = e.latlng.lng;
+            ProcessClick(lat,lon)	
+            });
+        }
+
+    });
+
+    $.getJSON(layerPPMV, function(data) {
+        sites.addData(data);
+    });
+    
+    sites.addTo(techMap)
+
+    techMap.on('click',function(e){  
+		lat = e.latlng.lat;
+		lon = e.latlng.lng;
+		ProcessClick(lat,lon)	
+  });
+
+  function ProcessClick(lat,lon){
+	console.log("You clicked the map at LAT: "+ lat+" and LONG: "+lon );
+		//Clear existing marker, circle, and selected points if selecting new points
+		if (theCircle != undefined) {
+		  techMap.removeLayer(theCircle);
+		};
+		if (theMarker != undefined) {
+			  techMap.removeLayer(theMarker);
+		};
+		if (geojsonLayer != undefined) {
+			  techMap.removeLayer(geojsonLayer);
+		};
+		
+	//Add a marker to show where you clicked.
+	 theMarker = L.marker([lat,lon]).addTo(techMap);  //Note: if lat/lon are strings then use parseFloat(lat), parseFloat(lon)
+	SelectPoints(lat,lon)
+
+    }
+
+    var selPts = [];
+
+	function SelectPoints(lat,lon){
+		var dist = document.getElementById("miles").value;
+
+		xy = [lat,lon];  //center point of circle
+		
+		var theRadius = parseInt(dist) * 1609.34  //1609.34 meters in a mile //dist is a string so it's convered to an Interger.
+		
+		selPts.length =0;  //Reset the array if selecting new points
+		
+		sites.eachLayer(function (layer) {
+			// Lat, long of current point as it loops through.
+			layer_lat_long = layer.getLatLng();
+			
+			// Distance from our circle marker To current point in meters
+			distance_from_centerPoint = layer_lat_long.distanceTo(xy);
+			
+			// See if meters is within radius, add the to array
+			if (distance_from_centerPoint <= theRadius) {
+				 selPts.push(layer.feature);  
+			}
+		});
+
+
+        theCircle = L.circle(xy, theRadius , {   /// Number is in Meters
+            color: 'orange',
+            fillOpacity: 0,
+            opacity: 1
+          }).addTo(techMap);
+
+          //Symbolize the Selected Points
+			 geojsonLayer = L.geoJson(selPts, {
+			 
+				pointToLayer: function(feature, latlng) {
+					return L.circleMarker(latlng, {
+					radius: 4, //expressed in pixels circle size
+					color: "green", 
+					stroke: true,
+					weight: 7,		//outline width  increased width to look like a filled circle.
+					fillOpcaity: 1
+					});
+					}
+			});
+			//Add selected points back into map as green circles.
+			techMap.addLayer(geojsonLayer);
+			
+			//Take array of features and make a GeoJSON feature collection 
+			var GeoJS = { type: "FeatureCollection",  features: selPts   };
+			//Show number of selected features.
+			console.log(GeoJS.features.length +" Selected features");
+			 // show selected GEOJSON data in console
+			console.log(JSON.stringify(GeoJS)); 
+	}	//end of SelectPoints function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
     // ######### Feature INfo Bar ###########
@@ -285,7 +434,9 @@ let techMap,
                             <div class="card" style="width: 18rem;">
                                 
                                 <div class="card-body">
-                                    <h2 class="card-title" id="feat-name">Click a layer/point to view properties</h2>                                                                   
+                                    <div class="card-text">
+                                    
+                                    </div>
                                 </div>
                             </div>
                            
@@ -389,6 +540,7 @@ let techMap,
     
     // mainSideBar.addTo(techMap)
     
+    // Base Map activators
     document.getElementById('osm').addEventListener('click', () =>{
         L.tileLayer.provider('OpenStreetMap').addTo(techMap)
      })
@@ -460,9 +612,9 @@ const inforBarState = (el,togglClass) =>{
         if(attr.type == 'PPMV'){
             return L.marker(latlng,{
                 icon: iconPPMV,
-            }).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
+            }).bindTooltip(`<b>Name:${attr.name}</b> <br> 
             Address: ${attr.address} <br> 
-            Wardcode: <i class="text-success">${attr.wardcode}</i>`,{direction: 'top'})
+            `,{direction: 'top'})
         }else{
             return L.marker(latlng,{
                 icon: iconHospital,
@@ -502,13 +654,13 @@ const inforBarState = (el,togglClass) =>{
         // console.log(attr)
         return L.marker(latlng).bindTooltip(`
             <div class="t-tooltip">
-                <b>LGA:${attr.lga}</b> 
+                <b>Name:${attr.name}</b> 
                     <br> 
                 <i class="fas fa-home"></i> Address: ${attr.address} 
                 <br> 
-                Wardcode: <i class="text-primary"> ${attr.wardcode}</i>
+                Wardcode: <i class="text-primary"> ${attr.state}</i>
             </div>
-        `,{direction: 'top'})
+        `,{direction: 'side'})
     }
 
     function popUpData(feature, ltlng){
@@ -581,65 +733,80 @@ const inforBarState = (el,togglClass) =>{
 
 function feat1 (feature, layer) {
 
+    let bd = document.querySelector('.legend-content .card-body .card-text')
+    
     layer.on('click', e =>{
         let coords = e.target.feature.geometry.coordinates
         let props = feature.properties
         document.querySelector('.legend').classList.remove('trans-open')
         // console.log(props)
         if(feature.geometry.type == "MultiPolygon"){
+            
+            bd.innerHTML = ""
             for(let key in props){
+                
                 let value = props[key]
-                console.log(`<b> ${key}</b>:${value}`)
+                // console.log(`this is ${key} and ${value}`)
+                bd.innerHTML += `<div><b> ${key}</b>: and ${value}</div>`
             }
             
             
-            document.querySelector('.legend-content').innerHTML = `
-            <div class="card" style="width: 18rem;">
-            <img id="feat-img" class="card-img-top" src="" alt="image of state">
-            <div class="card-body">
-                <h2 class="card-title" id="feat-name">${feature.properties.statename}</h2>
-                <div class="card-text">
-                    <p class="text-info">State:<b id="feat-add">${feature.properties.statename}</b></p>
-                    <button class="btn btn-info disabled btn-sm">Capital</button>:<b id="feat-num">${feature.properties.capcity}</b> <br><br>
-                    <button class="btn btn-info disabled btn-sm">Geozone</button>:<b id="feat-lga">${feature.properties.geozone}</b> <br><br>
-                    <span class="badge badge-info">State code:${feature.properties.statecode}</span><br>
-                </div>                                    
-            </div>
-        </div>
-
-            `
+        //     document.querySelector('.legend-content').innerHTML = `
+        //     <div class="card" style="width: 18rem;">
+        //     <img id="feat-img" class="card-img-top" src="" alt="image of state">
+        //     <div class="card-body">
+        //         <h2 class="card-title" id="feat-name">${feature.properties.statename}</h2>
+        //         <div class="card-text">
+        //             <p class="text-info">State:<b id="feat-add">${feature.properties.statename}</b></p>
+        //             <button class="btn btn-info disabled btn-sm">Capital</button>:<b id="feat-num">${feature.properties.capcity}</b> <br><br>
+        //             <button class="btn btn-info disabled btn-sm">Geozone</button>:<b id="feat-lga">${feature.properties.geozone}</b> <br><br>
+        //             <span class="badge badge-info">State code:${feature.properties.statecode}</span><br>
+        //         </div>                                    
+        //     </div>
+        // </div>
+        //     `
             
         }else if(feature.geometry.type == "Point"){
             onMapClick(coords)            
             // console.log(feature.properties)
             
+            bd.innerHTML = ""
             for(let key in props){
+                
                 let value = props[key]
                 console.log(`this is ${key} and ${value}`)
+                bd.innerHTML += `<div><b> ${key}</b>: and ${value}</div>`
             }
-            document.querySelector('.legend-content').innerHTML = `
-                <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="${feature.properties.photo}" alt="feature image">
-                <div class="card-body">
-                    <h3 class="card-title">${feature.properties.name}</h3>
-                    <p class="card-text">
-                        <div class="">Address: ${feature.properties.address}</div> 
-                        <div class="">Number: ${feature.properties.phone_number} </div>
-                        <div class="">LGA: ${feature.properties.lga} </div>
-                        <div class="">State: ${feature.properties.state}</div> 
-                        <span class="badge badge-default">${feature.properties.address}</span>
-                    </p>
-                    <a href="#" class="btn btn-success btn-sm">More...</a>
-                </div>
-            </div>
+            // document.querySelector('.legend-content').innerHTML = `
+            //     <div class="card" style="width: 18rem;">
+            //     <img class="card-img-top" src="${feature.properties.photo}" alt="feature image">
+            //     <div class="card-body">
+            //         <h3 class="card-title">${feature.properties.name}</h3>
+            //         <p class="card-text">
+            //             <div class="">Address: ${feature.properties.address}</div> 
+            //             <div class="">Number: ${feature.properties.phone_number} </div>
+            //             <div class="">LGA: ${feature.properties.lga} </div>
+            //             <div class="">State: ${feature.properties.state}</div> 
+            //             <span class="badge badge-default">${feature.properties.address}</span>
+            //         </p>
+            //         <a href="#" class="btn btn-success btn-sm">More...</a>
+            //     </div>
+            // </div>
             
-            `
+            // `
         }else{
-            document.querySelector('.legend-content').innerHTML = ` <h2>Click a Layer to display properties</h2> `
+            document.querySelector('.legend-content').innerHTML = ` 
+            <h2>Click a Layer to display properties</h2> 
+            `
         }
 
     })
 }
+
+
+
+
+
 
 /*********HELPER FUNCs FOR INFO DIV************/
 

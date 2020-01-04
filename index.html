@@ -29,7 +29,9 @@
   <link rel="stylesheet" href="./assets/js/plugins/gh-fork-ribbon.css">
   <link rel="stylesheet" href="./assets/js/plugins/easy-button.css">
   <link rel="stylesheet" href="./assets/js/plugins/leaflet-measure.css">
-  <link rel="stylesheet" href="./assets/js/plugins/search/searchbox.min.css">
+  <!-- <link rel="stylesheet" href="./assets/js/plugins/search/searchbox.min.css"> -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-search@2.3.7/dist/leaflet-search.src.css" />
+
   <link rel="stylesheet" href="./assets/js/plugins/Leaflet.PolylineMeasure.css">
   <link rel="stylesheet" href="./assets/js/plugins/leaflet-search.min.css">
   <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.css">
@@ -47,16 +49,16 @@
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
   <!-- TURF js -->
-  <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+  <!-- <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script> -->
   
   <!-- PLUGINS -->
-  <script src="./assets/js/plugins/leaflet-sidebar.js"></script>
+  
   <script src="./assets/js/plugins/Leaflet.PolylineMeasure.js"></script>
   <script src="./assets/js/plugins/leaflet-providers.js"></script>
   <script src="./assets/js/plugins/leaflet.ajax.min.js"></script>
   <script src="./assets/js/plugins/leaflet-heat.js"></script>
   <script src="./assets/js/plugins/easy-button.js"></script>
-  <!-- <script src="./assets/js/plugins/leaflet-search.min.js"></script> -->
+  <script src="https://unpkg.com/leaflet-search@2.3.7/dist/leaflet-search.src.js"></script>
   <script src="./assets/js/plugins/leaflet-omnivore.min.js"></script>
   <script src="./assets/js/plugins/leaflet.filelayer.js"></script>
   <script src="./assets/js/plugins/leaflet-measure.js"></script>
@@ -224,9 +226,16 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-light" href="#">
-              <i class="ni ni-settings"></i> Tools
+            <a class="nav-link text-light collapse " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-settings"></i> Tools 
             </a>
+            <div class="dropdown">                
+                <div class="dropdown-menu dropdown-menu dropdown-menu-arrow" x-placement="top-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-161px, -60px, 0px);">
+                  <a class="dropdown-item" href="#"><i class="fas fa-unlock-alt"></i> Permision</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-briefcase"></i>Role</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-user"></i>User</a>
+                </div>
+            </div>
           </li>          
         </ul>
       </div>
@@ -379,6 +388,23 @@
 
         <!-- main map component -->
           <div class="">
+              <div class="parent">
+                  <div class="child-top" id="panel">
+                   <div id="txtboxes">
+                 
+                 Select on click within 
+                       <select id="miles">
+                         <option value='50'>50 Miles</option>
+                         <option value='100' >100 Mile</option>
+                         <option value='150'>150 Miles</option>
+                         <option value='200'>200 Miles</option>
+                         <option value='300'>300 Miles</option>
+                         <option value='500'>500 Miles</option>
+                       </select>
+                 </div>
+                 </div>
+                 <div class="child-bottom" id="map">
+                 </div>
                   <div id="mapid">
 
                   </div>  
