@@ -51,7 +51,7 @@ $(document).ready(function () {
 
     // ######## AJAX data Calls #########
     // Dataset layer
-    layerData = L.geoJSON.ajax('features', {
+    layerData = L.geoJSON.ajax('/features', {
         'pointToLayer': dataMarker,
     }).addTo(techMap)
     layerData.on('data:loaded', () => {
@@ -59,8 +59,17 @@ $(document).ready(function () {
         console.log(layerData)
     }).addTo(techMap)
 
+    // Saved Map layer
+    layerMap = L.geoJSON.ajax('/featuresmap', {
+        'pointToLayer': dataMarker,
+    }).addTo(techMap)
+    layerMap.on('data:loaded', () => {
+        techMap.fitBounds(layerMap.getBounds())
+        console.log(layerMap)
+    }).addTo(techMap)
+
     // PPMV
-    layerPPMV = L.geoJSON.ajax('data/PPMV.geojson', {
+    layerPPMV = L.geoJSON.ajax('/data/PPMV.geojson', {
         'pointToLayer': dataMarker,
         'onEachFeature': feat1
     })
@@ -70,7 +79,7 @@ $(document).ready(function () {
     })
 
     // CP
-    layerCP = L.geoJSON.ajax('data/CP.geojson', {
+    layerCP = L.geoJSON.ajax('/data/CP.geojson', {
         'pointToLayer': dataMarker,
     })
     layerCP.on('data:loaded', () => {
@@ -78,7 +87,7 @@ $(document).ready(function () {
     })
 
     // Hospital
-    layerHospital = L.geoJSON.ajax('data/hospital.geojson', {
+    layerHospital = L.geoJSON.ajax('/data/hospital.geojson', {
         'pointToLayer': dataMarker,
         'onEachFeature': feat1
     })
@@ -87,7 +96,7 @@ $(document).ready(function () {
     })
 
     // Laboratory
-    layerLaboratory = L.geoJSON.ajax('data/laboratory.geojson', {
+    layerLaboratory = L.geoJSON.ajax('/data/laboratory.geojson', {
         'pointToLayer': dataMarker,
         'onEachFeature': feat1
     })
@@ -96,7 +105,7 @@ $(document).ready(function () {
     })
 
     // lagos State
-    layerLagos = L.geoJSON.ajax('data/lagos_state.geojson', {
+    layerLagos = L.geoJSON.ajax('/data/lagos_state.geojson', {
         'pointToLayer': dataMarker,
     })
 
@@ -105,7 +114,7 @@ $(document).ready(function () {
     })
 
     // lagos State LGA
-    layerLagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
+    layerLagosLGA = L.geoJSON.ajax('/data/lagos_LGA.geojson', {
         'pointToLayer': dataMarker,
     })
 
@@ -114,16 +123,16 @@ $(document).ready(function () {
     })
 
     // States Layer
-    statesLayer = L.geoJSON.ajax('states', {
+    statesLayer = L.geoJSON.ajax('/states', {
         // 'pointToLayer': dataStyler,
         'pointToLayer': dataMarker,
-    }).addTo(techMap)
+    })
 
     // LGAs layer
     red = { // Define your style object
         "color": "#ff0000"
     }
-    lgasLayer = L.geoJSON.ajax('lgas', {
+    lgasLayer = L.geoJSON.ajax('/lgas', {
         'pointToLayer': dataMarker,
         'style': red,
     })
@@ -203,6 +212,7 @@ $(document).ready(function () {
         "Hospital": layerHospital,
         "Laboratory": layerLaboratory,
         "Dataset": layerData,
+        "Saved Map": layerMap,
         "Draw Layer": drawnItems
     }
 
@@ -339,6 +349,7 @@ $(document).ready(function () {
         return points;
     };
 
+
     techMap.on('draw:created', function (e) {
         let type = e.layerType,
             layer = e.layer
@@ -362,17 +373,19 @@ $(document).ready(function () {
             layer.bindTooltip('width: ' + e.sourceTarget._size.x + 'km <br/> Height ' + e.sourceTarget._size.y + 'km');
             // console.log(e, layer, e.sourceTarget._size)
             drawnItems.addLayer(layer);
+
         }
         else if (type === 'polygon') {
             layer.bindTooltip('');
             // console.log(layer)
             drawnItems.addLayer(layer);
-        } else {
+
+        }
+        else {
             drawnItems.addLayer(layer);
-        // let newGeo = JSON.stringify(layer.toGeoJSON())
         }
 
-        
+        // let newGeo = JSON.stringify(layer.toGeoJSON())
 
     });
 
@@ -750,12 +763,12 @@ sideBarBtns.forEach( btn =>{
 })
 // save drawn items layer
 $(".save-map").click(function (e) {
-    geom = drawnItems.toGeoJSON();
-    console.log(geom)
+    geometry = drawnItems.toGeoJSON();
+    console.log(geometry);
     $.ajax({
         type: 'POST',
         url: '/drawnSave',
-        data: geom,
+        data: geometry,
         success: function (data) {
             alert(data.success);
         }
