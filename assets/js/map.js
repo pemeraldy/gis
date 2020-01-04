@@ -347,7 +347,7 @@ let techMap,
 		
 		var theRadius = parseInt(dist) * 1609.34  //1609.34 meters in a mile //dist is a string so it's convered to an Interger.
 		
-		selPts.length =0;  //Reset the array if selecting new points
+		selPts.length = 0;  //Reset the array if selecting new points
 		
 		sites.eachLayer(function (layer) {
 			// Lat, long of current point as it loops through.
@@ -747,7 +747,7 @@ function feat1 (feature, layer) {
                 
                 let value = props[key]
                 // console.log(`this is ${key} and ${value}`)
-                bd.innerHTML += `<div><b> ${key}</b>: and ${value}</div>`
+                bd.innerHTML += `<div><b> ${key}</b>: ${value}</div>`
             }
             
             
@@ -775,7 +775,7 @@ function feat1 (feature, layer) {
                 
                 let value = props[key]
                 console.log(`this is ${key} and ${value}`)
-                bd.innerHTML += `<div><b> ${key}</b>: and ${value}</div>`
+                bd.innerHTML += `<div><b> ${key}</b>: ${value}</div>`
             }
             // document.querySelector('.legend-content').innerHTML = `
             //     <div class="card" style="width: 18rem;">
