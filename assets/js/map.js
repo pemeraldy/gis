@@ -108,7 +108,17 @@ let techMap,
     /**STYLING FUNCTIONS**/
     function style(feature) {
         return {
-            fillColor: 'green', 
+            fillColor: '#2dce89', 
+            fillOpacity: 0.5,  
+            weight: 2,
+            opacity: 1,
+            color: '#ffffff',
+            dashArray: '3'
+        };
+    }
+    function style2(feature) {
+        return {
+            fillColor: 'orange', 
             fillOpacity: 0.5,  
             weight: 2,
             opacity: 1,
@@ -135,7 +145,7 @@ let techMap,
         layer.bindPopup(popupContent);
 
         layer.on("click", function (e) { 
-            states.setStyle(style); //resets layer colors
+            layer.setStyle(style2); //resets layer colors
             layer.setStyle(highlight);  //highlights selected.
         }); 
     }
@@ -192,12 +202,12 @@ let techMap,
     })
      
     
-    searchControl = L.control.search({
-        layer: markerCluster, 
-        initial: false,
-        propertyName: 'name' // Specify which property is searched into.
-      })
-      .addTo(techMap,{position:"topright"});
+    // searchControl = L.control.search({
+    //     layer: layerPPMV, 
+    //     initial: false,
+    //     propertyName: 'name' // Specify which property is searched into.
+    //   })
+    //   .addTo(techMap,{position:"topright"});
 
 
     // get user location using the capital L key
@@ -617,13 +627,14 @@ const inforBarState = (el,togglClass) =>{
 //  display data attributes and control data presentations
     function dataMarker(json, latlng){
         let attr = json.properties
-        // console.log(attr)
+        console.log(json)
         if(attr.type == 'PPMV'){
             return L.marker(latlng,{
                 icon: iconPPMV,
             }).bindTooltip(`<b>Name:${attr.name}</b> <br> 
             Address: ${attr.address} <br> 
             `,{direction: 'top'}).bindPopup('about Edit me?')
+
         }else{
             return L.marker(latlng,{
                 icon: iconHospital,
@@ -740,10 +751,11 @@ const inforBarState = (el,togglClass) =>{
 // end of code for click marker.
 
 
+
 function feat1 (feature, layer) {
 
     let bd = document.querySelector('.legend-content .card-body .card-text')
-    console.log('layer:',layer)
+    // console.log('layer:',layer)
     
     layer.on('click', e =>{
         let coords = e.target.feature.geometry.coordinates
@@ -751,30 +763,34 @@ function feat1 (feature, layer) {
         document.querySelector('.legend').classList.remove('trans-open')
         // console.log(props)
         if(feature.geometry.type == "MultiPolygon"){
-            console.log('layer options:',layer.options)
+            let color  = document.createElement('input')
+            color.type = 'color'
+            console.log(layer)
+                        
             bd.innerHTML = ""
             for(let key in props){
                 
                 let value = props[key]
-                // console.log(`this is ${key} and ${value}`)
+                
                 bd.innerHTML += `<div><b> ${key}</b>: ${value}</div>`
             }
+            bd.innerHtml += `<hr>`
+            bd.innerHTML += `<div><label>Fill color</label>:<input id="fillCol" type='color' value='${layer.options.fillColor}'></div>`
+            bd.innerHTML += `<div><label>Fill opacicty</label>:<input id="fillOp" type='number' step='any' value='${layer.options.fillOpacity}'></div>`
+            console.log(layer.options.fillColor)
             
-            
-        //     document.querySelector('.legend-content').innerHTML = `
-        //     <div class="card" style="width: 18rem;">
-        //     <img id="feat-img" class="card-img-top" src="" alt="image of state">
-        //     <div class="card-body">
-        //         <h2 class="card-title" id="feat-name">${feature.properties.statename}</h2>
-        //         <div class="card-text">
-        //             <p class="text-info">State:<b id="feat-add">${feature.properties.statename}</b></p>
-        //             <button class="btn btn-info disabled btn-sm">Capital</button>:<b id="feat-num">${feature.properties.capcity}</b> <br><br>
-        //             <button class="btn btn-info disabled btn-sm">Geozone</button>:<b id="feat-lga">${feature.properties.geozone}</b> <br><br>
-        //             <span class="badge badge-info">State code:${feature.properties.statecode}</span><br>
-        //         </div>                                    
-        //     </div>
-        // </div>
-        //     `
+            // addevent listeners for newly filled htmltags
+            let fillColor = document.getElementById('fillCol'),
+                fillOpacity = document.getElementById('fillOp'),
+                strokeWidth = document.getElementById('strokeWit'),
+                strokeColor = document.getElementById('strokeCol')
+            fillColor.addEventListener('change', ()=> layer.options.fillColor = fillColor.value )
+
+            fillOpacity.addEventListener('change', () =>{ 
+                layer.options.fillOpacity = fillOpacity.value
+                // techMap.remove(layer)
+                // techMap.addLayer(layer._leaflet_id)
+            })
             
         }else if(feature.geometry.type == "Point"){
             onMapClick(coords)            
@@ -784,26 +800,10 @@ function feat1 (feature, layer) {
             for(let key in props){
                 
                 let value = props[key]
-                console.log(`this is ${key} and ${value}`)
+                
                 bd.innerHTML += `<div><b> ${key}</b>: ${value}</div>`
             }
-            // document.querySelector('.legend-content').innerHTML = `
-            //     <div class="card" style="width: 18rem;">
-            //     <img class="card-img-top" src="${feature.properties.photo}" alt="feature image">
-            //     <div class="card-body">
-            //         <h3 class="card-title">${feature.properties.name}</h3>
-            //         <p class="card-text">
-            //             <div class="">Address: ${feature.properties.address}</div> 
-            //             <div class="">Number: ${feature.properties.phone_number} </div>
-            //             <div class="">LGA: ${feature.properties.lga} </div>
-            //             <div class="">State: ${feature.properties.state}</div> 
-            //             <span class="badge badge-default">${feature.properties.address}</span>
-            //         </p>
-            //         <a href="#" class="btn btn-success btn-sm">More...</a>
-            //     </div>
-            // </div>
             
-            // `
         }else{
             document.querySelector('.legend-content').innerHTML = ` 
             <h2>Click a Layer to display properties</h2> 
