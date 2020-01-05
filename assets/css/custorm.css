@@ -256,7 +256,7 @@ ul.leaflet-draw-actions{
   width: 30px;
   height: 30px;
   border-radius: 50% 50% 50% 0;
-  background: #c30b82;
+  /* background: #c30b82; */
   position: absolute;
   transform: rotate(-45deg);
   left: 50%;
@@ -268,7 +268,7 @@ ul.leaflet-draw-actions{
   width: 30px;
   height: 30px;
   border-radius: 50% 50% 50% 0;
-  background: #180292;
+  /* background: #180292; */
   position: absolute;
   transform: rotate(-45deg);
   left: 50%;
@@ -299,7 +299,7 @@ ul.leaflet-draw-actions{
 .custom-div-icon i.awesome {
    margin: 12px auto;
    font-size: 17px;
-   color: white
+   /* color: white */
 }
 
 
@@ -499,3 +499,9 @@ url('../img/brand/bgMap.png') !important;
 }
 
 
+/* MAP CUSTOMIZE MODAL */
+#customize{
+  position: absolute !important;
+  right: 0;
+  bottom: 0;
+}

@@ -69,10 +69,7 @@
   <script src="./assets/js/plugins/search/leaflet.customsearchbox.min.js"></script>
   <script src="https://npmcdn.com/@turf/turf@5.1.6/turf.min.js"></script>
 
-  <!-- ESRI Leaflet -->
-  <!-- <script src="//cdn.jsdelivr.net/leaflet.esri/1.0.3/esri-leaflet.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.3/dist/esri-leaflet-geocoder.css">
-  <script src="https://unpkg.com/esri-leaflet-geocoder@2.2.3"></script> -->
+  
 
   <script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet-clustered-feature-layer/1.0.0-rc.1/esri-leaflet-clustered-feature-layer.js"></script>
   
@@ -82,8 +79,7 @@
   <!-- End of drawer Js -->
   <script src="./assets/js/plugins/leaflet-styleeditor/javascript/Leaflet.StyleEditor.js"></script>
   <script src="./assets/js/plugins/leaflet-styleeditor/javascript/Leaflet.StyleForms.js"></script>
-  <!-- <script src="./assets/js/plugins/leaflet-style-editor/javascript/Control.js"></script> -->
-  <!-- <script src="src="https://cdn.jsdelivr.net/npm/leaflet-styleeditor@latest/dist/javascript/Leaflet.StyleEditor.min.js""></script> -->
+ 
 
    
   <link type="text/css" href="./assets/css/argon.css?v=1.0.0" rel="stylesheet">
@@ -221,7 +217,7 @@
         <!-- Navigation -->
         <ul class="navbar-nav mb-md-3">
           <li class="nav-item">
-            <a class="nav-link text-light" href="#">
+            <a class="nav-link text-light" href="#" data-toggle="modal" data-target="#customize">
               <i class="fas fa-eye"></i> Visualization
             </a>
           </li>
@@ -285,7 +281,7 @@
                         <ul class="navbar-nav ml-lg-auto">
                             <label class="custom-toggle private">
                                 <!-- <span style="display:inline-block; margin-left: 20px;">Hello</span> -->
-                                <input type="checkbox" checked data-toggle="modal" data-target="#exampleModal">
+                                <input type="checkbox" checked data-toggle="modal" data-target="#publicMap">
                                 <span class="custom-toggle-slider rounded-circle"></span>
                             </label>
                         </ul>
@@ -414,12 +410,12 @@
 
     <!-- Modal -->
           
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <!-- Modal for public/private map -->
+          <div class="modal fade" id="publicMap" tabindex="-1" role="dialog" aria-labelledby="publicMapLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title" id="exampleModalLabel">Make map public</h1>
+                  <h1 class="modal-title" id="publicMapLabel">Make map public</h1>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -435,11 +431,101 @@
             </div>
           </div>
 
-
+          <!-- Modal to customize icon -->
+          <div class="modal fade" id="customize" tabindex="-1" role="dialog" aria-labelledby="customizeLabel" aria-hidden="true">
+              <div class="modal-dialog " role="document">              
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title" id="customizeLabel">customize Map</h1>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <nav>
+                          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-layer-tab" data-toggle="tab" href="#nav-layer" role="tab" aria-controls="nav-layer" aria-selected="true">Layers</a>
+                            <a class="nav-item nav-link" id="nav-Style-tab" data-toggle="tab" href="#nav-Style" role="tab" aria-controls="nav-Style" aria-selected="false">Style</a>
+                            
+                          </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                          <div class="tab-pane fade show active" id="nav-layer" role="tabpanel" aria-labelledby="nav-layer-tab">
+                              <form>
+                                  <div class="form-row align-items-center">
+                                    <div class="col-auto my-1">
+                                      <label class="mr-sm-2 sr-only" for="selectLayer">Select layer</label>
+                                      <select class="custom-select mr-sm-2" id="selectLayer">
+                                        <option selected>Select layer</option>
+                                        
+                                      </select>
+                                    </div>
+                                    <div class="col-auto my-1">
+                                      <div class="custom-control custom-checkbox mr-sm-2">
+                                        <label for="fillColor">Fill color</label>
+                                        <input id="fillColor" type="color">
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="col-auto my-1">
+                                      <div class="custom-control custom-checkbox mr-sm-2">
+                                        <label for="fillOpacity">Fill opacity</label>
+                                        <input id="fillOpacity" type="number" step="any">
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="col-auto my-1">
+                                      <div class="custom-control custom-checkbox mr-sm-2">
+                                        <label for="strokeColor">Stroke color</label>
+                                         <input id="strokeColor" type="color">
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="col-auto my-1">
+                                      <div class="custom-control custom-checkbox mr-sm-2">
+                                        <label for="strokeWidth">Stoke Width</label>
+                                        <input id="strokeWidth" type="number" step="any">
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="col-auto my-1">
+                                      <div class="custom-control custom-checkbox mr-sm-2">
+                                        <label for="strokeOpacity">Stoke opacity</label>
+                                        <input id="strokeOpacity" type="number" step="any">
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="col-auto my-1">
+                                      <div class="custom-control custom-checkbox mr-sm-2">
+                                        <label for="marker">Marker</label>
+                                          <input id="marker" type="text" list="data-list" value>
+                                          <datalist id="data-list">
+                                            <!-- popluate list of icons -->
+                                          </datalist>        
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="col-auto my-1">
+                                      <button id="submitSet" type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                  </div>
+                                </form>
+                          </div>
+                          <div class="tab-pane fade" id="nav-Style" role="tabpanel" aria-labelledby="nav-Style-tab">.akclas</div>
+                          
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Ok</button>
+                  </div>
+                </div>
+              </div>
+            </div>
            <!-- Tab panes -->
 
    
-  <!-- Argon Scripts -->
+  
   <!-- Core -->
   <!-- <script src="./assets/vendor/jquery/dist/jquery.min.js"></script> -->
   <script src="./assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
