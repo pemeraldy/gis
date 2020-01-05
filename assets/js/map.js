@@ -760,10 +760,10 @@ function feat1 (feature, layer) {
     layer.on('click', e =>{
         let coords = e.target.feature.geometry.coordinates
         let props = feature.properties
+        bd.scrollTop = 0
         document.querySelector('.legend').classList.remove('trans-open')
         // console.log(props)
         if(feature.geometry.type == "MultiPolygon"){
-            let color  = document.createElement('input')
             color.type = 'color'
             console.log(layer)
                         
@@ -788,8 +788,7 @@ function feat1 (feature, layer) {
 
             fillOpacity.addEventListener('change', () =>{ 
                 layer.options.fillOpacity = fillOpacity.value
-                // techMap.remove(layer)
-                // techMap.addLayer(layer._leaflet_id)
+                
             })
             
         }else if(feature.geometry.type == "Point"){
@@ -803,7 +802,18 @@ function feat1 (feature, layer) {
                 
                 bd.innerHTML += `<div><b> ${key}</b>: ${value}</div>`
             }
-            
+            bd.innerHTML += `
+                <div class="custom-control custom-checkbox mr-sm-2">
+                    <label for="marker"> Change marker</label>
+                    <input id="marker" type="text" list="marker-list" value>
+                    <datalist id="marker-list">
+                        <!-- popluate list of icons -->
+                        <option value="1">
+                        <option value="2">
+                    </datalist>        
+                </div>
+            `
+            bd.scrollTop = 0 //scrooll to top
         }else{
             document.querySelector('.legend-content').innerHTML = ` 
             <h2>Click a Layer to display properties</h2> 
@@ -840,7 +850,8 @@ function fillLayer(){
     }
 }
 function loadLayer(e){
-    // removeCheck()
+    // if a layer is not active, add the class active and also add to Map else do d opp
+
    e.target.classList.contains('inactive') ? techMap.addLayer(overlays[e.target.innerText]) : techMap.removeLayer(overlays[e.target.innerText])
    e.target.classList.toggle('inactive')
    e.target.lastElementChild.classList.toggle('fa-check-square')
