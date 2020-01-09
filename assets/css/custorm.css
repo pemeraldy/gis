@@ -505,3 +505,8 @@ url('../img/brand/bgMap.png') !important;
   right: 0;
   bottom: 0;
 }
+
+li .search-tip{
+  background: orange !important;
+  color: white !important;
+}

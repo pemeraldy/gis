@@ -666,7 +666,6 @@ function feat1 (feature, layer) {
     layer.on('click', e =>{
         let coords = e.target.feature.geometry.coordinates
         let props = feature.properties
-        bd.scrollTop = 0
         document.querySelector('.legend').classList.remove('trans-open')
         // console.log(props)
         if(feature.geometry.type == "MultiPolygon"){
@@ -690,10 +689,21 @@ function feat1 (feature, layer) {
                 fillOpacity = document.getElementById('fillOp'),
                 strokeWidth = document.getElementById('strokeWit'),
                 strokeColor = document.getElementById('strokeCol')
-            fillColor.addEventListener('change', ()=> layer.options.fillColor = fillColor.value )
+            fillColor.addEventListener('change', ()=> {
+                
+                layer.setStyle({
+                    fillColor: fillColor.value
+                })
+            } )
 
-            fillOpacity.addEventListener('change', () =>{ 
-                layer.options.fillOpacity = fillOpacity.value
+            fillOpacity.addEventListener('change', () =>{
+                let inc = fillOpacity.value
+                let dec  = inc/10
+                fillOpacity.value = dec
+                console.log(dec,inc) 
+                layer.setStyle({
+                    fillOpacity: fillOpacity.value
+                }) 
                 
             })
             
