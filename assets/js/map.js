@@ -27,7 +27,8 @@ let techMap,
     markerCluster,
     layerHospital,
     searchControl, 
-    sites
+    sites,
+    fuseSearch
     
 
    $(document).ready(function(){
@@ -89,9 +90,10 @@ let techMap,
     
     // When Data Has Successfully Loaded
     let ppmarkerCluster = L.markerClusterGroup()
-    layerPPMV.on('data:loaded', () =>{    
+    layerPPMV.on('data:loaded', (data) =>{    
         ppmarkerCluster.addLayer(layerPPMV)    
         overlaysArray.push(layerPPMV)
+        
         
     })
 
@@ -136,8 +138,6 @@ let techMap,
 
     function forEachFeature(feature, layer) {
 
-        // Tagging each state poly with their name for the search control.
-        // layer._leaflet_id = feature.properties.statename;
 
         let popupContent = "<p><b>STATE: </b>"+ feature.properties.statename +
             "</br>REGION: "+ feature.properties.statecode 
@@ -150,21 +150,6 @@ let techMap,
         }); 
     }
 
-    // // let stateLayer = L.geoJson(states, {onEachFeature: forEachFeature, style: style});
-    // //     stateLayer.addTo(techMap)
-    // $.getJSON(states, function(data) {
-    //         states.addData(data);
-        
-    //         for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
-    //             arr1.push({label:data.features[i].properties.statename, value:""});
-    //         }
-    //     addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
-    //     });
-
-    // states.addTo(techMap);
-
-	
-	
 
 
     // ############### HEATMAP ######
@@ -201,13 +186,47 @@ let techMap,
         expand: true
     })
      
-    
-    // searchControl = L.control.search({
-    //     layer: layerPPMV, 
-    //     initial: false,
-    //     propertyName: 'name' // Specify which property is searched into.
-    //   })
-    //   .addTo(techMap,{position:"topright"});
+    let poi = L.layerGroup([layerHospital,layerPPMV])
+    searchControl = L.control.search({
+        layer: poi, 
+        initial: false,
+        marker: false,
+        propertyName: 'name' ,
+        moveToLocation: function(latlng, title, techMap) {
+            // techMap.fitBounds( latlng.layer.getBounds() );
+            // console.log(latlng, title, techMap)
+			// var zoom = techMap.getBoundsZoom(latlng.layer.getBounds());
+            techMap.flyTo(latlng, 11); // access the zoom
+            
+		}
+      })
+      
+      searchControl.on('search:locationfound', function(e) {
+		
+        console.log(e)
+        let marker = new L.Marker(new L.latLng(e.latlng))
+        
+        states.eachLayer(function(layer) {	
+			// states.resetStyle(layer);
+        });
+        
+        // poi.addLayer(marker)
+        
+        // e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
+		if(e.layer._popup)
+			e.layer.openPopup();
+
+	}).on('search:collapsed', function(e) {
+
+		states.eachLayer(function(layer) {	//restore feature color
+            states.resetStyle(layer);    
+        });	
+        
+	});
+
+
+
+      techMap.addControl(searchControl)
 
 
     // get user location using the capital L key
@@ -297,126 +316,6 @@ let techMap,
     measureControl.addTo(techMap);
 
     
-//     // ################## trying buffer
-//     var theMarker;
-//     var theCircle;
-//     var geojsonLayer
-//     sites = L.geoJson(null, {
-			
-//         pointToLayer: function(feature, latlng) {
-//             return L.circleMarker(latlng, {
-//             radius: 4, //expressed in pixels circle size
-//             color: "red", 
-//             stroke: true,
-//             weight: 7,		//outline width  increased width to look like a filled circle.
-//             fillOpcaity: 1
-//             });
-//             },
-            
-//         onEachFeature: function (feature, layer) {
-        
-//             layer.bindTooltip(feature.properties.Team);
-
-//             layer.on('click', function (e) {
-//                 lat = e.latlng.lat;
-//                 lon = e.latlng.lng;
-//             ProcessClick(lat,lon)	
-//             });
-//         }
-
-//     });
-
-//     $.getJSON(layerPPMV, function(data) {
-//         sites.addData(data);
-//     });
-    
-//     sites.addTo(techMap)
-
-//     techMap.on('click',function(e){  
-// 		lat = e.latlng.lat;
-// 		lon = e.latlng.lng;
-// 		ProcessClick(lat,lon)	
-//   });
-
-//   function ProcessClick(lat,lon){
-// 	console.log("You clicked the map at LAT: "+ lat+" and LONG: "+lon );
-// 		//Clear existing marker, circle, and selected points if selecting new points
-// 		if (theCircle != undefined) {
-// 		  techMap.removeLayer(theCircle);
-// 		};
-// 		if (theMarker != undefined) {
-// 			  techMap.removeLayer(theMarker);
-// 		};
-// 		if (geojsonLayer != undefined) {
-// 			  techMap.removeLayer(geojsonLayer);
-// 		};
-		
-// 	//Add a marker to show where you clicked.
-// 	 theMarker = L.marker([lat,lon]).addTo(techMap);  //Note: if lat/lon are strings then use parseFloat(lat), parseFloat(lon)
-// 	SelectPoints(lat,lon)
-
-//     }
-
-//     var selPts = [];
-
-// 	function SelectPoints(lat,lon){
-// 		var dist = document.getElementById("miles").value;
-
-// 		xy = [lat,lon];  //center point of circle
-		
-// 		var theRadius = parseInt(dist) * 1609.34  //1609.34 meters in a mile //dist is a string so it's convered to an Interger.
-		
-// 		selPts.length = 0;  //Reset the array if selecting new points
-		
-// 		sites.eachLayer(function (layer) {
-// 			// Lat, long of current point as it loops through.
-// 			layer_lat_long = layer.getLatLng();
-			
-// 			// Distance from our circle marker To current point in meters
-// 			distance_from_centerPoint = layer_lat_long.distanceTo(xy);
-			
-// 			// See if meters is within radius, add the to array
-// 			if (distance_from_centerPoint <= theRadius) {
-// 				 selPts.push(layer.feature);  
-// 			}
-// 		});
-
-
-//         theCircle = L.circle(xy, theRadius , {   /// Number is in Meters
-//             color: 'orange',
-//             fillOpacity: 0,
-//             opacity: 1
-//           }).addTo(techMap);
-
-//           //Symbolize the Selected Points
-// 			 geojsonLayer = L.geoJson(selPts, {
-			 
-// 				pointToLayer: function(feature, latlng) {
-// 					return L.circleMarker(latlng, {
-// 					radius: 4, //expressed in pixels circle size
-// 					color: "green", 
-// 					stroke: true,
-// 					weight: 7,		//outline width  increased width to look like a filled circle.
-// 					fillOpcaity: 1
-// 					});
-// 					}
-// 			});
-// 			//Add selected points back into map as green circles.
-// 			techMap.addLayer(geojsonLayer);
-			
-// 			//Take array of features and make a GeoJSON feature collection 
-// 			var GeoJS = { type: "FeatureCollection",  features: selPts   };
-// 			//Show number of selected features.
-// 			console.log(GeoJS.features.length +" Selected features");
-// 			 // show selected GEOJSON data in console
-// 			console.log(JSON.stringify(GeoJS)); 
-// 	}	//end of SelectPoints function
-
-
-
-
-
-
 
 
 
@@ -605,6 +504,12 @@ let techMap,
        
 })
 
+
+
+
+
+
+
 // ############# GLOBLA SCOPE -- OUTSIDE IFFE##############
 
 // toggle Draw Controller
@@ -627,7 +532,7 @@ const inforBarState = (el,togglClass) =>{
 //  display data attributes and control data presentations
     function dataMarker(json, latlng){
         let attr = json.properties
-        console.log(json)
+        // console.log(json)
         if(attr.type == 'PPMV'){
             return L.marker(latlng,{
                 icon: iconPPMV,
@@ -753,6 +658,7 @@ const inforBarState = (el,togglClass) =>{
 
 
 function feat1 (feature, layer) {
+    feature.layer = layer
 
     let bd = document.querySelector('.legend-content .card-body .card-text')
     // console.log('layer:',layer)
@@ -883,3 +789,5 @@ sideBarBtns.forEach( btn =>{
     
 })
 
+// Layer Edit functions
+const editLayerModal = document.getElementById('editLayer')
