@@ -18,6 +18,7 @@ let techMap,
     baseMapContoller,
     baseLayers,
     overlays,
+    overlaysArray,
     featureGRP,
     drawController,
     layerData,
@@ -25,8 +26,16 @@ let techMap,
     drawControl,
     drawStyle,
     measureControl,
+    markerCluster,
     layerSearch,
-    mainSideBar
+    mainSideBar,
+    sites,
+    fuseSearch,
+    searchControl,
+    statesLayer,
+    lgasLayer,
+    legend;
+
 
 $(document).ready(function () {
     //init setting
@@ -48,30 +57,37 @@ $(document).ready(function () {
     baseTopo = L.tileLayer.provider('OpenTopoMap')
     baseCartoDB = L.tileLayer.provider('CartoDB.DarkMatter')
 
+    overlaysArray = [];
 
     // ######## AJAX data Calls #########
     // Dataset layer
     layerData = L.geoJSON.ajax('/features', {
         'pointToLayer': dataMarker,
+        onEachFeature: feat1
     }).addTo(techMap)
     layerData.on('data:loaded', () => {
         techMap.fitBounds(layerData.getBounds())
         console.log(layerData)
     }).addTo(techMap)
 
+    let hMarkerCluster = L.markerClusterGroup()
+    layerData.on('data:loaded', () => {
+        hMarkerCluster.addLayer(layerData)
+    })
+
     // Saved Map layer
-    layerMap = L.geoJSON.ajax('/featuresmap', {
-        'pointToLayer': dataMarker,
-    }).addTo(techMap)
-    layerMap.on('data:loaded', () => {
-        techMap.fitBounds(layerMap.getBounds())
-        console.log(layerMap)
-    }).addTo(techMap)
+    // layerMap = L.geoJSON.ajax('/featuresmap', {
+    //     'pointToLayer': dataMarker,
+    // }).addTo(techMap)
+    // layerMap.on('data:loaded', () => {
+    //     techMap.fitBounds(layerMap.getBounds())
+    //     console.log(layerMap)
+    // }).addTo(techMap)
 
     // PPMV
     layerPPMV = L.geoJSON.ajax('/data/PPMV.geojson', {
         'pointToLayer': dataMarker,
-        'onEachFeature': feat1
+        onEachFeature: feat1
     })
     layerPPMV.on('data:loaded', () => {
         techMap.fitBounds(layerPPMV.getBounds());
@@ -81,6 +97,7 @@ $(document).ready(function () {
     // CP
     layerCP = L.geoJSON.ajax('/data/CP.geojson', {
         'pointToLayer': dataMarker,
+        onEachFeature: feat1
     })
     layerCP.on('data:loaded', () => {
         techMap.fitBounds(layerCP.getBounds())
@@ -89,7 +106,7 @@ $(document).ready(function () {
     // Hospital
     layerHospital = L.geoJSON.ajax('/data/hospital.geojson', {
         'pointToLayer': dataMarker,
-        'onEachFeature': feat1
+        onEachFeature: feat1
     })
     layerHospital.on('data:loaded', () => {
         techMap.fitBounds(layerHospital.getBounds())
@@ -98,7 +115,7 @@ $(document).ready(function () {
     // Laboratory
     layerLaboratory = L.geoJSON.ajax('/data/laboratory.geojson', {
         'pointToLayer': dataMarker,
-        'onEachFeature': feat1
+        onEachFeature: feat1
     })
     layerLaboratory.on('data:loaded', () => {
         techMap.fitBounds(layerLaboratory.getBounds())
@@ -106,7 +123,7 @@ $(document).ready(function () {
 
     // lagos State
     layerLagos = L.geoJSON.ajax('/data/lagos_state.geojson', {
-        'pointToLayer': dataMarker,
+        'pointToLayer': dataStyler,
     })
 
     layerLagos.on('data:loaded', () => {
@@ -115,7 +132,8 @@ $(document).ready(function () {
 
     // lagos State LGA
     layerLagosLGA = L.geoJSON.ajax('/data/lagos_LGA.geojson', {
-        'pointToLayer': dataMarker,
+        'pointToLayer': dataStyler,
+        onEachFeature: popUpData
     })
 
     layerLagosLGA.on('data:loaded', () => {
@@ -125,27 +143,37 @@ $(document).ready(function () {
     // States Layer
     statesLayer = L.geoJSON.ajax('/states', {
         // 'pointToLayer': dataStyler,
-        'pointToLayer': dataMarker,
+        'pointToLayer': dataStyler,
+        onEachFeature: feat1,
+        style: style
+    })
+    statesLayer.on('data:loaded', () => {
+        overlaysArray.push(statesLayer)
+        // states.fitBounds(states.getBounds())
+        console.log(statesLayer);
+
     })
 
     // LGAs layer
-    red = { // Define your style object
-        "color": "#ff0000"
-    }
     lgasLayer = L.geoJSON.ajax('/lgas', {
-        'pointToLayer': dataMarker,
-        'style': red,
+        'pointToLayer': dataStyler,
+        style: styleOne
     })
 
-
-    ////////// Autocomplete search
-    // let url = statesLayer,
-    //     arr = [], arr1 = []
-    // $('#autocomplete').autocomplete()
-
+    /**STYLING FUNCTIONS**/
     function style(feature) {
         return {
-            fillColor: 'green',
+            fillColor: '#2dce89',
+            fillOpacity: 0.5,
+            weight: 2,
+            opacity: 1,
+            color: '#ffffff',
+            dashArray: '3'
+        };
+    }
+    function style2(feature) {
+        return {
+            fillColor: 'orange',
             fillOpacity: 0.5,
             weight: 2,
             opacity: 1,
@@ -159,7 +187,13 @@ $(document).ready(function () {
         'weight': 2,
         'opacity': 1
     };
+    // When Data Has Successfully Loaded
+    let ppmarkerCluster = L.markerClusterGroup()
+    layerPPMV.on('data:loaded', () => {
+        ppmarkerCluster.addLayer(layerPPMV)
+        overlaysArray.push(layerPPMV)
 
+    })
     let stateLayer = L.geoJson(null, { onEachFeature: forEachFeature, style: style });
 
     function forEachFeature(feature, layer) {
@@ -172,19 +206,19 @@ $(document).ready(function () {
         layer.bindPopup(popupContent);
 
         layer.on("click", function (e) {
-            stateLayer.setStyle(style); //resets layer colors
+            layer.setStyle(style2); //resets layer colors
             layer.setStyle(highlight);  //highlights selected.
         });
     }
 
-    $.getJSON(null, function (data) {
-        stateLayer.addData(data);
+    // $.getJSON(null, function (data) {
+    //     stateLayer.addData(data);
 
-        for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
-            arr1.push({ label: data.features[i].properties.statename, value: "" });
-        }
-        // addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
-    });
+    //     for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
+    //         arr1.push({ label: data.features[i].properties.statename, value: "" });
+    //     }
+    //     // addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
+    // });
 
     stateLayer.addTo(techMap);
 
@@ -212,15 +246,65 @@ $(document).ready(function () {
         "Hospital": layerHospital,
         "Laboratory": layerLaboratory,
         "Dataset": layerData,
-        "Saved Map": layerMap,
+        // "Saved Map": layerMap,
         "Draw Layer": drawnItems
     }
 
     // baseMapContoller = L.control.layers(baseLayers, overlays, {
     //     collapse: false,
-    //     expand: false
-    // }).addTo(techMap)
-     // console.log(drawnItems)
+    //     expand: true
+    // })
+    let poi = L.layerGroup([overlays["Dataset"]])
+    searchControl = L.control.search({
+        layer: poi,
+        initial: false,
+        marker: false,
+        propertyName: 'name' ,
+        hideMarkerOnCollapse: true,
+        marker: {
+			icon: new L.Icon({iconUrl:'/assets/carrental.png', iconSize: [20,20]}),
+			circle: {
+				radius: 20,
+				color: '#f41642',
+				opacity: 1
+			}
+		},
+        moveToLocation: function(latlng, title, techMap) {
+            // techMap.fitBounds( latlng.layer.getBounds() );
+            // console.log(latlng, title, techMap)
+			// var zoom = techMap.getBoundsZoom(latlng.layer.getBounds());
+            techMap.flyTo(latlng, 11); // access the zoom
+
+		}
+      })
+
+      searchControl.on('search:locationfound', function(e) {
+
+        console.log(e)
+        let marker = new L.Marker(new L.latLng(e.latlng))
+
+        statesLayer.eachLayer(function(layer) {
+			// states.resetStyle(layer);
+        });
+
+        // poi.addLayer(marker)
+
+        // e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
+		if(e.layer._popup)
+			e.layer.openPopup();
+
+	}).on('search:collapsed', function(e) {
+
+		statesLayer.eachLayer(function(layer) {	//restore feature color
+            statesLayer.resetStyle(layer);
+        });
+
+	});
+
+
+
+      techMap.addControl(searchControl)
+    // console.log(drawnItems)
 
     // easyBtn = L.easyButton('fa-globe', function () {
     //     console.log('hey')
@@ -284,7 +368,7 @@ $(document).ready(function () {
     L.Util.VincentyConstants = {
         a: 6378137,
         b: 6356752.3142,
-        f: 1/298.257223563
+        f: 1 / 298.257223563
     };
     function destinationVincenty(lonlat, brng, dist) { //rewritten to work with leaflet
 
@@ -295,37 +379,37 @@ $(document).ready(function () {
         var lat1 = lonlat.lat;
         var s = dist;
         var pi = Math.PI;
-        var alpha1 = brng * pi/180 ; //converts brng degrees to radius
+        var alpha1 = brng * pi / 180; //converts brng degrees to radius
         var sinAlpha1 = Math.sin(alpha1);
         var cosAlpha1 = Math.cos(alpha1);
-        var tanU1 = (1-f) * Math.tan( lat1 * pi/180 /* converts lat1 degrees to radius */ );
-        var cosU1 = 1 / Math.sqrt((1 + tanU1*tanU1)), sinU1 = tanU1*cosU1;
+        var tanU1 = (1 - f) * Math.tan(lat1 * pi / 180 /* converts lat1 degrees to radius */);
+        var cosU1 = 1 / Math.sqrt((1 + tanU1 * tanU1)), sinU1 = tanU1 * cosU1;
         var sigma1 = Math.atan2(tanU1, cosAlpha1);
         var sinAlpha = cosU1 * sinAlpha1;
-        var cosSqAlpha = 1 - sinAlpha*sinAlpha;
-        var uSq = cosSqAlpha * (a*a - b*b) / (b*b);
-        var A = 1 + uSq/16384*(4096+uSq*(-768+uSq*(320-175*uSq)));
-        var B = uSq/1024 * (256+uSq*(-128+uSq*(74-47*uSq)));
-        var sigma = s / (b*A), sigmaP = 2*Math.PI;
-        while (Math.abs(sigma-sigmaP) > 1e-12) {
-            var cos2SigmaM = Math.cos(2*sigma1 + sigma);
+        var cosSqAlpha = 1 - sinAlpha * sinAlpha;
+        var uSq = cosSqAlpha * (a * a - b * b) / (b * b);
+        var A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));
+        var B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
+        var sigma = s / (b * A), sigmaP = 2 * Math.PI;
+        while (Math.abs(sigma - sigmaP) > 1e-12) {
+            var cos2SigmaM = Math.cos(2 * sigma1 + sigma);
             var sinSigma = Math.sin(sigma);
             var cosSigma = Math.cos(sigma);
-            var deltaSigma = B*sinSigma*(cos2SigmaM+B/4*(cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)-
-                B/6*cos2SigmaM*(-3+4*sinSigma*sinSigma)*(-3+4*cos2SigmaM*cos2SigmaM)));
+            var deltaSigma = B * sinSigma * (cos2SigmaM + B / 4 * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) -
+                B / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
             sigmaP = sigma;
-            sigma = s / (b*A) + deltaSigma;
+            sigma = s / (b * A) + deltaSigma;
         }
-        var tmp = sinU1*sinSigma - cosU1*cosSigma*cosAlpha1;
-        var lat2 = Math.atan2(sinU1*cosSigma + cosU1*sinSigma*cosAlpha1,
-            (1-f)*Math.sqrt(sinAlpha*sinAlpha + tmp*tmp));
-        var lambda = Math.atan2(sinSigma*sinAlpha1, cosU1*cosSigma - sinU1*sinSigma*cosAlpha1);
-        var C = f/16*cosSqAlpha*(4+f*(4-3*cosSqAlpha));
-        var lam = lambda - (1-C) * f * sinAlpha *
-            (sigma + C*sinSigma*(cos2SigmaM+C*cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)));
+        var tmp = sinU1 * sinSigma - cosU1 * cosSigma * cosAlpha1;
+        var lat2 = Math.atan2(sinU1 * cosSigma + cosU1 * sinSigma * cosAlpha1,
+            (1 - f) * Math.sqrt(sinAlpha * sinAlpha + tmp * tmp));
+        var lambda = Math.atan2(sinSigma * sinAlpha1, cosU1 * cosSigma - sinU1 * sinSigma * cosAlpha1);
+        var C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha));
+        var lam = lambda - (1 - C) * f * sinAlpha *
+            (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
         var revAz = Math.atan2(sinAlpha, -tmp);  // final bearing
-        var lamFunc = lon1 + (lam * 180/pi); //converts lam radius to degrees
-        var lat2a = lat2 * 180/pi; //converts lat2a radius to degrees
+        var lamFunc = lon1 + (lam * 180 / pi); //converts lam radius to degrees
+        var lat2a = lat2 * 180 / pi; //converts lat2a radius to degrees
 
         return L.latLng(lamFunc, lat2a);
 
@@ -393,9 +477,11 @@ $(document).ready(function () {
     drawStyle = L.control.styleEditor().addTo(techMap)
 
     // Measure area and line
-    measureControl = new L.Control.Measure({ position: 'topright', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters' });
+    measureControl = new L.Control.Measure({ position: 'topleft', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters' });
+    let oldContainer = measureControl.getContainer()
+    let newMeasureToolCont = document.querySelector('#pills-contact');
+    newMeasureToolCont.append(oldContainer);
     measureControl.addTo(techMap);
-    measure = L.control.polylineMeasure().addTo(techMap);
 
     // #########LEGEND TEMPLATES ###########
 
@@ -404,28 +490,30 @@ $(document).ready(function () {
     /*Legend specific*/
     legend = L.control({ position: "bottomleft" });
 
-    legend.onAdd = function(featPoint) {
+    legend.onAdd = function (featPoint) {
         let div = L.DomUtil.create("div", "legend trans-open");
-       if(featPoint == undefined){
-          return false
-      }else {
-        div.innerHTML += `<h2>Feature Info</h2>`;
-        div.innerHTML += `<div class='anchor'><i class="fas fa-chevron-right"></i></div>`;
-        div.innerHTML += `<div class="legend-content">
-                              <div class="card" style="width: 18rem;">
+        if (featPoint == undefined) {
+            return false
+        } else {
+            div.innerHTML += `<h2>Feature Info</h2>`;
+            div.innerHTML += `<div class='anchor'><i class="fas fa-chevron-right"></i></div>`;
+            div.innerHTML += `<div class="legend-content">
+                            <div class="card" style="width: 18rem;">
 
-                                  <div class="card-body">
-                                      <h2 class="card-title" id="feat-name">Click a layer/point to view properties</h2>
-                                  </div>
-                              </div>
+                                <div class="card-body">
+                                    <div class="card-text">
 
-                          </div>`
+                                    </div>
+                                </div>
+                            </div>
 
-        return div;
-          }
-      };
+                        </div>`
 
-      legend.addTo(techMap);
+            return div;
+        }
+    };
+
+    legend.addTo(techMap);
 
     // ********UTILITY SIDEBAR******
 
@@ -479,6 +567,17 @@ $(document).ready(function () {
     //     element.classList.toggle(`${togglClass}`)
     // }
 
+    // Base Map activators
+    document.getElementById('osm').addEventListener('click', () => {
+        L.tileLayer.provider('OpenStreetMap').addTo(techMap)
+    })
+    document.getElementById('cartoDb').addEventListener('click', () => {
+        L.tileLayer.provider('CartoDB.DarkMatter').addTo(techMap)
+    })
+    document.getElementById('openTopo').addEventListener('click', () => {
+        L.tileLayer.provider('OpenTopoMap').addTo(techMap)
+    })
+
     const anchor = document.querySelector('.anchor') //anchor button on legend bar
     anchor.addEventListener('click', () => inforBarState('legend', 'trans-open'))
 
@@ -489,61 +588,53 @@ $(document).ready(function () {
     // })
 
     fillLayer()
-
+    document.querySelector('#fb_share').setAttribute('href','http://www.facebook.com/share.php?u=' + encodeURIComponent(location.href))
+    document.querySelector('#tw_share').setAttribute('href','https://twitter.com/intent/tweet?text=' + encodeURIComponent(location.href))
+    document.querySelector('#copy_url').setAttribute('value',encodeURIComponent(location.href))
 
 })
 
 
-// ###########################
-//    outside ready function
+// ############# GLOBLA SCOPE -- OUTSIDE IFFE##############
 
 // toggle Draw Controller
-function toggleDraw(){
+function toggleDraw() {
     drawControl._container.style.display = drawControl._container.style.display == 'none' ? 'flex' : 'none'
 }
 
 // TOGGLE SIDE BARS
-const inforBarState = (el,togglClass) =>{
+const inforBarState = (el, togglClass) => {
     let element = document.querySelector(`.${el}`)
     element.classList.toggle(`${togglClass}`)
-  }
+}
 
-  const sideAnchor = document.querySelector('.sidebar-anchor') //anchor button on legend bar
+const sideAnchor = document.querySelector('.sidebar-anchor') //anchor button on legend bar
 
-  sideAnchor.addEventListener('click', () => inforBarState('map-sidebar', 'side-open'))
+sideAnchor.addEventListener('click', () => inforBarState('map-sidebar', 'side-open'))
 
+//  display data attributes and control data presentations
 function dataMarker(json, latlng) {
     let attr = json.properties
-    console.log(json.type)
-
-    // console.log(attr)
-    console.log(json.geometry)
+    // console.log(json)
     if (attr.type == 'PPMV') {
         return L.marker(latlng, {
             icon: iconPPMV,
-        }).bindTooltip(`<b>LGA:${attr.lga}</b> <br>
+        }).bindTooltip(`<b>Name:${attr.name}</b> <br>
         Address: ${attr.address} <br>
-        Wardcode: <i class="text-success">${attr.wardcode}</i>`, { direction: 'top' })
+        `, { direction: 'top' })
 
-    } else if(attr.type_of_facility == 'Laboratory'){
-        return L.marker(latlng, {
-            icon: iconLaboratory,
-        }).bindTooltip(`<b>LGA:${attr.name}</b> <br>
-        Address: ${attr.address} <br>
-        Wardcode: <i class="text-success">${attr.address}</i>`, { direction: 'top' })
-    }
-    else {
+    } else {
         return L.marker(latlng, {
             icon: iconHospital,
-        }).bindTooltip(`<b>LGA:${attr.lga}</b> <br>
+        }).bindTooltip(`<b>Name:${attr.name}</b> <br>
         Address: ${attr.address} <br>
-        Wardcode: <i class="text-success">${attr.wardcode}</i>`)
+        Wardcode: <i class="text-success">${attr.state}</i>`)
     }
 
 }
 
 function highlightFeature(e) {
-    var layer = e.target;
+    let layer = e.target;
 
     layer.setStyle({
         weight: 2,
@@ -569,14 +660,14 @@ function dataStyler(json, latlng) {
     let attr = json.properties
     // console.log(attr)
     return L.marker(latlng).bindTooltip(`
-        <div class="t-tooltip">
-            <b>LGA:${attr.lga}</b>
+            <div class="t-tooltip">
+                <b>Name:${attr.name}</b>
+                    <br>
+                <i class="fas fa-home"></i> Address: ${attr.address}
                 <br>
-            <i class="fas fa-home"></i> Address: ${attr.address}
-            <br>
-            Wardcode: <i class="text-primary"> ${attr.wardcode}</i>
-        </div>
-    `, { direction: 'top' })
+                Wardcode: <i class="text-primary"> ${attr.state}</i>
+            </div>
+        `, { direction: 'side' })
 }
 
 function popUpData(feature, ltlng) {
@@ -585,7 +676,7 @@ function popUpData(feature, ltlng) {
     let res = []
     if (att) {
         res.push(att.name)
-        console.log('from popup data', res, feat)
+        // console.log('from popup data',res,feat)
     }
 }
 
@@ -601,7 +692,7 @@ let iconPPMV = L.divIcon({
     html: "<div style='color:#fff;' class='marker-pin-two'></div><i class='fas fa-capsules awesome fa-3x'>",
     iconSize: [30, 42],
     iconAnchor: [15, 42]
-});
+})
 
 let iconHospital = L.divIcon({
     className: 'custom-div-icon',
@@ -647,6 +738,10 @@ function onMapClick(coords) {
 // end of code for click marker.
 
 function feat1 (feature, layer) {
+    feature.layer = layer
+
+    let bd = document.querySelector('.legend-content .card-body .card-text')
+    // console.log('layer:',layer)
 
     layer.on('click', e =>{
         let coords = e.target.feature.geometry.coordinates
@@ -654,55 +749,71 @@ function feat1 (feature, layer) {
         document.querySelector('.legend').classList.remove('trans-open')
         // console.log(props)
         if(feature.geometry.type == "MultiPolygon"){
+            color.type = 'color'
+            console.log(layer)
+
+            bd.innerHTML = ""
             for(let key in props){
+
                 let value = props[key]
-                console.log(`<b> ${key}</b>:${value}`)
+
+                bd.innerHTML += `<div><b> ${key}</b>: ${value}</div>`
             }
+            bd.innerHtml += `<hr>`
+            bd.innerHTML += `<div><label>Fill color</label>:<input id="fillCol" type='color' value='${layer.options.fillColor}'></div>`
+            bd.innerHTML += `<div><label>Fill opacicty</label>:<input id="fillOp" type='number' step='any' value='${layer.options.fillOpacity}'></div>`
+            console.log(layer.options.fillColor)
 
+            // addevent listeners for newly filled htmltags
+            let fillColor = document.getElementById('fillCol'),
+                fillOpacity = document.getElementById('fillOp'),
+                strokeWidth = document.getElementById('strokeWit'),
+                strokeColor = document.getElementById('strokeCol')
+            fillColor.addEventListener('change', ()=> {
 
-            document.querySelector('.legend-content').innerHTML = `
-            <div class="card" style="width: 18rem;">
-            <img id="feat-img" class="card-img-top" src="" alt="image of state">
-            <div class="card-body">
-                <h2 class="card-title" id="feat-name">${feature.properties.statename}</h2>
-                <div class="card-text">
-                    <p class="text-info">State:<b id="feat-add">${feature.properties.statename}</b></p>
-                    <button class="btn btn-info disabled btn-sm">Capital</button>:<b id="feat-num">${feature.properties.capcity}</b> <br><br>
-                    <button class="btn btn-info disabled btn-sm">Geozone</button>:<b id="feat-lga">${feature.properties.geozone}</b> <br><br>
-                    <span class="badge badge-info">State code:${feature.properties.statecode}</span><br>
-                </div>
-            </div>
-        </div>
+                layer.setStyle({
+                    fillColor: fillColor.value
+                })
+            } )
 
-            `
+            fillOpacity.addEventListener('change', () =>{
+                let inc = fillOpacity.value
+                let dec  = inc/10
+                // fillOpacity.value = dec
+                console.log(dec,inc)
+                layer.setStyle({
+                    fillOpacity: fillOpacity.value
+                })
+
+            })
 
         }else if(feature.geometry.type == "Point"){
             onMapClick(coords)
             // console.log(feature.properties)
 
+            bd.innerHTML = ""
             for(let key in props){
-                let value = props[key]
-                console.log(`this is ${key} and ${value}`)
-            }
-            document.querySelector('.legend-content').innerHTML = `
-                <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="${feature.properties.photo}" alt="feature image">
-                <div class="card-body">
-                    <h3 class="card-title">${feature.properties.name}</h3>
-                    <p class="card-text">
-                        <div class="">Address: ${feature.properties.address}</div>
-                        <div class="">Number: ${feature.properties.phone_number} </div>
-                        <div class="">LGA: ${feature.properties.lga} </div>
-                        <div class="">State: ${feature.properties.state}</div>
-                        <span class="badge badge-default">${feature.properties.address}</span>
-                    </p>
-                    <a href="#" class="btn btn-success btn-sm">More...</a>
-                </div>
-            </div>
 
+                let value = props[key]
+
+                bd.innerHTML += `<div><b> ${key}</b>: ${value}</div>`
+            }
+            bd.innerHTML += `
+                <div class="custom-control custom-checkbox mr-sm-2">
+                    <label for="marker"> Change marker</label>
+                    <input id="marker" type="text" list="marker-list" value>
+                    <datalist id="marker-list">
+                        <!-- popluate list of icons -->
+                        <option value="1">
+                        <option value="2">
+                    </datalist>
+                </div>
             `
+
         }else{
-            document.querySelector('.legend-content').innerHTML = ` <h2>Click a Layer to display properties</h2> `
+            document.querySelector('.legend-content').innerHTML = `
+            <h2>Click a Layer to display properties</h2>
+            `
         }
 
     })
@@ -711,10 +822,10 @@ function feat1 (feature, layer) {
 /*********HELPER FUNCs FOR INFO DIV************/
 
 //fill container with a list of loaded layers
-function fillLayer(){
+function fillLayer() {
     document.querySelector('#pills-profile').innerHTML = ''
 
-    for(key of Object.keys(overlays)){
+    for (key of Object.keys(overlays)) {
         let el = document.createElement('div')
         let checked = document.createElement('i')
         checked.classList.add('fas')
@@ -729,48 +840,122 @@ function fillLayer(){
 
     }
 }
-function loadLayer(e){
+function loadLayer(e) {
     // removeCheck()
-   e.target.classList.contains('inactive') ? techMap.addLayer(overlays[e.target.innerText]) : techMap.removeLayer(overlays[e.target.innerText])
-   e.target.classList.toggle('inactive')
-   e.target.lastElementChild.classList.toggle('fa-check-square')
-   e.target.lastElementChild.style.fontSize = '22px'
-// console.log(e.target.lastElementChild)
+    e.target.classList.contains('inactive') ? techMap.addLayer(overlays[e.target.innerText]) : techMap.removeLayer(overlays[e.target.innerText])
+    e.target.classList.toggle('inactive')
+    e.target.lastElementChild.classList.toggle('fa-check-square')
+    e.target.lastElementChild.style.fontSize = '22px'
+    // console.log(e.target.lastElementChild)
 }
 
 
 const mapThumb = document.querySelectorAll('.map-thumb')
 
 // TOGGLE ACTIVE CLASS FOR BASE MAPS
-mapThumb.forEach( thum =>{
+mapThumb.forEach(thum => {
 
-    thum.addEventListener('click', function(e){
+    thum.addEventListener('click', function (e) {
 
-    mapThumb.forEach(thum => thum.classList.remove('base-active'))
-    thum.classList.toggle('base-active')
+        mapThumb.forEach(thum => thum.classList.remove('base-active'))
+        thum.classList.toggle('base-active')
 
-} )
+    })
 
 })
 
 // SIDE BAR crumbs BUTTONS
 const sideBarBtns = document.querySelectorAll('.sidebar .nav-link')
 const sideBarHeader = document.querySelector('.sidebar-header')
-sideBarBtns.forEach( btn =>{
+sideBarBtns.forEach(btn => {
     // Set Header of Side Bar on CLick of BTNS
-    btn.addEventListener('click', (e) => { sideBarHeader.innerText = btn.innerText } )
+    btn.addEventListener('click', (e) => { sideBarHeader.innerText = btn.innerText })
 
 })
+
 // save drawn items layer
 $(".save-map").click(function (e) {
+    var name = document.getElementById("mapname").value;
     geometry = drawnItems.toGeoJSON();
+    if (name == '') {
+        return alert('Map name is required');
+    }
+    data = {
+        'name': name,
+        'geometry': geometry,
+    }
     console.log(geometry);
     $.ajax({
         type: 'POST',
         url: '/drawnSave',
-        data: geometry,
+        data: data,
         success: function (data) {
             alert(data.success);
-        }
+        },
+        error: function (xhr, status, error) {
+            alert('Error:' + error);
+        },
     });
 });
+
+// search layer
+$(".search").click(function (e) {
+    e.preventDefault();
+    var search = document.getElementById("search").value;
+    if (search == '') {
+        return alert('Please input feature name');
+    }
+    // console.log(search);
+    page = window.location.pathname + '/' + search;
+    $.ajax({
+        type: 'POST',
+        url: '/search/' + search,
+        data: search,
+        success: function (status) {
+            document.querySelector('#status').innerHTML = status;
+            if (status == 'Not Found') {
+                alert(data.status);
+            } else {
+                history.pushState(null, null, window.location.pathname);
+                // history.replaceState(null, null, window.location.pathname);
+                window.location.replace(page);
+                // document.querySelector('#back').setAttribute();
+            }
+            // location.reload(true);
+        },
+        error: function (xhr, status, error) {
+            alert(xhr.responseText);
+            document.querySelector('#status').innerHTML = 'Error:' + xhr.responseText
+
+        },
+    });
+});
+
+// Search map on enter key
+var input = document.getElementById("search");
+if (input!= null){
+input.addEventListener("keyup", function (event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("searchbtn").click();
+    }
+})};
+
+// copy URL
+$("#copy_url_btn").click(function (e) {
+    /* Get the text field */
+    var copyText = document.getElementById("copy_url");
+
+    /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+    /* Copy the text inside the text field */
+    document.execCommand("copy");
+
+    /* Alert the copied text */
+    document.getElementById("copy_url_btn").innerHTML='Copied';
+  });
