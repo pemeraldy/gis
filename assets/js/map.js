@@ -197,7 +197,7 @@ let techMap,
 			icon: new L.Icon({iconUrl:'./assets/carrental.png', iconSize: [20,20]}),
 			circle: {
 				radius: 20,
-				color: '#0a0',
+				color: '#f41642',
 				opacity: 1
 			}
 		},
@@ -493,8 +493,7 @@ let techMap,
     const anchor = document.querySelector('.anchor') //anchor button on legend bar    
     anchor.addEventListener('click', () => inforBarState('legend','trans-open'))
 
-    // const sideBarAnchor = document.querySelector('.main-side-bar .anchor') //anchor button on utility side bar
-    // sideBarAnchor.addEventListener('click', () => inforBarState('main-side-bar','slide-left'))
+    
     
     
       
@@ -502,10 +501,7 @@ let techMap,
       techMap.on('click', function(e) {
         // let attr = json.properties
             console.log(e)
-            // console.log(e.target)
-            // return L.circleMarker(json.latlng).bindTooltip(`<b>LGA:${attr.lga}</b> <br> 
-            // Address: ${attr.address} <br> 
-            // Wardcode: <i class="text-success">${attr.wardcode}</i>`)
+            
         });
 
         
