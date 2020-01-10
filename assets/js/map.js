@@ -186,12 +186,21 @@ let techMap,
         expand: true
     })
      
-    let poi = L.layerGroup([layerHospital,layerPPMV])
+    let poi = L.layerGroup([overlays["Hospital"],overlays["Lagos PPMV"]])
     searchControl = L.control.search({
         layer: poi, 
         initial: false,
         marker: false,
         propertyName: 'name' ,
+        hideMarkerOnCollapse: true,
+        marker: {
+			icon: new L.Icon({iconUrl:'./assets/carrental.png', iconSize: [20,20]}),
+			circle: {
+				radius: 20,
+				color: '#0a0',
+				opacity: 1
+			}
+		},
         moveToLocation: function(latlng, title, techMap) {
             // techMap.fitBounds( latlng.layer.getBounds() );
             // console.log(latlng, title, techMap)
@@ -529,16 +538,19 @@ const inforBarState = (el,togglClass) =>{
 
 
 
+
+ 
+
 //  display data attributes and control data presentations
     function dataMarker(json, latlng){
         let attr = json.properties
         // console.log(json)
         if(attr.type == 'PPMV'){
             return L.marker(latlng,{
-                icon: iconPPMV,
+                icon:myIcon ,
             }).bindTooltip(`<b>Name:${attr.name}</b> <br> 
             Address: ${attr.address} <br> 
-            `,{direction: 'top'}).bindPopup('about Edit me?')
+            `,{direction: 'top'}).bindPopup(attr.name)
 
         }else{
             return L.marker(latlng,{
@@ -699,7 +711,7 @@ function feat1 (feature, layer) {
             fillOpacity.addEventListener('change', () =>{
                 let inc = fillOpacity.value
                 let dec  = inc/10
-                fillOpacity.value = dec
+                // fillOpacity.value = dec
                 console.log(dec,inc) 
                 layer.setStyle({
                     fillOpacity: fillOpacity.value
@@ -729,7 +741,7 @@ function feat1 (feature, layer) {
                     </datalist>        
                 </div>
             `
-            bd.scrollTop = 0 //scrooll to top
+            
         }else{
             document.querySelector('.legend-content').innerHTML = ` 
             <h2>Click a Layer to display properties</h2> 
@@ -801,3 +813,16 @@ sideBarBtns.forEach( btn =>{
 
 // Layer Edit functions
 const editLayerModal = document.getElementById('editLayer')
+
+
+
+var myIcon = L.icon({
+    iconUrl: './assets/carrental.png',
+    iconSize: [30, 40],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+    
+});
+
+console.log(myIcon)
+
