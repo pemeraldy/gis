@@ -28,7 +28,7 @@ let techMap,
     layerHospital,
     searchControl, 
     sites,
-    fuseSearch
+    poi
     
 
    $(document).ready(function(){
@@ -60,7 +60,7 @@ let techMap,
 
 
      layerHospital = L.geoJSON.ajax('data/hospital.geojson', {
-        'pointToLayer': dataMarker,
+        'pointToLayer': points,
         onEachFeature: feat1
     })
     let hMarkerCluster = L.markerClusterGroup()
@@ -172,9 +172,9 @@ let techMap,
     }
 
     overlays  = {
-        "Lagos PPMV": ppmarkerCluster,
-        "Hospital" : hMarkerCluster,
-        "live drawn": drawnItems,
+        "Lagos PPMV": layerPPMV,
+        "Hospital" : layerHospital,
+        // "live drawn": drawnItems,
         // "heat map": heat,
         "Lagos LGA": lagosLGA,
         "States": states,
@@ -186,7 +186,9 @@ let techMap,
         expand: true
     })
      
-    let poi = L.layerGroup([overlays["Hospital"],overlays["Lagos PPMV"]])
+
+    /**** SEARCH LAYERS ***/
+    poi = L.layerGroup([overlays["Hospital"],overlays["Lagos PPMV"]])
 
     searchControl = L.control.search({
         layer: poi, 
@@ -216,9 +218,9 @@ let techMap,
         console.log(e)
         let marker = new L.Marker(new L.latLng(e.latlng))
         
-        states.eachLayer(function(layer) {	
-			// states.resetStyle(layer);
-        });
+        // states.eachLayer(function(layer) {	
+		// 	// states.resetStyle(layer);
+        // });
         
         // poi.addLayer(marker)
         
@@ -328,23 +330,6 @@ let techMap,
     
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     // ######### Feature INfo Bar ###########
 
@@ -376,97 +361,6 @@ let techMap,
     
     legend.addTo(techMap);
 
-
-    // ******DYNAMICALLY ADD LAYER *************
-    // $('#collapseOne').click(function addNewLayer() {
-    //     //create new layer
-    //     let imageOverlayNew = new L.imageOverlay(imageOverlayUrlNew, bounds);
-    //     //add it to a control
-    //     layerControl.addOverlay(imageOverlayNew, newLayerName);
-    // });
-
-    // ********UTILITY SIDEBAR******
-
-    // mainSideBar = L.control({ position: "bottomright" });
-
-    // mainSideBar.onAdd = function() {
-    //   let div = L.DomUtil.create("div", "main-side-bar slide-left")
-    // div.innerHTML += `<h4>Utilities</h4>`;
-    // div.innerHTML += `<div class='anchor'>&lt</div>`    
-    // div.innerHTML += `<div class="accordion" id="accordionExample">`
-    // div.innerHTML += `<div class="card base-map ">
-    //     <div class="card-header" id="headingOne">
-    //     <h2 class="mb-0">
-    //         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-    //             Base Maps
-    //         </button>
-    //     </h2>
-    //     </div>
-
-    //     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-    //     <div class="card-body map-thumb-wrapper">
-    //             <div id="osm" class="map-thumb">
-    //                 <img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/5/10/10" alt="open street map">
-    //                 <div class="map-thumb-tag">OSM</div>
-    //             </div>
-
-    //             <div id="cartoDb" class="map-thumb">
-    //                 <img src="https://b.basemaps.cartocdn.com/dark_nolabels/5/15/10@2x.png" alt=" carto db">
-    //                 <div class="map-thumb-tag">Carto DB</div>
-    //             </div>
-                
-    //             <div id="openTopo" class="map-thumb">
-    //                 <img src="https://b.tile.opentopomap.org/5/15/10.png" alt="open topo">
-    //                 <div class="map-thumb-tag">Open Topo</div>
-    //             </div>
-
-    //             <div id="waterpaint" class="map-thumb">
-    //                 <img src="https://stamen-tiles-b.a.ssl.fastly.net/watercolor/5/15/10.jpg" alt="open topo">
-    //                 <div class="map-thumb-tag">Open Topo</div>
-    //             </div>
-
-    //     </div>
-    //     </div>
-    //     </div>
-        
-    // </div>`  
-    //     div.innerHTML += `<div class="card">
-    //         <div class="card-header" id="headingTwo">
-    //         <h2 class="mb-0">
-    //             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-    //                 Buffer Tool
-    //             </button>
-    //         </h2>
-    //         </div>
-    //         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    //         <div class="card-body">
-    //             Buffer Area 
-    //         </div>
-    //         </div>
-    //     </div>`
-
-    //     div.innerHTML += `<div class="card">
-    //         <div class="card-header" id="heading3">
-    //         <h2 class="mb-0">
-    //             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapseTwo">
-    //             Query Search
-    //             </button>
-    //         </h2>
-    //         </div>
-    //         <div id="collapse3" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-    //         <div class="card-body">
-    //             Buffer Area 
-    //         </div>
-    //         </div>
-    //     </div>`
-    // div.innerHTML += `</div>`                         
-    // div.innerHTML += `</div>`                     
-                       
-
-    //   return div;
-    // };
-    
-    // mainSideBar.addTo(techMap)
     
     // Base Map activators
     document.getElementById('osm').addEventListener('click', () =>{
@@ -693,7 +587,7 @@ function feat1 (feature, layer) {
             }
             bd.innerHtml += `<hr>`
             bd.innerHTML += `<div><label>Fill color</label>:<input id="fillCol" type='color' value='${layer.options.fillColor}'></div>`
-            bd.innerHTML += `<div><label>Fill opacicty</label>:<input id="fillOp" type='number' step='any' value='${layer.options.fillOpacity}'></div>`
+            bd.innerHTML += `<div><label>Fill opacicty</label>:<input id="fillOp" type='number' step='0.1' value='${layer.options.fillOpacity}'></div>`
             console.log(layer.options.fillColor)
             
             // addevent listeners for newly filled htmltags
@@ -710,9 +604,9 @@ function feat1 (feature, layer) {
 
             fillOpacity.addEventListener('change', () =>{
                 let inc = fillOpacity.value
-                let dec  = inc/10
+                // let dec  = inc/10
                 // fillOpacity.value = dec
-                console.log(dec,inc) 
+                // console.log(dec,inc) 
                 layer.setStyle({
                     fillOpacity: fillOpacity.value
                 }) 
@@ -836,7 +730,26 @@ sideBarBtns.forEach( btn =>{
 })
 
 // Layer Edit functions
-const editLayerModal = document.getElementById('editLayer')
+
+const modalFormValues = ()=>{
+    // let iconList = editLayerModalForm.iconList.value
+    let fillColor = editLayerModalForm.fillColor.value
+    let fillOpacity =  editLayerModalForm.fillOpacity.value
+    console.log(fillColor, fillOpacity)
+    return{
+        fillColor: fillColor,
+        fillOpacity: fillOpacity
+    }
+
+    // changePoints("Hospital", points )
+} 
+
+
+const editLayerModalForm = document.getElementById('editLayer')
+// console.log(editLayerModalForm)
+
+const saveCustomize = document.getElementById('saveCustomize')
+saveCustomize.addEventListener('click', changePoints('Hospital'))
 
 
 
@@ -848,5 +761,61 @@ var myIcon = L.icon({
     
 });
 
+var myIcon2 = L.icon({
+    iconUrl: './assets/firstaid.png',
+    iconSize: [30, 40],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+    
+});
+
+function points(json, latlng,options){
+    options = modalFormValues()
+    let attr = json.properties
+    // console.log(json)
+   
+        return L.circleMarker(latlng,{
+            // icon:myIcon2 ,
+            fillColor: options.fillColor,
+            color: 'yellow',
+            fillOpacity: 0.5,
+            // radius: options.radius
+        }).bindTooltip(`<b>Name:${attr.name}</b> <br> 
+        Address: ${attr.address} <br> 
+        `,{direction: 'top'}).bindPopup(attr.name)
+
+    
+}
 console.log(myIcon)
+
+$('#autocomplete').on('keyup', function(e) {
+
+    searchControl.searchText( e.target.value );
+
+})
+
+function changePoints(layer, pointFunc){
+    techMap.removeLayer(overlays[`${layer}`])
+    overlays[`${layer}`].options.pointToLayer = null
+    overlays[`${layer}`].options.pointToLayer = pointFunc
+    
+    overlays[`${layer}`].refresh()
+
+    // for(key in overlays){
+    //     let value = overlays[key]
+    //     console.log(key)
+    //     overlays[`${key}`].refresh()
+    //     console.log(key)
+    // }
+
+    // poi.clearLayers()
+    // for(key in overlays){
+    //     let value = overlays[key]
+    //     poi.addLayer(overlays[key])
+    // }
+
+    techMap.addLayer(overlays[`${layer}`])
+    
+    console.log(overlays[`${layer}`])
+}
 
