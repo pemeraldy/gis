@@ -187,6 +187,7 @@ let techMap,
     })
      
     let poi = L.layerGroup([overlays["Hospital"],overlays["Lagos PPMV"]])
+
     searchControl = L.control.search({
         layer: poi, 
         initial: false,
@@ -538,7 +539,10 @@ const inforBarState = (el,togglClass) =>{
  
 
 //  display data attributes and control data presentations
-    function dataMarker(json, latlng){
+    function dataMarker(json, latlng,options){
+        options = {
+            color: 'red'
+        }
         let attr = json.properties
         // console.log(json)
         if(attr.type == 'PPMV'){
@@ -614,14 +618,14 @@ const inforBarState = (el,togglClass) =>{
     // ************ASIGN CUSTOM MARKERS*************
    let iconPPMV = L.divIcon({
             className: 'custom-div-icon',
-            html: "<div style='color:#fff;' class='marker-pin-two'></div><i class='fas fa-capsules awesome fa-3x'>",
+            html: "<div style='color:#fff' class='marker-pin-two'></div><i class='fas fa-capsules awesome fa-3x'>",
             iconSize: [30, 42],
             iconAnchor: [15, 42]
         })
 
         let iconHospital = L.divIcon({
             className: 'custom-div-icon',
-            html: "<div background-color:#4838cc;' class='marker-pin-one'></div><i class='fas fa-hospital awesome fa-3x'>",
+            html: "<div style='background-color:#4838cc' class='marker-pin-one'></div><i style='color:#fff' class='fas fa-hospital awesome fa-3x'>",
             iconSize: [30, 42],
             iconAnchor: [15, 42]
         });
@@ -761,9 +765,17 @@ function fillLayer(){
     for(key of Object.keys(overlays)){
         let el = document.createElement('div')
         let checked = document.createElement('i')
+        let edit = document.createElement('i')
+        edit.classList.add('fas')
+        edit.classList.add('fa-edit')
+        edit.classList.add('edit')
+        edit.style.fontSize = '18px'
         checked.classList.add('fas')
+        checked.style.marginLeft = 'auto'
         // checked.classList.add('fa-check-square')
         el.innerText = key
+        el.prepend(edit)
+        edit.addEventListener('click', callModal)
         el.append(checked)
         el.classList.add('inactive')
         el.classList.add('layer')
@@ -775,7 +787,8 @@ function fillLayer(){
 }
 function loadLayer(e){
     // if a layer is not active, add the class active and also add to Map else do d opp
-
+    // if(e.target !== 'div'){ return}
+    // console.log(e)
    e.target.classList.contains('inactive') ? techMap.addLayer(overlays[e.target.innerText]) : techMap.removeLayer(overlays[e.target.innerText])
    e.target.classList.toggle('inactive')
    e.target.lastElementChild.classList.toggle('fa-check-square')
@@ -783,6 +796,21 @@ function loadLayer(e){
 // console.log(e.target.lastElementChild)
 }
 
+
+function callModal(e){
+    let call = document.querySelector("a[data-target] ")
+    let modalTitle = document.querySelector('#customize .modal-title')
+    let layerName = e.target.parentElement.innerText
+    // modalTitle = `${modalTitle.innerText} ${e.target.parentElement.innerText}` 
+    document.querySelector(" .map-sidebar").classList.add('side-open')
+
+    // console.log(e.target.parentElement.innerText)
+    call.click()  
+    modalTitle.innerText = ''  
+    modalTitle.innerText = `Edit layer - ${layerName}`
+    // console.log(modalTitle)
+    return layerName
+}
 
 const mapThumb = document.querySelectorAll('.map-thumb')
 
