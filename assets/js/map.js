@@ -54,13 +54,13 @@ let techMap,
 
     // ######## data AJAX  Calls #########
     layerPPMV = L.geoJSON.ajax('data/PPMV.geojson', {
-        'pointToLayer': dataMarker,
+        'pointToLayer': points,
         onEachFeature: feat1
     })
 
 
      layerHospital = L.geoJSON.ajax('data/hospital.geojson', {
-        'pointToLayer': points,
+        'pointToLayer': newPoints,
         onEachFeature: feat1
     })
     let hMarkerCluster = L.markerClusterGroup()
@@ -91,10 +91,7 @@ let techMap,
     // When Data Has Successfully Loaded
     let ppmarkerCluster = L.markerClusterGroup()
     layerPPMV.on('data:loaded', (data) =>{    
-        ppmarkerCluster.addLayer(layerPPMV)    
-        overlaysArray.push(layerPPMV)
-        
-        
+        ppmarkerCluster.addLayer(layerPPMV)       
     })
 
     states.on('data:loaded', () =>{
@@ -174,7 +171,7 @@ let techMap,
     overlays  = {
         "Lagos PPMV": layerPPMV,
         "Hospital" : layerHospital,
-        // "live drawn": drawnItems,
+        "live drawn": drawnItems,
         // "heat map": heat,
         "Lagos LGA": lagosLGA,
         "States": states,
@@ -291,6 +288,7 @@ let techMap,
 
     }); 
 
+    
     //Add draw control to map
     techMap.addControl(drawControl);
 
@@ -388,6 +386,14 @@ let techMap,
     const anchor = document.querySelector('.anchor') //anchor button on legend bar    
     anchor.addEventListener('click', () => inforBarState('legend','trans-open'))
 
+    options = {
+        icon: 'clinic-medical',
+        iconShape: 'marker'
+    };
+   const freshMark =  L.marker([48.13710, 11.57539], {
+        icon: L.BeautifyIcon.icon(options),
+        draggable: false
+    }).addTo(techMap).bindPopup("popup").bindPopup("This is a BeautifyMarker");
     
     
     
@@ -749,7 +755,7 @@ const editLayerModalForm = document.getElementById('editLayer')
 // console.log(editLayerModalForm)
 
 const saveCustomize = document.getElementById('saveCustomize')
-saveCustomize.addEventListener('click', changePoints('Hospital'))
+saveCustomize.addEventListener('click', changePoints)
 
 
 
@@ -769,25 +775,46 @@ var myIcon2 = L.icon({
     
 });
 
+
+function newPoints(json, latlng){
+    let attr = json.properties
+    options = {
+        icon: 'leaf',
+        iconShape: 'marker'
+    };
+   return L.marker(latlng, {
+        icon: L.BeautifyIcon.icon(options),
+        draggable: true
+    }).bindTooltip(`<b>Name:${attr.name}</b> <br> 
+    Address: ${attr.address} <br> 
+    `,{direction: 'top'}).bindPopup(attr.name)
+}
+
 function points(json, latlng,options){
-    options = modalFormValues()
+    // options = modalFormValues()
     let attr = json.properties
     // console.log(json)
    
-        return L.circleMarker(latlng,{
-            // icon:myIcon2 ,
-            fillColor: options.fillColor,
-            color: 'yellow',
-            fillOpacity: 0.5,
-            // radius: options.radius
-        }).bindTooltip(`<b>Name:${attr.name}</b> <br> 
+    var options = {
+        icon: 'clinic-medical',
+        iconShape: 'circle',
+        borderColor: '#b3334f',
+        textColor: '#b3334f',
+        //  iconSize: [40,40],
+        // innerIconStyle: 'font-size:20px; margin:10px auto'
+      };
+      return L.marker(latlng, {
+        icon: L.BeautifyIcon.icon(options),
+        draggable: true
+      })
+      .bindTooltip(`<b>Name:${attr.name}</b> <br> 
         Address: ${attr.address} <br> 
         `,{direction: 'top'}).bindPopup(attr.name)
 
     
 }
 console.log(myIcon)
-
+/* LINK THE SEARCH INPUT WITH LEAFLET SEARCH PLUGIN */
 $('#autocomplete').on('keyup', function(e) {
 
     searchControl.searchText( e.target.value );
@@ -801,21 +828,10 @@ function changePoints(layer, pointFunc){
     
     overlays[`${layer}`].refresh()
 
-    // for(key in overlays){
-    //     let value = overlays[key]
-    //     console.log(key)
-    //     overlays[`${key}`].refresh()
-    //     console.log(key)
-    // }
-
-    // poi.clearLayers()
-    // for(key in overlays){
-    //     let value = overlays[key]
-    //     poi.addLayer(overlays[key])
-    // }
 
     techMap.addLayer(overlays[`${layer}`])
     
     console.log(overlays[`${layer}`])
 }
+
 
