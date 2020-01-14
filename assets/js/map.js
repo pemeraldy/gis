@@ -72,7 +72,8 @@ let techMap,
     
     lagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
         'pointToLayer': dataStyler,
-        onEachFeature: popUpData
+        onEachFeature: feat1,
+        
     })
 
     states = L.geoJSON.ajax('data/Nigeria_states.geojson', {
@@ -83,6 +84,7 @@ let techMap,
 
     lga = L.geoJSON.ajax('data/Nigeria_LGAs.geojson', {
         'pointToLayer': dataStyler,
+        onEachFeature: feat1,
         style: styleOne
     })
 
@@ -100,10 +102,7 @@ let techMap,
     })
 
 
-    ////////// Autocomplete search
     
-
-
     /**STYLING FUNCTIONS**/
     function style(feature) {
         return {
@@ -194,7 +193,7 @@ let techMap,
         propertyName: 'name' ,
         hideMarkerOnCollapse: true,
         marker: {
-			icon: new L.Icon({iconUrl:'./assets/carrental.png', iconSize: [20,20]}),
+			icon: new L.Icon({iconUrl:'./assets/firstaid.png', iconSize: [20,20]}),
 			circle: {
 				radius: 20,
 				color: '#f41642',
@@ -516,26 +515,26 @@ const inforBarState = (el,togglClass) =>{
     }
 
     // ************ASIGN CUSTOM MARKERS*************
-   let iconPPMV = L.divIcon({
-            className: 'custom-div-icon',
-            html: "<div style='color:#fff' class='marker-pin-two'></div><i class='fas fa-capsules awesome fa-3x'>",
-            iconSize: [30, 42],
-            iconAnchor: [15, 42]
-        })
+//    let iconPPMV = L.divIcon({
+//             className: 'custom-div-icon',
+//             html: "<div style='color:#fff' class='marker-pin-two'></div><i class='fas fa-capsules awesome fa-3x'>",
+//             iconSize: [30, 42],
+//             iconAnchor: [15, 42]
+//         })
 
-        let iconHospital = L.divIcon({
-            className: 'custom-div-icon',
-            html: "<div style='background-color:#4838cc' class='marker-pin-one'></div><i style='color:#fff' class='fas fa-hospital awesome fa-3x'>",
-            iconSize: [30, 42],
-            iconAnchor: [15, 42]
-        });
+//         let iconHospital = L.divIcon({
+//             className: 'custom-div-icon',
+//             html: "<div style='background-color:#4838cc' class='marker-pin-one'></div><i style='color:#fff' class='fas fa-hospital awesome fa-3x'>",
+//             iconSize: [30, 42],
+//             iconAnchor: [15, 42]
+//         });
 
-        let iconLaboratory = L.divIcon({
-            className: 'custom-div-icon',
-            html: "<div style='color:#fff;' class='marker-pin-one'></div><i class='fas fa-flask awesome fa-3x'>",
-            iconSize: [30, 42],
-            iconAnchor: [15, 42]
-        });
+//         let iconLaboratory = L.divIcon({
+//             className: 'custom-div-icon',
+//             html: "<div style='color:#fff;' class='marker-pin-one'></div><i class='fas fa-flask awesome fa-3x'>",
+//             iconSize: [30, 42],
+//             iconAnchor: [15, 42]
+//         });
 
 
 
@@ -580,6 +579,7 @@ function feat1 (feature, layer) {
         let props = feature.properties
         document.querySelector('.legend').classList.remove('trans-open')
         // console.log(props)
+
         if(feature.geometry.type == "MultiPolygon"){
             color.type = 'color'
             console.log(layer)
@@ -609,10 +609,8 @@ function feat1 (feature, layer) {
             } )
 
             fillOpacity.addEventListener('change', () =>{
-                let inc = fillOpacity.value
-                // let dec  = inc/10
-                // fillOpacity.value = dec
-                // console.log(dec,inc) 
+               
+                 
                 layer.setStyle({
                     fillOpacity: fillOpacity.value
                 }) 
@@ -707,7 +705,7 @@ function callModal(e){
     // console.log(e.target.parentElement.innerText)
     call.click()  
     modalTitle.innerText = ''  
-    modalTitle.innerText = `Edit layer - ${layerName}`
+    modalTitle.innerText = `${layerName}`
     // console.log(modalTitle)
     return layerName
 }
@@ -751,11 +749,11 @@ const modalFormValues = ()=>{
 } 
 
 
-const editLayerModalForm = document.getElementById('editLayer')
-// console.log(editLayerModalForm)
+// const editLayerModalForm = document.getElementById('editLayer')
+// // console.log(editLayerModalForm)
 
-const saveCustomize = document.getElementById('saveCustomize')
-saveCustomize.addEventListener('click', changePoints)
+// const saveCustomize = document.getElementById('saveCustomize')
+// saveCustomize.addEventListener('click', changePoints)
 
 
 
@@ -779,25 +777,25 @@ var myIcon2 = L.icon({
 function newPoints(json, latlng){
     let attr = json.properties
     options = {
-        icon: 'leaf',
+        icon: 'home',
         iconShape: 'marker'
     };
    return L.marker(latlng, {
         icon: L.BeautifyIcon.icon(options),
-        draggable: true
-    }).bindTooltip(`<b>Name:${attr.name}</b> <br> 
+        draggable: false
+    }).bindTooltip(`<b>${attr.name}</b> <br> 
     Address: ${attr.address} <br> 
-    `,{direction: 'top'}).bindPopup(attr.name)
+    `,{direction: 'auto'}).bindPopup(attr.name)
 }
 
-function points(json, latlng,options){
-    // options = modalFormValues()
+function points(json,latlng,options){
+    
     let attr = json.properties
     // console.log(json)
    
     var options = {
-        icon: 'clinic-medical',
-        iconShape: 'circle',
+        icon: 'hospital-alt',
+        iconShape: 'marker',
         borderColor: '#b3334f',
         textColor: '#b3334f',
         //  iconSize: [40,40],
@@ -805,7 +803,7 @@ function points(json, latlng,options){
       };
       return L.marker(latlng, {
         icon: L.BeautifyIcon.icon(options),
-        draggable: true
+        draggable: false
       })
       .bindTooltip(`<b>Name:${attr.name}</b> <br> 
         Address: ${attr.address} <br> 
@@ -834,4 +832,145 @@ function changePoints(layer, pointFunc){
     console.log(overlays[`${layer}`])
 }
 
+    const ptSymbol = document.getElementById('ptSymbol')
+    const ptSize = document.getElementById('ptSize')
+    const ptFill = document.getElementById('ptFill')
+    
+    const ptOpacity = document.getElementById('ptOpacity')
+    
+    
+    const ptStrokeOp = document.getElementById('ptStrokeOp')
+    const ptStrokeW  = document.getElementById('ptStrokeW')
+    const ptSolid = document.getElementById('ptSolid')
+    const ptDash = document.getElementById('ptDash')
 
+    ptOpacity.addEventListener('change', ()=>ptSymbol.style.opacity = ptOpacity.value)
+    const ptStroke = document.getElementById('ptStroke')
+
+    ptFill.addEventListener('change', ()=>ptSymbol.style.background = ptFill.value)
+
+    ptStroke.addEventListener('change', ()=>{
+        console.log(ptStroke.value)
+        if(ptSolid.checked){ ptSymbol.style.border = `${ptStrokeW.value}px  solid  ${ptStroke.value}` }
+        if(ptDash.checked){ ptSymbol.style.border = `${ptStrokeW.value}px  dotted  ${ptStroke.value}` }
+    })
+    ptStrokeW.addEventListener('change', ()=>{
+        if(ptSolid.checked){ ptSymbol.style.border = `${ptStrokeW.value}px  solid  ${ptStroke.value}` }
+        if(ptDash.checked){ ptSymbol.style.border = `${ptStrokeW.value}px  dotted  ${ptStroke.value}` }
+    })
+/****** MAP MODAL STYLING *******/
+// ######POINTS
+function returnPointValues(){    
+    const ptSize = document.getElementById('ptSize')
+    const ptFill = document.getElementById('ptFill')
+    const ptOpacity = document.getElementById('ptOpacity')
+    const ptStroke = document.getElementById('ptStroke')
+    const ptStrokeW  = document.getElementById('ptStrokeW')
+    const ptSolid = document.querySelector('input[name="ptStrokeType"]:checked').value
+    // const ptDash = document.getElementById('ptDash')
+    
+    const ptOptions =  {
+        ptSize: ptSize.value,
+        ptFill: ptFill.value,
+        ptOpacity: ptOpacity.value,
+        ptStroke: ptStroke.value,
+        // ptStrokeOp: ptStrokeOp.value,
+        ptSolid: ptSolid,
+        ptStrokeW: ptStrokeW.value
+        
+    }
+    return ptOptions
+}
+const savePtCustomize = document.getElementById('savePtCustomize')
+
+savePtCustomize.addEventListener('click', () =>{
+    
+    const layer = document.getElementById('customizeLabel').innerText
+    changePoints(layer,pointStyler)
+    
+    
+    console.log( returnPointValues() )
+    document.getElementById('ptmodalClose').click()
+})
+
+// FUNCTION THAT STYLES POINTS ONLY
+function pointStyler(json, latlng, val){
+    let attr = json.properties
+     val = returnPointValues()
+    options = {
+        iconShape: 'circle-dot',
+        iconSize: [val.ptSize,val.ptSize],
+        borderWidth: val.ptStrokeW,
+        borderColor: val.ptStroke,
+        borderStyle: val.ptSolid,
+        backgroundColor: val.ptFill,
+      };
+   return L.marker(latlng, {
+        icon: L.BeautifyIcon.icon(options),
+        draggable: false,
+        opacity: val.ptOpacity
+    }).bindTooltip(`<b>${attr.name}</b> <br> Address: ${attr.address} <br> 
+    `,{direction: 'auto'}).bindPopup(attr.name)
+    
+}
+
+
+// FUNCTION TO STYLE ICONS
+function iconStyler(json, latlng){
+    let attr = json.properties
+     val = returnIconValues()
+     options = {
+        icon: val.icon,
+        borderColor: val.borderColor,
+        textColor: val.textColor,
+        backgroundColor: val.backgroundColor,
+        iconSize:val.iconSize,          
+        innerIconStyle: val.innerIconStyle,
+        // iconShape: ''
+      };
+    
+   return L.marker(latlng, {
+        icon: L.BeautifyIcon.icon(options),
+        draggable: false,
+        
+    }).bindTooltip(`<b>${attr.name}</b> <br> Address: ${attr.address} <br> 
+    `,{direction: 'auto'}).bindPopup(attr.name)
+    
+}
+
+const icon = document.getElementById('iconType')
+const iconColor = document.getElementById('iconColor')
+// Icon FORM VALUES
+function returnIconValues(){    
+    const icon = document.getElementById('iconType')
+    const iconColor = document.getElementById('iconColor')
+    const iconSize = document.getElementById('iconSize')
+    const iconBg = document.getElementById('iconBg')
+    const iconStroke  = document.getElementById('iconStroke')
+    const iconStrokeSize  = document.getElementById('iconStrokeSize')
+    
+    
+    const iconOptions =  {
+        icon: icon.value,
+        textColor: iconColor.value,
+        backgroundColor: iconBg.value,
+        iconSize: [Number(iconSize.value), Number(iconSize.value)],
+        borderWidth: iconStrokeSize.value,
+        borderColor: iconStroke.value,
+        innerIconStyle: `font-size:${Math.floor(Number(iconSize.value)/2)}px; padding:${Math.floor(Number(iconSize.value)/5)}px;`        
+    }
+    return iconOptions
+}
+
+
+const saveIconCustomize = document.getElementById('saveIcon')
+
+saveIconCustomize.addEventListener('click', () =>{
+    
+    const layer = document.getElementById('customizeLabel').innerText
+    changePoints(layer,iconStyler)
+    
+    
+    console.log( returnPointValues() )
+    document.getElementById('cancelIcon').click()
+})

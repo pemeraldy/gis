@@ -66,7 +66,7 @@
   <script src="./assets/js/plugins/leaflet-measure.js"></script>
   <!-- <script src="./assets/js/plugins/L.Control.SlideMenu.js"></script> -->
   <script src="./assets/js/plugins/leaflet.markercluster.js"></script>
-  <!-- <script src="./assets/js/plugins/leaflet-marker-bounce.js"></script> -->
+  <script src="./assets/js/plugins/leaflet-marker-bounce.js"></script>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.5/fuse.min.js"></script> -->
   <script src="./assets/js/plugins/fuse.js"></script>
   <script src="./assets/js/plugins/leaflet.fusesearch.js"></script>
@@ -432,32 +432,31 @@
                   <div class="modal-body">
                       <nav>
                           <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active" id="nav-layer-tab" data-toggle="tab" href="#nav-layer" role="tab" aria-controls="nav-layer" aria-selected="true">Basic</a>
-                            <a class="nav-item nav-link" id="nav-Style-tab" data-toggle="tab" href="#nav-Style" role="tab" aria-controls="nav-Style" aria-selected="false">Category</a>
+                            <a class="nav-item nav-link active" id="nav-layer-tab" data-toggle="tab" href="#nav-layer" role="tab" aria-controls="nav-layer" aria-selected="true">Points</a>
+                            <a class="nav-item nav-link" id="" data-toggle="tab" href="#nav-Style" role="tab" aria-controls="nav-Style" aria-selected="false">Icons</a>
+                            <a class="nav-item nav-link" id="" data-toggle="tab" href="#nav-Style" role="tab" aria-controls="nav-Style" aria-selected="false">Category</a>
+                            <a class="nav-item nav-link" id="" data-toggle="tab" href="#nav-Style" role="tab" aria-controls="nav-Style" aria-selected="false">Cloropleth</a>
                             
                           </div>
                         </nav>
                         <div class="tab-content" id="nav-tabContent">
                           <div class="tab-pane fade show active" id="nav-layer" role="tabpanel" aria-labelledby="nav-layer-tab">
-                            <form id="editLayer" class="p-2">
+                            <form id="points" class="p-2">
                               <div class="row">
                                 <div class="col-md-6">
-                                  <!--############# Icon Selection ########## -->
+                                  <!--############# Points ########## -->
                                   <div class="form-group">
                                     <label for="iconsType" class="">Point symbol</label>
-                                    <input type="text" list="iconList" class="form-control" id="iconType" placeholder="choose icon">
-                                    <datalist id="iconList">
-                                      <option value="car"></option>
-                                      <option value="hospital"></option>
-                                      <option value="ppmv"></option>
-                                    </datalist>
+                                      <div " class="symbol">
+                                        <div id="ptSymbol" class="symbol-icon"></div>
+                                      </div>
                                   </div>
                                 </div>
                                 <!--############# Icon Size ########## -->
                                 <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="iconSize" class="">Size</label>
-                                    <input id="iconSize" type="number" min="16" max="60" class="form-control"  value="14"/>
+                                      <label for="ptSize" class="">Size</label>
+                                    <input id="ptSize" type="number" min="16" max="60" class="form-control"  value="14"/>
                                   </div>
                                 </div>
                               </div>
@@ -466,20 +465,20 @@
                                 <!-- ############ Fill color and opacity ############### -->
                                 <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="fillColor" class="">Fill color</label>
+                                      <label for="ptFill" class="">Fill color</label>
                                     <div class="input-group mb-4">
                                       <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-color"></i></span>
                                       </div>                                      
-                                      <input id="fillColor" class="form-control"  type="color">
+                                      <input id="ptFill" class="form-control"  type="color">
                                     </div>
                                   </div>
                                 </div>
                                 <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="fillOpacity" class="" >Fill opacity</label>
+                                      <label for="ptOpacity" class="" >Fill opacity</label>
                                     <div class="input-group mb-4">
-                                      <input id="fillOpacity" class="form-control"  type="number" step="0.1" value="0.5" min="0" max="1">
+                                      <input id="ptOpacity" class="form-control"  type="number" step="0.1" value="0.5" min="0" max="1">
                                       <div class="input-group-append">
                                         <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
                                       </div>
@@ -490,53 +489,131 @@
 
                               <div class="row">
                                   <!-- ############ outline color and opacity ############### -->
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="strokeColor" class="">Stroke color</label>
+                                        <label for="ptStroke" class="">Stroke</label>
                                       <div class="input-group mb-4">
                                         <div class="input-group-prepend">
                                           <span class="input-group-text"><i class="fas fa-color"></i></span>
                                         </div>                                      
-                                        <input id="strokeColor" class="form-control"  type="color">
+                                        <input id="ptStroke" class="form-control"  type="color">
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
+                                      <div class="form-group">
+                                          <label for="ptStrokeW" class="" >Stroke width</label>
+                                        <div class="input-group mb-4">
+                                          <input id="ptStrokeW" class="form-control"  type="number" step="1" value="0" min="0" max="100">
+                                          <div  class="input-group-append">
+                                            <span class="input-group-text"><i class="ni ni-zoo-split-in"></i></span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="strokeOpacity" class="" >Stroke opacity</label>
+                                        <label for="stType" class="" >Stroke type</label>
                                       <div class="input-group mb-4">
-                                        <input class="form-control"  type="number" step="0.1" value="0.5" min="0" max="1">
+                                          <button type="button" class="btn btn-sm btn-white" data-toggle="tooltip" data-placement="top" title="choose solid or dash">
+                                              <input class=""  type="radio" name="ptStrokeType" value="solid" id="ptSolid" checked> Solid
+                                              <input style="margin-left:4px ;" class=""  type="radio" name="ptStrokeType" value="dotted" id="ptDash"> Dash
+                                          </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="ptmodalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button id="savePtCustomize" type="button" class="btn btn-primary">Save</button>
+                                  </div>
+                            </form>
+                          </div>
+                          <div class="tab-pane fade" id="nav-Style" role="tabpanel" aria-labelledby="nav-Style-tab">
+                            <form id="iconSymbols" class="p-2">
+                              <div class="row">
+                               <!--############# Icon Selection ########## -->
+                                <div class="col-md-4">                                  
+                                  <div class="form-group">
+                                    <label for="icon" class="">Point symbol</label>
+                                    <input type="text" list="icon" value="home" class="form-control" id="iconType" placeholder="choose icon">
+                                    <datalist id="icon">
+                                      <option value="home"></option>
+                                      <option value="hospital"></option>
+                                      <option value="taxi"></option>
+                                    </datalist>
+                                  </div>
+                                </div>
+                                <!-- ############ Fill color and opacity ############### -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="iconColor" class="">Fill color</label>
+                                      <div class="input-group mb-4">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text"><i class="fas fa-color"></i></span>
+                                        </div>                                      
+                                        <input id="iconColor" class="form-control" value="#400080" type="color">
+                                      </div>
+                                    </div>
+                                  </div>
+                                <!--############# Icon Size ########## -->
+                                <div class="col-md-4">
+                                  <div class="form-group">
+                                      <label for="iconSize" class="">Size</label>
+                                    <input id="iconSize" type="number" min="40" max="400" class="form-control"  value="40"/>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <!-- ############ Icon background ############### -->
+                                <div class="col-md-4">
+                                  <div class="form-group">
+                                      <label for="iconBg" class="">Backgound</label>
+                                    <div class="input-group mb-4">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-color"></i></span>
+                                      </div>                                      
+                                      <input id="iconBg" class="form-control" value="#ffffff"  type="color">
+                                    </div>
+                                  </div>
+                                </div>
+                                <!-- ###########STROKE COLOR -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="iconStroke" class="" >Stroke color</label>
+                                      <div class="input-group mb-4">
+                                        <input id="iconStroke" class="form-control"  type="color">
                                         <div class="input-group-append">
-                                          <span class="input-group-text"><i class="ni ni-zoo-split-in"></i></span>
+                                          <span class="input-group-text"><i class="fas fa-color"></i></span>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
+
+                                  <div class="col-md-4">
+                                      <div class="form-group">
+                                          <label for="iconStrokeSize" class="">Stoke size</label>
+                                        <input id="iconStrokeSize" type="number" min="0" max="10" class="form-control"  value="0"/>
+                                      </div>
+                                    </div>
+                              </div>
+
+                              <div class="modal-footer">
+                                  <button id="cancelIcon" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  <button id="saveIcon" type="button" class="btn btn-primary">Save</button>
                                 </div>
-                              <!-- <div class="row">
-                                <div class="col-md-6">
-                                  <div class="form-group has-success">
-                                    <input type="text" placeholder="Success" class="form-control is-valid" />
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <div class="form-group has-danger">
-                                    <input type="email" placeholder="Error Input" class="form-control is-invalid" />
-                                  </div>
-                                </div>
-                              </div> -->
+                                                     
                             </form>
-                          </div>
-                          <div class="tab-pane fade" id="nav-Style" role="tabpanel" aria-labelledby="nav-Style-tab">
-                            ...
                           </div>
                           
                         </div>
                   </div>
-                  <div class="modal-footer">
+                  <!-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button id="saveCustomize" type="button" class="btn btn-primary">Save</button>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>

@@ -522,3 +522,21 @@ li .search-tip{
   background: orange !important;
   color: white !important;
 }
+
+.symbol{
+  width: 70px;
+  height: auto;
+  padding:5px;
+  background: #fff;
+  display: flex;
+  justify-content:center;
+  align-items:center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.symbol-icon{
+  border-radius: 50%;
+  width: 20px;
+  height:20px;
+  background: orange;
+}
