@@ -280,10 +280,11 @@ let techMap,
                 repeatMode: true,
                 draggable: true
             },
+            marker: true,
         },
         edit: {
             featureGroup: drawnItems,
-            // remove: true
+            remove: true
         },
 
     }); 
@@ -293,22 +294,23 @@ let techMap,
     techMap.addControl(drawControl);
 
     techMap.on('draw:created', function (e) {
-        let type = e.layerType,
-            layer = e.layer
-        
+        let type = e.layerType
+        // let layer = e.layer
+            console.log(e.layer)    
         
             if (type === 'circle') {
                 layer.bindTooltip('<b>Radius: </b>'+ (layer._mRadius/1000).toFixed(3)+' km');
-                console.log(e, layer.toGeoJSON())                
+                console.log(e, e.layer.toGeoJSON())                
             }
             if (type === 'rectangle') {
                 layer.bindTooltip('width: '+e.sourceTarget._size.x +'km <br/> Height '+e.sourceTarget._size.y+'km');
-                console.log( e, layer, e.sourceTarget._size)                
+                console.log( e, e.layer, e.sourceTarget._size)                
             }
             if (type === 'polygon') {
-                layer.bindTooltip('');
-                console.log( layer)                
+                e.layer.bindTooltip('');
+                console.log( e.layer)                
             }
+
             // cHECKING IF ITS A MARKER AND TRIGGRED
             if(e.layerType === 'marker' && bufferMode.classList.contains('active')){
                 if(bufferCircle){
@@ -316,12 +318,12 @@ let techMap,
                     
                 }
                 
-                var marker_lat_long = e.layer._latlng
-                console.log(marker_lat_long)
-                var radius = milesToMeters($('#radiusSelected').val());
+                let marker_lat_long = e.layer._latlng
+                // console.log(marker_lat_long)
+                let radius = milesToMeters($('#radiusSelected').val());
         
                 bufferCircle = L.circle(marker_lat_long, radius)
-                console.log(bufferCircle)
+                // console.log(bufferCircle)
                 bufferCircle.addTo(techMap);
         
                 // Calculate the number of eco icons within the circle
@@ -329,8 +331,8 @@ let techMap,
                 pointsInCircle(bufferCircle, radius)
         
                 // Make the marker draggable
-                console.log(e)
-                layer.dragging.enable();
+                console.log(e.layer)
+                e.layer.dragging.enable();
         
                 // If you drag the marker, make sure the circle goes with it
                 e.layer.on('dragend', function(event) {
@@ -341,7 +343,7 @@ let techMap,
                     // $('#ofi_paf').html('');
         
                     // This will determine how many markers are within the circle
-                    pointsInCircle(bufferCircle, milesToMeters($('#radiusSelected').val()));
+                    pointsInCircle(bufferCircle, milesToMeters($('#radius-selected').val()));
         
                     // Redraw: Leaflet function
                     bufferCircle.redraw();
@@ -351,7 +353,7 @@ let techMap,
 
 
 
-        drawnItems.addLayer(layer);
+        drawnItems.addLayer(e.layer);
         // let newGeo = layer.toGeoJSON()
         // console.log(newGeo)
         
@@ -1031,12 +1033,12 @@ saveIconCustomize.addEventListener('click', () =>{
 // BUFER BUFER!!!
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
-	return miles * 1069.344;
+	return miles * 1069.344
 }
 
 // figures out how many points are i a circle
 function pointsInCircle(circle, meters_user_set) {
-	if (circle !== undefined) {
+	if (bufferCircle !== undefined) {
     // Only run if we have an address entered
     // Lat, long of circle
     circle_lat_long = bufferCircle.getLatLng();
@@ -1054,21 +1056,21 @@ function pointsInCircle(circle, meters_user_set) {
 
 			// See if meters is within raduis
 			// The user has selected
-			// if (distance_from_layer_circle <= meters_user_set) {
+			if (distance_from_layer_circle <= meters_user_set) {
 			// 	counter_points_in_circle += 1;
-
+                console.log(layer.feature.properties.name)
 			// 	var ofi_paf_html = '<h4>' + counter_points_in_circle + '. ' + layer.feature.properties.oficina + '</h4>';
 			// 	// Convert to miles
 			// 	ofi_paf_html += 'Distance: ' + (distance_from_layer_circle * 0.000621371).toFixed(2) + ' miles';
 
 			// 	$('#ofi_paf').append(ofi_paf_html);
-			// }
+			}
 		});
 
 		// Set number of results on main page
 		// $('#ofi_paf_results').html(counter_points_in_circle);
 	}
-// Close pointsInCircle
+// Close pointsInCircle 
 };
 
 const bufferMode = document.getElementById('bufferMode')
