@@ -28,7 +28,8 @@ let techMap,
     layerHospital,
     searchControl, 
     sites,
-    poi
+    poi,
+    bufferCircle
     
 
    $(document).ready(function(){
@@ -71,7 +72,7 @@ let techMap,
     })
     
     lagosLGA = L.geoJSON.ajax('data/lagos_LGA.geojson', {
-        'pointToLayer': dataStyler,
+        'pointToLayer': dataStyler, 
         onEachFeature: feat1,
         
     })
@@ -145,7 +146,6 @@ let techMap,
             layer.setStyle(highlight);  //highlights selected.
         }); 
     }
-
 
 
     // ############### HEATMAP ######
@@ -282,7 +282,8 @@ let techMap,
             },
         },
         edit: {
-            featureGroup: drawnItems
+            featureGroup: drawnItems,
+            // remove: true
         },
 
     }); 
@@ -294,6 +295,7 @@ let techMap,
     techMap.on('draw:created', function (e) {
         let type = e.layerType,
             layer = e.layer
+        
         
             if (type === 'circle') {
                 layer.bindTooltip('<b>Radius: </b>'+ (layer._mRadius/1000).toFixed(3)+' km');
@@ -307,8 +309,50 @@ let techMap,
                 layer.bindTooltip('');
                 console.log( layer)                
             }
+            // cHECKING IF ITS A MARKER AND TRIGGRED
+            if(e.layerType === 'marker' && bufferMode.classList.contains('active')){
+                if(bufferCircle){
+                    techMap.removeLayer(bufferCircle)
+                    
+                }
+                
+                var marker_lat_long = e.layer._latlng
+                console.log(marker_lat_long)
+                var radius = milesToMeters($('#radiusSelected').val());
+        
+                bufferCircle = L.circle(marker_lat_long, radius)
+                console.log(bufferCircle)
+                bufferCircle.addTo(techMap);
+        
+                // Calculate the number of eco icons within the circle
+                // So we can put it on the DOM
+                pointsInCircle(bufferCircle, radius)
+        
+                // Make the marker draggable
+                console.log(e)
+                layer.dragging.enable();
+        
+                // If you drag the marker, make sure the circle goes with it
+                e.layer.on('dragend', function(event) {
+                    techMap.setView(event.target.getLatLng());
+                    bufferCircle.setLatLng(event.target.getLatLng());
+        
+                    // Clear out results
+                    // $('#ofi_paf').html('');
+        
+                    // This will determine how many markers are within the circle
+                    pointsInCircle(bufferCircle, milesToMeters($('#radiusSelected').val()));
+        
+                    // Redraw: Leaflet function
+                    bufferCircle.redraw();
+                });
+            }
+
+
+
+
         drawnItems.addLayer(layer);
-        let newGeo = layer.toGeoJSON()
+        // let newGeo = layer.toGeoJSON()
         // console.log(newGeo)
         
         // sendDraw()
@@ -319,7 +363,7 @@ let techMap,
 
     // Measure area and line
     measureControl = new L.Control.Measure({position: 'topleft', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters'});
-    let oldContainer =  measureControl.getContainer()
+     oldContainer =  measureControl.getContainer()
     let newMeasureToolCont = document.querySelector('#pills-contact');
     newMeasureToolCont.append(oldContainer);
     measureControl.addTo(techMap);
@@ -392,7 +436,7 @@ let techMap,
    const freshMark =  L.marker([48.13710, 11.57539], {
         icon: L.BeautifyIcon.icon(options),
         draggable: false
-    }).addTo(techMap).bindPopup("popup").bindPopup("This is a BeautifyMarker");
+    }).addTo(techMap).bindPopup("popup")
     
     
     
@@ -881,6 +925,7 @@ function returnPointValues(){
     }
     return ptOptions
 }
+// Button to effect point changes
 const savePtCustomize = document.getElementById('savePtCustomize')
 
 savePtCustomize.addEventListener('click', () =>{
@@ -938,8 +983,9 @@ function iconStyler(json, latlng){
     
 }
 
-const icon = document.getElementById('iconType')
-const iconColor = document.getElementById('iconColor')
+
+
+
 // Icon FORM VALUES
 function returnIconValues(){    
     const icon = document.getElementById('iconType')
@@ -973,4 +1019,60 @@ saveIconCustomize.addEventListener('click', () =>{
     
     console.log( returnPointValues() )
     document.getElementById('cancelIcon').click()
+})
+
+
+
+// TRY TURF AFRESH
+// var point = turf.point([-90.548630, 14.616599]);
+// var buffered = turf.buffer(point, 500, {units: 'miles'})
+// buffered.addTo(techMap)
+
+// BUFER BUFER!!!
+// Convert miles to meters to set radius of circle
+function milesToMeters(miles) {
+	return miles * 1069.344;
+}
+
+// figures out how many points are i a circle
+function pointsInCircle(circle, meters_user_set) {
+	if (circle !== undefined) {
+    // Only run if we have an address entered
+    // Lat, long of circle
+    circle_lat_long = bufferCircle.getLatLng();
+
+    var counter_points_in_circle = 0;
+
+		// Loop through each point in JSON file
+		layerHospital.eachLayer(function(layer) {
+			// Lat, long of current point
+			layer_lat_long = layer.getLatLng();
+
+			// Distance from our circle marker
+			// To current point in meters
+			distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
+
+			// See if meters is within raduis
+			// The user has selected
+			// if (distance_from_layer_circle <= meters_user_set) {
+			// 	counter_points_in_circle += 1;
+
+			// 	var ofi_paf_html = '<h4>' + counter_points_in_circle + '. ' + layer.feature.properties.oficina + '</h4>';
+			// 	// Convert to miles
+			// 	ofi_paf_html += 'Distance: ' + (distance_from_layer_circle * 0.000621371).toFixed(2) + ' miles';
+
+			// 	$('#ofi_paf').append(ofi_paf_html);
+			// }
+		});
+
+		// Set number of results on main page
+		// $('#ofi_paf_results').html(counter_points_in_circle);
+	}
+// Close pointsInCircle
+};
+
+const bufferMode = document.getElementById('bufferMode')
+bufferMode.addEventListener('click', (e) =>{
+    e.target.classList.add('active')
+    e.target.innerText = 'Buffer activated'
 })

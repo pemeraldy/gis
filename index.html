@@ -51,7 +51,7 @@
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
   <!-- TURF js -->
-  <!-- <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script> -->
+  <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
   
   <!-- PLUGINS -->
   
@@ -245,9 +245,9 @@
         <div class="container-fluid map-name">
             <div class="row pt-3">
 
-                <div class="col-12">
-                    <h2>Map Name</h2>
-                    <p>Map description.</p>              
+                <div  style = "display: flex;"class="col-12">
+                    <h2>Map Name <small>Map description</small></h2>
+                    <button class="btn btn-info btn-sm ml-auto">Save changes</button>         
                 </div>
                 
             </div>
@@ -367,7 +367,10 @@
                 
         </div>
               <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">Layers</div>
-              <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>
+              <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                <button id="bufferMode" type="button" class="btn btn-info btn-small mb-2">Buffer</button>
+                <input id="radiusSelected" type="number" value="50" class="form-control" step="10" min="10" max="10000">
+              </div>
             </div>
             
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -537,7 +540,7 @@
                                 <div class="col-md-4">                                  
                                   <div class="form-group">
                                     <label for="icon" class="">Point symbol</label>
-                                    <input type="text" list="icon" value="home" class="form-control" id="iconType" placeholder="choose icon">
+                                    <input type="text" list="icon" value="" class="form-control" id="iconType" placeholder="choose icon">
                                     <datalist id="icon">
                                       <option value="clinic-medical"></option>
                                       <option value="hospital"></option>

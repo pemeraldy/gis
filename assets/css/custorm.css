@@ -422,22 +422,35 @@ overflow-y: scroll;
 ::-webkit-scrollbar {
 width: 10px;
 }
+::-moz-scrollbar {
+  width: 10px;
+  }
 
 /* Track */
 ::-webkit-scrollbar-track {
 background: #f1f1f1;
 display: none
 }
+::-moz-scrollbar-track {
+  background: #f1f1f1;
+  display: none
+  }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
 background: #888;
 }
-
+::-moz-scollbar-thumb{
+  background: #888;
+}
 ::-webkit-scrollbar-thumb:hover {
 background: #555;
 }
+::-moz-thumb:hover {
+  background: #555;
+  }
 
+  /* Base map thumbs */
 .map-thumb{
 padding: 5px;
 display: flex;
