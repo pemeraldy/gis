@@ -368,8 +368,14 @@
         </div>
               <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">Layers</div>
               <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-                <button id="bufferMode" type="button" class="btn btn-info btn-small mb-2">Buffer</button>
-                <input id="radiusSelected" type="number" value="50" class="form-control" step="10" min="10" max="10000">
+                <div class="buffer-tool">
+                  <button id="bufferMode" type="button" class="btn btn-info btn-small mb-2">Buffer</button>
+                  <select class="form-control" name="buffer" id="bufferLayer">
+                    <!-- Generated -->
+                    <option value="">Select a layer</option>
+                  </select >                  
+                </div>
+                <input id="radiusSelected" type="number" value="5" class="form-control" step="1" min="0" max="10000">
               </div>
             </div>
             
@@ -381,13 +387,13 @@
                 <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Layers</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Measure</a>
+                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Buffer</a>
               </li>
             </ul>
             </div>
           </div>
           <!-- RIGHT SIDEBAR ENDS -->
-
+          
         <!-- main map component -->
           <div class="">
           
@@ -622,10 +628,7 @@
                           
                         </div>
                   </div>
-                  <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button id="saveCustomize" type="button" class="btn btn-primary">Save</button>
-                  </div> -->
+                  
                 </div>
               </div>
             </div>

@@ -29,7 +29,8 @@ let techMap,
     searchControl, 
     sites,
     poi,
-    bufferCircle
+    bufferCircle,
+    cIndicator
     
 
    $(document).ready(function(){
@@ -60,9 +61,22 @@ let techMap,
     })
 
 
+    function filterLayer (feature){
+        let prop = feature.properties.lga
+        // console.log(feature.properties.lga)
+        if(feature.properties.lga == "Ajeromi") console.log(feature.properties.lga)
+            
+            
+        
+        // return prop.lga == 'Ajeromi'
+        
+    }
+
      layerHospital = L.geoJSON.ajax('data/hospital.geojson', {
-        'pointToLayer': newPoints,
+        // filter: filterLayer,
+        pointToLayer: newPoints,
         onEachFeature: feat1
+        
     })
     let hMarkerCluster = L.markerClusterGroup()
     layerHospital.on('data:loaded', () =>{    
@@ -318,6 +332,10 @@ let techMap,
                     
                 }
                 
+                if(cIndicator){
+                    techMap.removeLayer(bufferCircle)                    
+                }
+
                 let marker_lat_long = e.layer._latlng
                 // console.log(marker_lat_long)
                 let radius = milesToMeters($('#radiusSelected').val());
@@ -451,14 +469,18 @@ let techMap,
         });
 
         
-       fillLayer()      
+       fillLayer() 
+       bufferLayerGen()     
        
 })
 
 
 
 
-
+/*************************************************************************************/
+/*************************************************************************************/
+/*************************************************************************************/
+/*************************************************************************************/
 
 
 // ############# GLOBLA SCOPE -- OUTSIDE IFFE##############
@@ -1030,35 +1052,54 @@ saveIconCustomize.addEventListener('click', () =>{
 // var buffered = turf.buffer(point, 500, {units: 'miles'})
 // buffered.addTo(techMap)
 
-// BUFER BUFER!!!
+// BUFER BUFFER!!!
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
-	return miles * 1069.344
+	return (miles * 1069.344)/1
 }
 
 // figures out how many points are i a circle
-function pointsInCircle(circle, meters_user_set) {
+function pointsInCircle(circle, meters_user_set, bufferLayer) {
+    
+    let bd = document.querySelector('.legend-content .card-body .card-text')
+    
+    bufferLayer = document.querySelector('#bufferLayer').value
+       
 	if (bufferCircle !== undefined) {
     // Only run if we have an address entered
     // Lat, long of circle
     circle_lat_long = bufferCircle.getLatLng();
 
     var counter_points_in_circle = 0;
-
+    
 		// Loop through each point in JSON file
-		layerHospital.eachLayer(function(layer) {
+		overlays[`${bufferLayer}`].eachLayer(function(layer) {
 			// Lat, long of current point
 			layer_lat_long = layer.getLatLng();
 
 			// Distance from our circle marker
 			// To current point in meters
 			distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
-
+            bd.innerHtml = ' '
 			// See if meters is within raduis
 			// The user has selected
 			if (distance_from_layer_circle <= meters_user_set) {
-			// 	counter_points_in_circle += 1;
+            	counter_points_in_circle += 1;
+                console.log(bd)
                 console.log(layer.feature.properties.name)
+                // console.log('layer',layer)
+                
+                cIndicator = L.circle(layer._latlng, {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+                    radius: 0
+                  }).addTo(techMap);
+                  
+                  bd.innerHTML += `
+                                    <p>${layer.feature.properties.name}</p>
+                                
+                  `
 			// 	var ofi_paf_html = '<h4>' + counter_points_in_circle + '. ' + layer.feature.properties.oficina + '</h4>';
 			// 	// Convert to miles
 			// 	ofi_paf_html += 'Distance: ' + (distance_from_layer_circle * 0.000621371).toFixed(2) + ' miles';
@@ -1073,8 +1114,36 @@ function pointsInCircle(circle, meters_user_set) {
 // Close pointsInCircle 
 };
 
+
+
 const bufferMode = document.getElementById('bufferMode')
 bufferMode.addEventListener('click', (e) =>{
-    e.target.classList.add('active')
-    e.target.innerText = 'Buffer activated'
+    let btn = e.target
+    bufferLayer = document.querySelector('#bufferLayer').value
+    if(bufferLayer === ''){
+        alert('Select a layer')
+        return false
+    }
+    
+    e.target.classList.toggle('active')
+    btn.innerText = btn.classList.contains('active') ? 'Stop buffer' : 'buffer'
+    // e.target.innerText = 'Buffer activated'
+
 })
+
+// Buffer Layer generator
+function bufferLayerGen(){
+    
+    let  bl = document.querySelector('#bufferLayer')
+    
+    for(key of Object.keys(overlays)){
+        let option = document.createElement('option')
+        
+        option.innerText = key
+        option.value = key
+        
+        bl.append(option)        
+
+    }
+}
+

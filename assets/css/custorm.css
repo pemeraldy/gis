@@ -553,3 +553,10 @@ li .search-tip{
   height:20px;
   background: orange;
 }
+
+
+
+/* BUFFER */
+.buffer-tool{
+  display: flex;
+}
