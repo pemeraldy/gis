@@ -261,7 +261,7 @@ let techMap,
 
     techMap.on('locationfound', function(e){
         L.circleMarker(e.latlng).addTo(techMap)
-        techMap.setView(e.latlng, 14)
+        techMap.flyTo(e.latlng, 14)
     })
 
     techMap.on('locationerror', function(){
@@ -333,7 +333,7 @@ let techMap,
                 }
                 
                 if(cIndicator){
-                    techMap.removeLayer(bufferCircle)                    
+                    techMap.removeLayer(cIndicator)                    
                 }
 
                 let marker_lat_long = e.layer._latlng
@@ -1067,9 +1067,13 @@ function pointsInCircle(circle, meters_user_set, bufferLayer) {
     counts.classList.add('count')
     bd.parentElement.parentElement.parentElement.parentElement.classList.remove('trans-open')
     bufferLayer = document.querySelector('#bufferLayer').value
-    if(cIndicator){
-        techMap.removeLayer(cIndicator)
-    } 
+
+    // if(cIndicator){
+    //     console.log('Somen is here')
+    //     techMap.removeLayer(cIndicator)
+        
+    // } else{console.log('we gat nothn')}
+
 	if (bufferCircle !== undefined) {
         
     // Lat, long of circle
@@ -1095,14 +1099,15 @@ function pointsInCircle(circle, meters_user_set, bufferLayer) {
                 console.log(layer.feature.properties.name)
                 // console.log('layer',layer)
                 
-                cIndicator = L.circle(layer._latlng, {
-                    color: 'red',
-                    fillColor: '#f03',
-                    fillOpacity: 0.5,
-                    radius: 0
-                  }).addTo(techMap);
-                  
-                  bd.innerHTML += ` <p> ${layer.feature.properties.name} <br/>
+                // cIndicator = L.circle(layer._latlng, {
+                //     color: 'red',
+                //     fillColor: '#f03',
+                //     fillOpacity: 0.5,
+                //     radius: 0
+                //   }).addTo(techMap);
+                  let lat = layer.feature.layer._latlng.lat
+                  let lng = layer.feature.layer._latlng.lng
+                  bd.innerHTML += ` <p class="buffer-points" > ${layer.feature.properties.name} <span class="lat" style="display:none">${lat}</span> <span class="lng" style="display:none">${lng}</span> <br/>
                                         <b>Distance:  ${(distance_from_layer_circle * 0.000621371).toFixed(2)}  miles / ${(distance_from_layer_circle/1000).toFixed(2)} Km</b>
                                         
                   </p> `
@@ -1113,7 +1118,17 @@ function pointsInCircle(circle, meters_user_set, bufferLayer) {
         console.log(counts)
         document.querySelector('.count').innerHTML = `<h4> ${counter_points_in_circle} points within buffer radius </h4>`
 		// Set number of results on main page
-		// $('#ofi_paf_results').html(counter_points_in_circle);
+        // $('#ofi_paf_results').html(counter_points_in_circle);
+        let l = document.querySelector('.legend')
+        l.addEventListener('click', (e)=>{
+            if(e.target.tagName === 'P'){
+                let lat = e.target.firstElementChild.innerText
+                let lng = e.target.firstElementChild.nextElementSibling.innerText
+                console.log(e.target.innerText)
+                techMap.flyTo([lat,lng], 14)
+            }
+        
+        })
 	}
 // Close pointsInCircle 
 };
@@ -1132,6 +1147,9 @@ bufferMode.addEventListener('click', (e) =>{
     e.target.classList.toggle('active')
     btn.innerText = btn.classList.contains('active') ? 'Stop buffer' : 'buffer'
     // e.target.innerText = 'Buffer activated'
+    if(bufferCircle && !btn.classList.contains('active') ){
+        techMap.removeLayer(bufferCircle)
+    }
 
 })
 
