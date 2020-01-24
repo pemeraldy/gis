@@ -1071,7 +1071,7 @@ function pointsInCircle(circle, meters_user_set, bufferLayer) {
     circle_lat_long = bufferCircle.getLatLng();
 
     var counter_points_in_circle = 0;
-    
+    bd.innerHTML = ' '
 		// Loop through each point in JSON file
 		overlays[`${bufferLayer}`].eachLayer(function(layer) {
 			// Lat, long of current point
@@ -1080,7 +1080,7 @@ function pointsInCircle(circle, meters_user_set, bufferLayer) {
 			// Distance from our circle marker
 			// To current point in meters
 			distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
-            bd.innerHtml = ' '
+            
 			// See if meters is within raduis
 			// The user has selected
 			if (distance_from_layer_circle <= meters_user_set) {
@@ -1096,10 +1096,7 @@ function pointsInCircle(circle, meters_user_set, bufferLayer) {
                     radius: 0
                   }).addTo(techMap);
                   
-                  bd.innerHTML += `
-                                    <p>${layer.feature.properties.name}</p>
-                                
-                  `
+                  bd.innerHTML += ` <p> ${layer.feature.properties.name} </p> `
 			// 	var ofi_paf_html = '<h4>' + counter_points_in_circle + '. ' + layer.feature.properties.oficina + '</h4>';
 			// 	// Convert to miles
 			// 	ofi_paf_html += 'Distance: ' + (distance_from_layer_circle * 0.000621371).toFixed(2) + ' miles';
