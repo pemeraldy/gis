@@ -1062,16 +1062,22 @@ function milesToMeters(miles) {
 function pointsInCircle(circle, meters_user_set, bufferLayer) {
     
     let bd = document.querySelector('.legend-content .card-body .card-text')
+    let counts = document.createElement('div')
     
+    counts.classList.add('count')
+    bd.parentElement.parentElement.parentElement.parentElement.classList.remove('trans-open')
     bufferLayer = document.querySelector('#bufferLayer').value
-       
+    if(cIndicator){
+        techMap.removeLayer(cIndicator)
+    } 
 	if (bufferCircle !== undefined) {
-    // Only run if we have an address entered
+        
     // Lat, long of circle
     circle_lat_long = bufferCircle.getLatLng();
 
-    var counter_points_in_circle = 0;
+    let counter_points_in_circle = 0;
     bd.innerHTML = ' '
+    bd.appendChild(counts)
 		// Loop through each point in JSON file
 		overlays[`${bufferLayer}`].eachLayer(function(layer) {
 			// Lat, long of current point
@@ -1084,8 +1090,8 @@ function pointsInCircle(circle, meters_user_set, bufferLayer) {
 			// See if meters is within raduis
 			// The user has selected
 			if (distance_from_layer_circle <= meters_user_set) {
-            	counter_points_in_circle += 1;
-                console.log(bd)
+            	counter_points_in_circle += 1
+                console.log(layer)
                 console.log(layer.feature.properties.name)
                 // console.log('layer',layer)
                 
@@ -1096,15 +1102,16 @@ function pointsInCircle(circle, meters_user_set, bufferLayer) {
                     radius: 0
                   }).addTo(techMap);
                   
-                  bd.innerHTML += ` <p> ${layer.feature.properties.name} </p> `
-			// 	var ofi_paf_html = '<h4>' + counter_points_in_circle + '. ' + layer.feature.properties.oficina + '</h4>';
-			// 	// Convert to miles
-			// 	ofi_paf_html += 'Distance: ' + (distance_from_layer_circle * 0.000621371).toFixed(2) + ' miles';
-
-			// 	$('#ofi_paf').append(ofi_paf_html);
-			}
-		});
-
+                  bd.innerHTML += ` <p> ${layer.feature.properties.name} <br/>
+                                        <b>Distance:  ${(distance_from_layer_circle * 0.000621371).toFixed(2)}  miles / ${(distance_from_layer_circle/1000).toFixed(2)} Km</b>
+                                        
+                  </p> `
+			
+            }
+            
+        });
+        console.log(counts)
+        document.querySelector('.count').innerHTML = `<h4> ${counter_points_in_circle} points within buffer radius </h4>`
 		// Set number of results on main page
 		// $('#ofi_paf_results').html(counter_points_in_circle);
 	}
