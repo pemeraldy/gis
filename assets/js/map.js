@@ -4,7 +4,6 @@ $.ajaxSetup({
     }
 });
 
-// const axios = require('axios');
 //*********GLOBAL VARAIBLES********* */
 let techMap,
     leyerOSM,
@@ -30,21 +29,18 @@ let techMap,
     layerSearch,
     mainSideBar,
     sites,
-    fuseSearch,
+    poi,
     searchControl,
     statesLayer,
     lgasLayer,
+    bufferCircle,
+    cIndicator,
     legend;
 
 
 $(document).ready(function () {
     //init setting
     techMap = L.map('mapid', { zoomControl: false }).setView([6.6088, 3.2545], 9);
-
-    //######## adding markers to map at will for position purpose#######
-    // techMap.on("click", function(e){
-    //     new L.Marker([e.latlng.lat, e.latlng.lng]).addTo(techMap);
-    //  })
 
     // Scale display at bottom left
     L.control.scale().addTo(techMap)
@@ -62,18 +58,18 @@ $(document).ready(function () {
     // ######## AJAX data Calls #########
     // Dataset layer
     layerData = L.geoJSON.ajax('/features', {
-        'pointToLayer': dataMarker,
+        'pointToLayer': newPoints,
         onEachFeature: feat1
-    }).addTo(techMap)
+    }).addTo(techMap);
     layerData.on('data:loaded', () => {
-        techMap.fitBounds(layerData.getBounds())
-        console.log(layerData)
-    }).addTo(techMap)
+        techMap.fitBounds(layerData.getBounds());
+        console.log(layerData);
+    }).addTo(techMap);
 
     let hMarkerCluster = L.markerClusterGroup()
     layerData.on('data:loaded', () => {
-        hMarkerCluster.addLayer(layerData)
-    })
+        hMarkerCluster.addLayer(layerData);
+    });
 
     // Saved Map layer
     // layerMap = L.geoJSON.ajax('/featuresmap', {
@@ -84,61 +80,61 @@ $(document).ready(function () {
     //     console.log(layerMap)
     // }).addTo(techMap)
 
-    // PPMV
-    layerPPMV = L.geoJSON.ajax('/data/PPMV.geojson', {
-        'pointToLayer': dataMarker,
-        onEachFeature: feat1
-    })
-    layerPPMV.on('data:loaded', () => {
-        techMap.fitBounds(layerPPMV.getBounds());
+    // // PPMV
+    // layerPPMV = L.geoJSON.ajax('/data/PPMV.geojson', {
+    //     'pointToLayer': dataMarker,
+    //     onEachFeature: feat1
+    // })
+    // layerPPMV.on('data:loaded', () => {
+    //     techMap.fitBounds(layerPPMV.getBounds());
 
-    })
+    // })
 
-    // CP
-    layerCP = L.geoJSON.ajax('/data/CP.geojson', {
-        'pointToLayer': dataMarker,
-        onEachFeature: feat1
-    })
-    layerCP.on('data:loaded', () => {
-        techMap.fitBounds(layerCP.getBounds())
-    })
+    // // CP
+    // layerCP = L.geoJSON.ajax('/data/CP.geojson', {
+    //     'pointToLayer': dataMarker,
+    //     onEachFeature: feat1
+    // })
+    // layerCP.on('data:loaded', () => {
+    //     techMap.fitBounds(layerCP.getBounds());
+    // })
 
-    // Hospital
-    layerHospital = L.geoJSON.ajax('/data/hospital.geojson', {
-        'pointToLayer': dataMarker,
-        onEachFeature: feat1
-    })
-    layerHospital.on('data:loaded', () => {
-        techMap.fitBounds(layerHospital.getBounds())
-    })
+    // // Hospital
+    // layerHospital = L.geoJSON.ajax('/data/hospital.geojson', {
+    //     'pointToLayer': dataMarker,
+    //     onEachFeature: feat1
+    // })
+    // layerHospital.on('data:loaded', () => {
+    //     techMap.fitBounds(layerHospital.getBounds())
+    // })
 
-    // Laboratory
-    layerLaboratory = L.geoJSON.ajax('/data/laboratory.geojson', {
-        'pointToLayer': dataMarker,
-        onEachFeature: feat1
-    })
-    layerLaboratory.on('data:loaded', () => {
-        techMap.fitBounds(layerLaboratory.getBounds())
-    })
+    // // Laboratory
+    // layerLaboratory = L.geoJSON.ajax('/data/laboratory.geojson', {
+    //     'pointToLayer': dataMarker,
+    //     onEachFeature: feat1
+    // })
+    // layerLaboratory.on('data:loaded', () => {
+    //     techMap.fitBounds(layerLaboratory.getBounds())
+    // })
 
-    // lagos State
-    layerLagos = L.geoJSON.ajax('/data/lagos_state.geojson', {
-        'pointToLayer': dataStyler,
-    })
+    // // lagos State
+    // layerLagos = L.geoJSON.ajax('/data/lagos_state.geojson', {
+    //     'pointToLayer': dataStyler,
+    // })
 
-    layerLagos.on('data:loaded', () => {
-        techMap.fitBounds(layerLagos.getBounds())
-    })
+    // layerLagos.on('data:loaded', () => {
+    //     techMap.fitBounds(layerLagos.getBounds())
+    // })
 
-    // lagos State LGA
-    layerLagosLGA = L.geoJSON.ajax('/data/lagos_LGA.geojson', {
-        'pointToLayer': dataStyler,
-        onEachFeature: popUpData
-    })
+    // // lagos State LGA
+    // layerLagosLGA = L.geoJSON.ajax('/data/lagos_LGA.geojson', {
+    //     'pointToLayer': dataStyler,
+    //     onEachFeature: popUpData
+    // })
 
-    layerLagosLGA.on('data:loaded', () => {
-        techMap.fitBounds(layerLagosLGA.getBounds())
-    })
+    // layerLagosLGA.on('data:loaded', () => {
+    //     techMap.fitBounds(layerLagosLGA.getBounds())
+    // })
 
     // States Layer
     statesLayer = L.geoJSON.ajax('/states', {
@@ -157,6 +153,7 @@ $(document).ready(function () {
     // LGAs layer
     lgasLayer = L.geoJSON.ajax('/lgas', {
         'pointToLayer': dataStyler,
+        onEachFeature: feat1,
         style: styleOne
     })
 
@@ -188,13 +185,13 @@ $(document).ready(function () {
         'opacity': 1
     };
     // When Data Has Successfully Loaded
-    let ppmarkerCluster = L.markerClusterGroup()
-    layerPPMV.on('data:loaded', () => {
-        ppmarkerCluster.addLayer(layerPPMV)
-        overlaysArray.push(layerPPMV)
+    // let ppmarkerCluster = L.markerClusterGroup()
+    // layerPPMV.on('data:loaded', () => {
+    //     ppmarkerCluster.addLayer(layerPPMV)
+    //     overlaysArray.push(layerPPMV)
 
-    })
-    let stateLayer = L.geoJson(null, { onEachFeature: forEachFeature, style: style });
+    // })
+    // let stateLayer = L.geoJson(null, { onEachFeature: forEachFeature, style: style });
 
     function forEachFeature(feature, layer) {
         // Tagging each state poly with their name for the search control.
@@ -211,16 +208,7 @@ $(document).ready(function () {
         });
     }
 
-    // $.getJSON(null, function (data) {
-    //     stateLayer.addData(data);
-
-    //     for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
-    //         arr1.push({ label: data.features[i].properties.statename, value: "" });
-    //     }
-    //     // addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
-    // });
-
-    stateLayer.addTo(techMap);
+    // stateLayer.addTo(techMap);
 
     // Draw controller
     drawnItems = new L.FeatureGroup()
@@ -239,12 +227,12 @@ $(document).ready(function () {
     overlays = {
         "States": statesLayer,
         "LGAs": lgasLayer,
-        "Lagos": layerLagos,
-        "LagosLGAs": layerLagosLGA,
-        "PPMV": layerPPMV,
-        "CP": layerCP,
-        "Hospital": layerHospital,
-        "Laboratory": layerLaboratory,
+        // "Lagos": layerLagos,
+        // "LagosLGAs": layerLagosLGA,
+        // "PPMV": layerPPMV,
+        // "CP": layerCP,
+        // "Hospital": layerHospital,
+        // "Laboratory": layerLaboratory,
         "Dataset": layerData,
         // "Saved Map": layerMap,
         "Draw Layer": drawnItems
@@ -259,51 +247,51 @@ $(document).ready(function () {
         layer: poi,
         initial: false,
         marker: false,
-        propertyName: 'name' ,
+        propertyName: 'name',
         hideMarkerOnCollapse: true,
         marker: {
-			icon: new L.Icon({iconUrl:'/assets/carrental.png', iconSize: [20,20]}),
-			circle: {
-				radius: 20,
-				color: '#f41642',
-				opacity: 1
-			}
-		},
-        moveToLocation: function(latlng, title, techMap) {
+            icon: new L.Icon({ iconUrl: '/assets/firstaid.png', iconSize: [20, 20] }),
+            circle: {
+                radius: 20,
+                color: '#f41642',
+                opacity: 1
+            }
+        },
+        moveToLocation: function (latlng, title, techMap) {
             // techMap.fitBounds( latlng.layer.getBounds() );
             // console.log(latlng, title, techMap)
-			// var zoom = techMap.getBoundsZoom(latlng.layer.getBounds());
-            techMap.flyTo(latlng, 11); // access the zoom
+            // var zoom = techMap.getBoundsZoom(latlng.layer.getBounds());
+            techMap.flyTo(latlng, 18); // access the zoom
 
-		}
-      })
+        }
+    })
 
-      searchControl.on('search:locationfound', function(e) {
+    searchControl.on('search:locationfound', function (e) {
 
         console.log(e)
         let marker = new L.Marker(new L.latLng(e.latlng))
 
-        statesLayer.eachLayer(function(layer) {
-			// states.resetStyle(layer);
+        statesLayer.eachLayer(function (layer) {
+            statesLayer.resetStyle(layer);
         });
 
         // poi.addLayer(marker)
 
         // e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
-		if(e.layer._popup)
-			e.layer.openPopup();
+        if (e.layer._popup)
+            e.layer.openPopup();
 
-	}).on('search:collapsed', function(e) {
+    }).on('search:collapsed', function (e) {
 
-		statesLayer.eachLayer(function(layer) {	//restore feature color
+        statesLayer.eachLayer(function (layer) {	//restore feature color
             statesLayer.resetStyle(layer);
         });
 
-	});
+    });
 
 
 
-      techMap.addControl(searchControl)
+    techMap.addControl(searchControl)
     // console.log(drawnItems)
 
     // easyBtn = L.easyButton('fa-globe', function () {
@@ -328,7 +316,7 @@ $(document).ready(function () {
     })
 
     // Measure control button
-    // measure = L.control.polylineMeasure().addTo(techMap);
+    measure = L.control.polylineMeasure().addTo(techMap);
 
     // zoomIN and Zoom Out btn functions
     zoomInBtn = document.getElementById('zoom-in')
@@ -355,9 +343,16 @@ $(document).ready(function () {
                 repeatMode: true,
                 draggable: true
             },
+            marker: true,
+            polyline: true,
         },
         edit: {
-            featureGroup: drawnItems
+            featureGroup: drawnItems,
+            remove: true,
+            buffer: {
+                replacePolylines: false,
+                separateBuffer: false,
+              },
         },
 
     });
@@ -464,6 +459,62 @@ $(document).ready(function () {
             // console.log(layer)
             drawnItems.addLayer(layer);
 
+
+        }
+        // else if (type === 'polyline') {
+        //     var line = layer.toGeoJSON();
+        //     console.log(line);
+
+        //     var lines = summarisePointsByLine(line,0.8,layerData.toGeoJSON(),'name');
+        //     var sum = summariseArray(lines.features[0].properties.statusVals);
+        //     strpopup = "Hospitals";
+        //     for (var i=0; i<sum[0].length;i++){
+        //         strpopup+="<br>"+sum[0][i]+":"+sum[1][i];
+        //     }
+        //     drawnItems.addLayer(layer.bindPopup(strpopup));
+
+        // }
+        // cHECKING IF ITS A MARKER AND TRIGGRED
+        else if(e.layerType === 'marker' && bufferMode.classList.contains('active')){
+            if(bufferCircle){
+                techMap.removeLayer(bufferCircle)
+
+            }
+
+            if(cIndicator){
+                techMap.removeLayer(cIndicator)
+            }
+
+            let marker_lat_long = e.layer._latlng
+            // console.log(marker_lat_long)
+            let radius = milesToMeters($('#radiusSelected').val());
+
+            bufferCircle = L.circle(marker_lat_long, radius)
+            // console.log(bufferCircle)
+            bufferCircle.addTo(techMap);
+
+            // Calculate the number of eco icons within the circle
+            // So we can put it on the DOM
+            pointsInCircle(bufferCircle, radius)
+
+            // Make the marker draggable
+            console.log(e.layer)
+            e.layer.dragging.enable();
+
+            // If you drag the marker, make sure the circle goes with it
+            e.layer.on('dragend', function(event) {
+                techMap.setView(event.target.getLatLng());
+                bufferCircle.setLatLng(event.target.getLatLng());
+
+                // Clear out results
+                // $('#ofi_paf').html('');
+
+                // This will determine how many markers are within the circle
+                pointsInCircle(bufferCircle, milesToMeters($('#radius-selected').val()));
+
+                // Redraw: Leaflet function
+                bufferCircle.redraw();
+            });
         }
         else {
             drawnItems.addLayer(layer);
@@ -474,13 +525,13 @@ $(document).ready(function () {
     });
 
 
-    drawStyle = L.control.styleEditor().addTo(techMap)
+    // drawStyle = L.control.styleEditor().addTo(techMap)
 
     // Measure area and line
     measureControl = new L.Control.Measure({ position: 'topleft', primaryLengthUnit: 'meters', secondaryLengthUnit: 'kilometers', primaryAreaUnit: 'sqmeters' });
     let oldContainer = measureControl.getContainer()
     let newMeasureToolCont = document.querySelector('#pills-contact');
-    newMeasureToolCont.append(oldContainer);
+    // newMeasureToolCont.append(oldContainer);
     measureControl.addTo(techMap);
 
     // #########LEGEND TEMPLATES ###########
@@ -579,18 +630,30 @@ $(document).ready(function () {
     })
 
     const anchor = document.querySelector('.anchor') //anchor button on legend bar
-    anchor.addEventListener('click', () => inforBarState('legend', 'trans-open'))
+    anchor.addEventListener('click', () => inforBarState('legend','trans-open'))
 
-    // const sideBarAnchor = document.querySelector('.main-side-bar .anchor') //anchor button on utility side bar bar
-    // sideBarAnchor.addEventListener('click', () => {
-    //     inforBarState('main-side-bar', 'slide-left')
-    //     console.log('heu')
-    // })
+    options = {
+        icon: 'clinic-medical',
+        iconShape: 'marker'
+    };
+   const freshMark =  L.marker([48.13710, 11.57539], {
+        icon: L.BeautifyIcon.icon(options),
+        draggable: false
+    }).addTo(techMap).bindPopup("popup").bindPopup("This is a BeautifyMarker");
+
+      techMap.on('click', function(e) {
+        // let attr = json.properties
+            console.log(e)
+
+        });
 
     fillLayer()
-    document.querySelector('#fb_share').setAttribute('href','http://www.facebook.com/share.php?u=' + encodeURIComponent(location.href))
-    document.querySelector('#tw_share').setAttribute('href','https://twitter.com/intent/tweet?text=' + encodeURIComponent(location.href))
-    document.querySelector('#copy_url').setAttribute('value',encodeURIComponent(location.href))
+    bufferLayerGen()
+
+    // autofill the share buttons
+    document.querySelector('#fb_share').setAttribute('href', 'http://www.facebook.com/share.php?u=' + encodeURIComponent(location.href))
+    document.querySelector('#tw_share').setAttribute('href', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(location.href))
+    document.querySelector('#copy_url').setAttribute('value', location.href)
 
 })
 
@@ -598,68 +661,77 @@ $(document).ready(function () {
 // ############# GLOBLA SCOPE -- OUTSIDE IFFE##############
 
 // toggle Draw Controller
-function toggleDraw() {
+function toggleDraw(){
     drawControl._container.style.display = drawControl._container.style.display == 'none' ? 'flex' : 'none'
 }
 
 // TOGGLE SIDE BARS
-const inforBarState = (el, togglClass) => {
+const inforBarState = (el,togglClass) =>{
     let element = document.querySelector(`.${el}`)
     element.classList.toggle(`${togglClass}`)
-}
+  }
 
-const sideAnchor = document.querySelector('.sidebar-anchor') //anchor button on legend bar
+  const sideAnchor = document.querySelector('.sidebar-anchor') //anchor button on legend bar
 
-sideAnchor.addEventListener('click', () => inforBarState('map-sidebar', 'side-open'))
+  sideAnchor.addEventListener('click', () => inforBarState('map-sidebar', 'side-open'))
+
+
+
+
+
 
 //  display data attributes and control data presentations
-function dataMarker(json, latlng) {
-    let attr = json.properties
-    // console.log(json)
-    if (attr.type == 'PPMV') {
-        return L.marker(latlng, {
-            icon: iconPPMV,
-        }).bindTooltip(`<b>Name:${attr.name}</b> <br>
-        Address: ${attr.address} <br>
-        `, { direction: 'top' })
+    function dataMarker(json, latlng,options){
+        options = {
+            color: 'red'
+        }
+        let attr = json.properties
+        // console.log(json)
+        if(attr.type == 'PPMV'){
+            return L.marker(latlng,{
+                icon:myIcon ,
+            }).bindTooltip(`<b>Name:${attr.name}</b> <br>
+            Address: ${attr.address} <br>
+            `,{direction: 'top'}).bindPopup(attr.name)
 
-    } else {
-        return L.marker(latlng, {
-            icon: iconHospital,
-        }).bindTooltip(`<b>Name:${attr.name}</b> <br>
-        Address: ${attr.address} <br>
-        Wardcode: <i class="text-success">${attr.state}</i>`)
+        }else{
+            return L.marker(latlng,{
+                icon: iconHospital,
+            }).bindTooltip(`<b>Name:${attr.name}</b> <br>
+            Address: ${attr.address} <br>
+            Wardcode: <i class="text-success">${attr.state}</i>`)
+        }
+
     }
 
-}
+    function highlightFeature(e) {
+        let layer = e.target;
 
-function highlightFeature(e) {
-    let layer = e.target;
+        layer.setStyle({
+            weight: 2,
+            color: 'yellow',
+            dashArray: '',
+            fillOpacity: 0.4
+        });
 
-    layer.setStyle({
-        weight: 2,
-        color: 'yellow',
-        dashArray: '',
-        fillOpacity: 0.4
-    });
-
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        layer.bringToFront();
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+        }
     }
-}
 
-function stateAttribute(feat, layer) {
-    layer.on({
-        // mouseover: highlightFeature,
-        // mouseout: resetHighlight,
-        // click: zoomToFeature
-    }).bindTooltip(`<div class="card"> ${feat.properties.statename}</div>`)
-}
 
-function dataStyler(json, latlng) {
-    let attr = json.properties
-    // console.log(attr)
-    return L.marker(latlng).bindTooltip(`
+    function stateAttribute(feat, layer){
+        layer.on({
+            // mouseover: highlightFeature,
+            // mouseout: resetHighlight,
+            // click: zoomToFeature
+        }).bindTooltip(`<div class="card"> ${feat.properties.statename}</div>`)
+    }
+
+    function dataStyler(json, latlng){
+        let attr = json.properties
+        // console.log(attr)
+        return L.marker(latlng).bindTooltip(`
             <div class="t-tooltip">
                 <b>Name:${attr.name}</b>
                     <br>
@@ -667,75 +739,77 @@ function dataStyler(json, latlng) {
                 <br>
                 Wardcode: <i class="text-primary"> ${attr.state}</i>
             </div>
-        `, { direction: 'side' })
-}
-
-function popUpData(feature, ltlng) {
-    let feat = feature
-    let att = feature.properties
-    let res = []
-    if (att) {
-        res.push(att.name)
-        // console.log('from popup data',res,feat)
+        `,{direction: 'side'})
     }
-}
 
-let styleOne = {
-    "color": "purple",
-    "weight": 1,
-    "opacity": 0.65
-}
-
-// ************ASIGN CUSTOM MARKERS*************
-let iconPPMV = L.divIcon({
-    className: 'custom-div-icon',
-    html: "<div style='color:#fff;' class='marker-pin-two'></div><i class='fas fa-capsules awesome fa-3x'>",
-    iconSize: [30, 42],
-    iconAnchor: [15, 42]
-})
-
-let iconHospital = L.divIcon({
-    className: 'custom-div-icon',
-    html: "<div background-color:#4838cc;' class='marker-pin-one'></div><i class='fas fa-hospital awesome fa-3x'>",
-    iconSize: [30, 42],
-    iconAnchor: [15, 42]
-});
-
-let iconLaboratory = L.divIcon({
-    className: 'custom-div-icon',
-    html: "<div style='color:#fff;' class='marker-pin-one'></div><i class='fas fa-flask awesome fa-3x'>",
-    iconSize: [30, 42],
-    iconAnchor: [15, 42]
-});
-
-/*********CUSTOM FUNCTONS**********/
-
-// click marker
-let clickmark;
-
-// When you click on a circle, it calls the onMapClick function and passes the layers coordinates.
-// I grab the coords which are X,Y, and I need to flip them to latLng for a marker,
-function onMapClick(coords) {
-    console.log(coords);
-    let thecoords = coords.toString().split(',');
-    let lat = thecoords[1];
-    let lng = thecoords[0];
-    console.log('click mark', clickmark)
-    //if prior marker exists, remove it.
-    if (clickmark != undefined) {
-        techMap.removeLayer(clickmark);
-    };
-
-    clickmark = L.circleMarker([lat, lng], {
-        radius: 8,
-        //opacity: 1,
-        color: "yellow",
-        fillColor: "yellow",
-        fillOpacity: 0.8
+    function popUpData(feature, ltlng){
+        let feat = feature
+        let att = feature.properties
+        let res = []
+        if(att){
+            res.push(att.name)
+            // console.log('from popup data',res,feat)
+        }
     }
-    ).addTo(techMap);
-}
+    let styleOne = {
+        "color": "purple",
+        "weight": 1,
+        "opacity": 0.65
+    }
+
+    // ************ASIGN CUSTOM MARKERS*************
+//    let iconPPMV = L.divIcon({
+//             className: 'custom-div-icon',
+//             html: "<div style='color:#fff' class='marker-pin-two'></div><i class='fas fa-capsules awesome fa-3x'>",
+//             iconSize: [30, 42],
+//             iconAnchor: [15, 42]
+//         })
+
+//         let iconHospital = L.divIcon({
+//             className: 'custom-div-icon',
+//             html: "<div style='background-color:#4838cc' class='marker-pin-one'></div><i style='color:#fff' class='fas fa-hospital awesome fa-3x'>",
+//             iconSize: [30, 42],
+//             iconAnchor: [15, 42]
+//         });
+
+//         let iconLaboratory = L.divIcon({
+//             className: 'custom-div-icon',
+//             html: "<div style='color:#fff;' class='marker-pin-one'></div><i class='fas fa-flask awesome fa-3x'>",
+//             iconSize: [30, 42],
+//             iconAnchor: [15, 42]
+//         });
+
+
+
+        /*********CUSTOM FUNCTONS**********/
+
+        // click marker
+  let clickmark;
+
+  // When you click on a circle, it calls the onMapClick function and passes the layers coordinates.
+  // I grab the coords which are X,Y, and I need to flip them to latLng for a marker,
+  function onMapClick(coords) {
+		console.log(coords);
+		let thecoords = coords.toString().split(',');
+		let lat = thecoords[1];
+        let lng = thecoords[0];
+        console.log('click mark',clickmark)
+		//if prior marker exists, remove it.
+		if (clickmark != undefined) {
+		  techMap.removeLayer(clickmark);
+		};
+
+		 clickmark = L.circleMarker([lat,lng],{
+			radius: 8,
+			//opacity: 1,
+			color: "yellow",
+			fillColor:  "yellow",
+			fillOpacity: 0.8}
+		 ).addTo(techMap);
+	}
 // end of code for click marker.
+
+
 
 function feat1 (feature, layer) {
     feature.layer = layer
@@ -748,6 +822,7 @@ function feat1 (feature, layer) {
         let props = feature.properties
         document.querySelector('.legend').classList.remove('trans-open')
         // console.log(props)
+
         if(feature.geometry.type == "MultiPolygon"){
             color.type = 'color'
             console.log(layer)
@@ -761,7 +836,7 @@ function feat1 (feature, layer) {
             }
             bd.innerHtml += `<hr>`
             bd.innerHTML += `<div><label>Fill color</label>:<input id="fillCol" type='color' value='${layer.options.fillColor}'></div>`
-            bd.innerHTML += `<div><label>Fill opacicty</label>:<input id="fillOp" type='number' step='any' value='${layer.options.fillOpacity}'></div>`
+            bd.innerHTML += `<div><label>Fill opacicty</label>:<input id="fillOp" type='number' step='0.1' value='${layer.options.fillOpacity}'></div>`
             console.log(layer.options.fillColor)
 
             // addevent listeners for newly filled htmltags
@@ -777,38 +852,47 @@ function feat1 (feature, layer) {
             } )
 
             fillOpacity.addEventListener('change', () =>{
-                let inc = fillOpacity.value
-                let dec  = inc/10
-                // fillOpacity.value = dec
-                console.log(dec,inc)
+
+
                 layer.setStyle({
                     fillOpacity: fillOpacity.value
                 })
 
             })
 
-        }else if(feature.geometry.type == "Point"){
+        }else if(feature.geometry.type == "Point" || "MultiPoint"){
             onMapClick(coords)
             // console.log(feature.properties)
+            delete props.file_id;
+            delete props.geometry;
+            delete props.created_at;
+            delete props.updated_at;
+            // bd.innerHTML = ' <img src='+props.photo+' alt="feature photo" class="img-responsive"/>'
+            bd.innerHTML = '<h3>'+props.name+'</h3>'
+            delete props.name;
 
-            bd.innerHTML = ""
             for(let key in props){
 
                 let value = props[key]
+                if (key === 'photo'){
+                    bd.innerHTML += `<div><b> ${key}</b>: <a href='${value}' target="_blank">click here</a></div>`
+                } else {
 
                 bd.innerHTML += `<div><b> ${key}</b>: ${value}</div>`
+
             }
-            bd.innerHTML += `
-                <div class="custom-control custom-checkbox mr-sm-2">
-                    <label for="marker"> Change marker</label>
-                    <input id="marker" type="text" list="marker-list" value>
-                    <datalist id="marker-list">
-                        <!-- popluate list of icons -->
-                        <option value="1">
-                        <option value="2">
-                    </datalist>
-                </div>
-            `
+            }
+            // bd.innerHTML += `
+            //     <div class="custom-control custom-checkbox mr-sm-2">
+            //         <label for="marker"> Change marker</label>
+            //         <input id="marker" type="text" list="marker-list" value>
+            //         <datalist id="marker-list">
+            //             <!-- popluate list of icons -->
+            //             <option value="1">
+            //             <option value="2">
+            //         </datalist>
+            //     </div>
+            // `
 
         }else{
             document.querySelector('.legend-content').innerHTML = `
@@ -822,15 +906,23 @@ function feat1 (feature, layer) {
 /*********HELPER FUNCs FOR INFO DIV************/
 
 //fill container with a list of loaded layers
-function fillLayer() {
+function fillLayer(){
     document.querySelector('#pills-profile').innerHTML = ''
 
-    for (key of Object.keys(overlays)) {
+    for(key of Object.keys(overlays)){
         let el = document.createElement('div')
         let checked = document.createElement('i')
+        let edit = document.createElement('i')
+        edit.classList.add('fas')
+        edit.classList.add('fa-edit')
+        edit.classList.add('edit')
+        edit.style.fontSize = '18px'
         checked.classList.add('fas')
+        checked.style.marginLeft = 'auto'
         // checked.classList.add('fa-check-square')
         el.innerText = key
+        el.prepend(edit)
+        edit.addEventListener('click', callModal)
         el.append(checked)
         el.classList.add('inactive')
         el.classList.add('layer')
@@ -840,38 +932,425 @@ function fillLayer() {
 
     }
 }
-function loadLayer(e) {
-    // removeCheck()
-    e.target.classList.contains('inactive') ? techMap.addLayer(overlays[e.target.innerText]) : techMap.removeLayer(overlays[e.target.innerText])
-    e.target.classList.toggle('inactive')
-    e.target.lastElementChild.classList.toggle('fa-check-square')
-    e.target.lastElementChild.style.fontSize = '22px'
-    // console.log(e.target.lastElementChild)
+function loadLayer(e){
+    // if a layer is not active, add the class active and also add to Map else do d opp
+    // if(e.target !== 'div'){ return}
+    // console.log(e)
+   e.target.classList.contains('inactive') ? techMap.addLayer(overlays[e.target.innerText]) : techMap.removeLayer(overlays[e.target.innerText])
+   e.target.classList.toggle('inactive')
+   e.target.lastElementChild.classList.toggle('fa-check-square')
+   e.target.lastElementChild.style.fontSize = '22px'
+// console.log(e.target.lastElementChild)
 }
 
+
+function callModal(e){
+    let call = document.querySelector("a[data-target] ")
+    let modalTitle = document.querySelector('#customize .modal-title')
+    let layerName = e.target.parentElement.innerText
+    // modalTitle = `${modalTitle.innerText} ${e.target.parentElement.innerText}`
+    document.querySelector(" .map-sidebar").classList.add('side-open')
+
+    // console.log(e.target.parentElement.innerText)
+    call.click()
+    modalTitle.innerText = ''
+    modalTitle.innerText = `${layerName}`
+    // console.log(modalTitle)
+    return layerName
+}
 
 const mapThumb = document.querySelectorAll('.map-thumb')
 
 // TOGGLE ACTIVE CLASS FOR BASE MAPS
-mapThumb.forEach(thum => {
+mapThumb.forEach( thum =>{
 
-    thum.addEventListener('click', function (e) {
+    thum.addEventListener('click', function(e){
 
-        mapThumb.forEach(thum => thum.classList.remove('base-active'))
-        thum.classList.toggle('base-active')
+    mapThumb.forEach(thum => thum.classList.remove('base-active'))
+    thum.classList.toggle('base-active')
 
-    })
+} )
 
 })
 
 // SIDE BAR crumbs BUTTONS
 const sideBarBtns = document.querySelectorAll('.sidebar .nav-link')
 const sideBarHeader = document.querySelector('.sidebar-header')
-sideBarBtns.forEach(btn => {
+sideBarBtns.forEach( btn =>{
     // Set Header of Side Bar on CLick of BTNS
-    btn.addEventListener('click', (e) => { sideBarHeader.innerText = btn.innerText })
+    btn.addEventListener('click', (e) => { sideBarHeader.innerText = btn.innerText } )
 
 })
+
+// Layer Edit functions
+const modalFormValues = ()=>{
+    // let iconList = editLayerModalForm.iconList.value
+    let fillColor = editLayerModalForm.fillColor.value
+    let fillOpacity =  editLayerModalForm.fillOpacity.value
+    console.log(fillColor, fillOpacity)
+    return{
+        fillColor: fillColor,
+        fillOpacity: fillOpacity
+    }
+
+    // changePoints("Hospital", points )
+}
+
+
+// const editLayerModalForm = document.getElementById('editLayer')
+// // console.log(editLayerModalForm)
+
+// const saveCustomize = document.getElementById('saveCustomize')
+// saveCustomize.addEventListener('click', changePoints)
+
+
+
+var myIcon = L.icon({
+    iconUrl: './assets/carrental.png',
+    iconSize: [30, 40],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+
+});
+
+var myIcon2 = L.icon({
+    iconUrl: './assets/firstaid.png',
+    iconSize: [30, 40],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+
+});
+
+
+function newPoints(json, latlng){
+    let attr = json.properties
+    options = {
+        icon: 'home',
+        backgroundColor: 'transparent',
+        borderColor:'transparent',
+        // iconShape: 'marker'
+    };
+   return L.marker(latlng, {
+        icon: L.BeautifyIcon.icon(options),
+        draggable: false
+    }).bindTooltip(`<b>${attr.name}</b> <br>
+    Address: ${attr.address} <br>
+    `,{direction: 'auto'}).bindPopup(attr.name)
+}
+
+function points(json,latlng,options){
+
+    let attr = json.properties
+    // console.log(json)
+
+    var options = {
+        icon: 'hospital-alt',
+        iconShape: 'marker',
+        borderColor: '#b3334f',
+        textColor: '#b3334f',
+        //  iconSize: [40,40],
+        // innerIconStyle: 'font-size:20px; margin:10px auto'
+      };
+      return L.marker(latlng, {
+        icon: L.BeautifyIcon.icon(options),
+        draggable: false
+      })
+      .bindTooltip(`<b>Name:${attr.name}</b> <br>
+        Address: ${attr.address} <br>
+        `,{direction: 'top'}).bindPopup(attr.name)
+
+
+}
+console.log(myIcon)
+/* LINK THE SEARCH INPUT WITH LEAFLET SEARCH PLUGIN */
+$('#autocomplete').on('keyup', function(e) {
+
+    searchControl.searchText( e.target.value );
+
+})
+
+function changePoints(layer, pointFunc){
+    techMap.removeLayer(overlays[`${layer}`])
+    overlays[`${layer}`].options.pointToLayer = null
+    overlays[`${layer}`].options.pointToLayer = pointFunc
+
+    overlays[`${layer}`].refresh()
+
+
+    techMap.addLayer(overlays[`${layer}`])
+
+    console.log(overlays[`${layer}`])
+}
+
+    const ptSymbol = document.getElementById('ptSymbol')
+    const ptSize = document.getElementById('ptSize')
+    const ptFill = document.getElementById('ptFill')
+
+    const ptOpacity = document.getElementById('ptOpacity')
+
+
+    const ptStrokeOp = document.getElementById('ptStrokeOp')
+    const ptStrokeW  = document.getElementById('ptStrokeW')
+    const ptSolid = document.getElementById('ptSolid')
+    const ptDash = document.getElementById('ptDash')
+
+    ptOpacity.addEventListener('change', ()=>ptSymbol.style.opacity = ptOpacity.value)
+    const ptStroke = document.getElementById('ptStroke')
+
+    ptFill.addEventListener('change', ()=>ptSymbol.style.background = ptFill.value)
+
+    // ptStroke.addEventListener('change', ()=>{
+    //     console.log(ptStroke.value)
+    //     if(ptSolid.checked){ ptSymbol.style.border = `${ptStrokeW.value}px  solid  ${ptStroke.value}` }
+    //     if(ptDash.checked){ ptSymbol.style.border = `${ptStrokeW.value}px  dotted  ${ptStroke.value}` }
+    // })
+    // ptStrokeW.addEventListener('change', ()=>{
+    //     if(ptSolid.checked){ ptSymbol.style.border = `${ptStrokeW.value}px  solid  ${ptStroke.value}` }
+    //     if(ptDash.checked){ ptSymbol.style.border = `${ptStrokeW.value}px  dotted  ${ptStroke.value}` }
+    // })
+/****** MAP MODAL STYLING *******/
+// ######POINTS
+function returnPointValues(){
+    const ptSize = document.getElementById('ptSize')
+    const ptFill = document.getElementById('ptFill')
+    const ptOpacity = document.getElementById('ptOpacity')
+    // const ptStroke = document.getElementById('ptStroke')
+    // const ptStrokeW  = document.getElementById('ptStrokeW')
+    // const ptSolid = document.querySelector('input[name="ptStrokeType"]:checked').value
+    // const ptDash = document.getElementById('ptDash')
+
+    const ptOptions =  {
+        ptSize: ptSize.value,
+        ptFill: ptFill.value,
+        ptOpacity: ptOpacity.value,
+        // ptStroke: ptStroke.value,
+        // ptStrokeOp: ptStrokeOp.value,
+        // ptSolid: ptSolid,
+        // ptStrokeW: ptStrokeW.value
+
+    }
+    return ptOptions
+}
+// Button to effect point changes
+const savePtCustomize = document.getElementById('savePtCustomize')
+
+savePtCustomize.addEventListener('click', () =>{
+
+    const layer = document.getElementById('customizeLabel').innerText
+    changePoints(layer,pointStyler)
+
+
+    console.log( returnPointValues() )
+    document.getElementById('ptmodalClose').click()
+})
+
+// FUNCTION THAT STYLES POINTS ONLY
+function pointStyler(json, latlng, val){
+    let attr = json.properties
+     val = returnPointValues()
+    options = {
+        iconShape: 'circle-dot',
+        iconSize: [val.ptSize,val.ptSize],
+        // borderWidth: val.ptStrokeW,
+        // borderColor: val.ptStroke,
+        borderStyle: val.ptSolid,
+        backgroundColor: val.ptFill,
+      };
+   return L.marker(latlng, {
+        icon: L.BeautifyIcon.icon(options),
+        draggable: false,
+        opacity: val.ptOpacity
+    }).bindTooltip(`<b>${attr.name}</b> <br> Address: ${attr.address} <br>
+    `,{direction: 'auto'}).bindPopup(attr.name)
+
+}
+
+
+// FUNCTION TO STYLE ICONS
+function iconStyler(json, latlng){
+    let attr = json.properties
+     val = returnIconValues()
+     options = {
+        icon: val.icon,
+        borderColor: 'transparent',
+        textColor: val.textColor,
+        backgroundColor: val.backgroundColor,
+        iconSize:val.iconSize,
+        innerIconStyle: val.innerIconStyle,
+        // iconShape: ''
+      };
+
+   return L.marker(latlng, {
+        icon: L.BeautifyIcon.icon(options),
+        draggable: false,
+
+    }).bindTooltip(`<b>${attr.name}</b> <br> Address: ${attr.address} <br>
+    `,{direction: 'auto'}).bindPopup(attr.name)
+
+}
+
+
+
+
+// Icon FORM VALUES
+function returnIconValues(){
+    const icon = document.getElementById('iconType')
+    const iconColor = document.getElementById('iconColor')
+    const iconSize = document.getElementById('iconSize')
+    // const iconBg = document.getElementById('iconBg')
+    // const iconStroke  = document.getElementById('iconStroke')
+    // const iconStrokeSize  = document.getElementById('iconStrokeSize')
+
+
+    const iconOptions =  {
+        icon: icon.value,
+        textColor: iconColor.value,
+        // backgroundColor: iconBg.value,
+        iconSize: [Number(iconSize.value), Number(iconSize.value)],
+        // borderWidth: iconStrokeSize.value,
+        // borderColor: iconStroke.value,
+        innerIconStyle: `font-size:${Math.floor(Number(iconSize.value)/2)}px; padding:${Math.floor(Number(iconSize.value)/5)}px;`
+    }
+    return iconOptions
+}
+
+
+const saveIconCustomize = document.getElementById('saveIcon')
+
+saveIconCustomize.addEventListener('click', () =>{
+
+    const layer = document.getElementById('customizeLabel').innerText
+    // changePoints(layer,iconStyler)
+    changePoints('Dataset',iconStyler)
+
+
+    console.log( returnPointValues() )
+    document.getElementById('cancelIcon').click()
+})
+
+
+
+// TRY TURF AFRESH
+// var point = turf.point([-90.548630, 14.616599]);
+// var buffered = turf.buffer(point, 500, {units: 'miles'})
+// buffered.addTo(techMap)
+
+// BUFER BUFFER!!!
+// Convert miles to meters to set radius of circle
+function milesToMeters(miles) {
+	return (miles * 1069.344)/1
+}
+
+// figures out how many points are i a circle
+function pointsInCircle(circle, meters_user_set, bufferLayer) {
+
+    let bd = document.querySelector('.legend-content .card-body .card-text')
+    let counts = document.createElement('div')
+
+    counts.classList.add('count')
+    bd.parentElement.parentElement.parentElement.parentElement.classList.remove('trans-open')
+    bufferLayer = document.querySelector('#bufferLayer').value
+
+    // if(cIndicator){
+    //     console.log('Somen is here')
+    //     techMap.removeLayer(cIndicator)
+
+    // } else{console.log('we gat nothn')}
+
+	if (bufferCircle !== undefined) {
+
+    // Lat, long of circle
+    circle_lat_long = bufferCircle.getLatLng();
+
+    let counter_points_in_circle = 0;
+    bd.innerHTML = ' '
+    bd.appendChild(counts)
+		// Loop through each point in JSON file
+		overlays[`${bufferLayer}`].eachLayer(function(layer) {
+			// Lat, long of current point
+			layer_lat_long = layer.getLatLng();
+
+			// Distance from our circle marker
+			// To current point in meters
+			distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
+
+			// See if meters is within raduis
+			// The user has selected
+			if (distance_from_layer_circle <= meters_user_set) {
+            	counter_points_in_circle += 1
+                console.log(layer)
+                console.log(layer.feature.properties.name)
+                // console.log('layer',layer)
+
+                // cIndicator = L.circle(layer._latlng, {
+                //     color: 'red',
+                //     fillColor: '#f03',
+                //     fillOpacity: 0.5,
+                //     radius: 0
+                //   }).addTo(techMap);
+                  let lat = layer.feature.layer._latlng.lat
+                  let lng = layer.feature.layer._latlng.lng
+                  bd.innerHTML += ` <p class="buffer-points" > ${layer.feature.properties.name} <span class="lat" style="display:none">${lat}</span> <span class="lng" style="display:none">${lng}</span> <br/>
+                                        <b>Distance:  ${(distance_from_layer_circle * 0.000621371).toFixed(2)}  miles / ${(distance_from_layer_circle/1000).toFixed(2)} Km</b>
+
+                  </p> `
+
+            }
+
+        });
+        console.log(counts)
+        document.querySelector('.count').innerHTML = `<h4> ${counter_points_in_circle} points within buffer radius </h4>`
+		// Set number of results on main page
+        // $('#ofi_paf_results').html(counter_points_in_circle);
+        let l = document.querySelector('.legend')
+        l.addEventListener('click', (e)=>{
+            if(e.target.tagName === 'P'){
+                let lat = e.target.firstElementChild.innerText
+                let lng = e.target.firstElementChild.nextElementSibling.innerText
+                console.log(e.target.innerText)
+                techMap.flyTo([lat,lng], 14)
+            }
+
+        })
+	}
+// Close pointsInCircle
+};
+
+
+
+const bufferMode = document.getElementById('bufferMode')
+bufferMode.addEventListener('click', (e) =>{
+    let btn = e.target
+    bufferLayer = document.querySelector('#bufferLayer').value
+    if(bufferLayer === ''){
+        alert('Select a layer')
+        return false
+    }
+
+    e.target.classList.toggle('active')
+    btn.innerText = btn.classList.contains('active') ? 'Stop buffer' : 'buffer'
+    // e.target.innerText = 'Buffer activated'
+    if(bufferCircle && !btn.classList.contains('active') ){
+        techMap.removeLayer(bufferCircle)
+    }
+
+})
+
+// Buffer Layer generator
+function bufferLayerGen(){
+
+    let  bl = document.querySelector('#bufferLayer')
+
+    for(key of Object.keys(overlays)){
+        let option = document.createElement('option')
+
+        option.innerText = key
+        option.value = key
+
+        bl.append(option)
+
+    }
+}
 
 // save drawn items layer
 $(".save-map").click(function (e) {
@@ -897,6 +1376,37 @@ $(".save-map").click(function (e) {
         },
     });
 });
+
+// map print
+$("#print_m").on("click", function(e) {
+    // prevent the link from taking any action
+    event.preventDefault();
+
+     // call the browser print function
+     window.print();
+ });
+
+ // map image
+ $("#image_m").on("click", function(e) {
+    // prevent the link from taking any action
+    event.preventDefault();
+    var mapElement = $("#mapid")[0];
+
+    // perform the conversion
+    html2canvas(mapElement, {
+      // required otherwise the map will be blank
+      useCORS: true,
+      onrendered: function(canvas) {
+          var url = canvas.toDataURL();
+          $("<a>", {
+            href: url,
+            download: "Map"
+          })
+          .on("click", function() {$(this).remove()})
+          .appendTo("body")[0].click()
+    }
+  });
+ });
 
 // search layer
 $(".search").click(function (e) {
@@ -933,16 +1443,17 @@ $(".search").click(function (e) {
 
 // Search map on enter key
 var input = document.getElementById("search");
-if (input!= null){
-input.addEventListener("keyup", function (event) {
-    // Number 13 is the "Enter" key on the keyboard
-    if (event.keyCode === 13) {
-        // Cancel the default action, if needed
-        event.preventDefault();
-        // Trigger the button element with a click
-        document.getElementById("searchbtn").click();
-    }
-})};
+if (input != null) {
+    input.addEventListener("keyup", function (event) {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            // Trigger the button element with a click
+            document.getElementById("searchbtn").click();
+        }
+    })
+};
 
 // copy URL
 $("#copy_url_btn").click(function (e) {
@@ -957,5 +1468,27 @@ $("#copy_url_btn").click(function (e) {
     document.execCommand("copy");
 
     /* Alert the copied text */
-    document.getElementById("copy_url_btn").innerHTML='Copied';
-  });
+    document.getElementById("copy_url_btn").innerHTML = 'Copied';
+});
+
+// buffering by polyline
+// function summarisePointsByLine(line, radius, fcpoint, prop){
+//     var buf = turf.buffer(line, radius, 'kilometers');
+//     buf = turf.featureCollection([buf]);
+//     buf = turf.collect(buf, fcpoint, prop+"Vals");
+//     return buf;
+// }
+// function summariseArray(ar){
+//     var arUnique = [];
+//     var arCount = [];
+//     for (var i=0; i<ar.length; i++){
+//         var idx = arUnique.indexOf(ar[i]);
+//         if (idx<0){
+//             arUnique.push(ar[i]);
+//             arCount.push(1);
+//         } else {
+//             arCount[idx] += 1;
+//         }
+//     }
+//     return [arUnique, arCount];
+// }
