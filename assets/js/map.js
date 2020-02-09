@@ -197,14 +197,14 @@ let techMap,
     })
      
 
-    /**** SEARCH LAYERS ***/
+    /**** SEARCH LAYERS ****/
     poi = L.layerGroup([overlays["Hospital"],overlays["Lagos PPMV"]])
 
     searchControl = L.control.search({
         layer: poi, 
         initial: false,
         marker: false,
-        propertyName: 'name' ,
+        propertyName: 'name',
         hideMarkerOnCollapse: true,
         marker: {
 			icon: new L.Icon({iconUrl:'./assets/firstaid.png', iconSize: [20,20]}),
@@ -218,7 +218,7 @@ let techMap,
             // techMap.fitBounds( latlng.layer.getBounds() );
             // console.log(latlng, title, techMap)
 			// var zoom = techMap.getBoundsZoom(latlng.layer.getBounds());
-            techMap.flyTo(latlng, 11); // access the zoom
+            techMap.flyTo(latlng, 14); // access the zoom
             
 		}
       })
@@ -1118,11 +1118,12 @@ function pointsInCircle(circle, meters_user_set, bufferLayer) {
         console.log(counts)
         document.querySelector('.count').innerHTML = `<h4> ${counter_points_in_circle} points within buffer radius </h4>`
 		// Set number of results on main page
-        // $('#ofi_paf_results').html(counter_points_in_circle);
+        
         let l = document.querySelector('.legend')
         l.addEventListener('click', (e)=>{
             if(e.target.tagName === 'P'){
-                let lat = e.target.firstElementChild.innerText
+                // let marker = 
+                let lat = e.target.firstElementChild.innerText 
                 let lng = e.target.firstElementChild.nextElementSibling.innerText
                 console.log(e.target.innerText)
                 techMap.flyTo([lat,lng], 14)
