@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
+  <meta name="author" content="Creative Tim">
+  <title>GIS</title>
+  <!-- Favicon -->
+  <!-- <link href="./assets/img/brand/favicon.png" rel="icon" type="image/png"> -->
+  <!-- Fonts -->
+  <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:100,300,300i,400,500,700,900&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <link href="./assets/vendor/nucleo/css/nucleo.css" rel="stylesheet">
+  <link href="./assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  
+  <!-- leaflet Css -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+  integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+  crossorigin=""/>
+
+
+
+  <!-- PLUGIN CSS -->
+  <link rel="stylesheet" href="./assets/js/plugins/leaflet-sidebar.css">
+  <link rel="stylesheet" href="./assets/js/plugins/Leaflet.PolylineMeasure.css">
+  <link rel="stylesheet" href="./assets/js/plugins/gh-fork-ribbon.ie.css">
+  <link rel="stylesheet" href="./assets/js/plugins/gh-fork-ribbon.css">
+  <link rel="stylesheet" href="./assets/js/plugins/easy-button.css">
+  <link rel="stylesheet" href="./assets/js/plugins/leaflet-measure.css">
+  <link rel="stylesheet" href="./assets/js/plugins/search/searchbox.min.css">
+  <link rel="stylesheet" href="./assets/js/plugins/Leaflet.PolylineMeasure.css">
+  <link rel="stylesheet" href="./assets/js/plugins/leaflet-search.min.css">
+  <!-- <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.css">
+  <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.Default.css"> -->
+
+  <!-- leaflet Javascript -->
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+  integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+  crossorigin=""></script>
+
+  <!-- JQuery -->
+  <script src="./assets/vendor/jquery/dist/jquery.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.8.24/i18n/jquery-ui-i18n.min.js"></script> -->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <!-- TURF js -->
+  <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+  
+  <!-- PLUGINS -->
+  <script src="./assets/js/plugins/leaflet-sidebar.js"></script>
+  <script src="./assets/js/plugins/Leaflet.PolylineMeasure.js"></script>
+  <script src="./assets/js/plugins/leaflet-providers.js"></script>
+  <script src="./assets/js/plugins/leaflet.ajax.min.js"></script>
+  <script src="./assets/js/plugins/leaflet-heat.js"></script>
+  <script src="./assets/js/plugins/easy-button.js"></script>
+  <!-- <script src="./assets/js/plugins/leaflet-search.min.js"></script> -->
+  <script src="./assets/js/plugins/leaflet-omnivore.min.js"></script>
+  <script src="./assets/js/plugins/leaflet.filelayer.js"></script>
+  <script src="./assets/js/plugins/leaflet-measure.js"></script>
+  <script src="./assets/js/plugins/L.Control.SlideMenu.js"></script>
+  <!-- <script src="./assets/js/plugins/leaflet.markercluster.js"></script>
+  <script src="./assets/js/plugins/leaflet-marker-bounce.js"></script> -->
+  
+  <script src="./assets/js/plugins/search/leaflet.customsearchbox.min.js"></script>
+  <script src="https://npmcdn.com/@turf/turf@5.1.6/turf.min.js"></script>
+
+  <!-- ESRI Leaflet -->
+  <!-- <script src="//cdn.jsdelivr.net/leaflet.esri/1.0.3/esri-leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.3/dist/esri-leaflet-geocoder.css">
+  <script src="https://unpkg.com/esri-leaflet-geocoder@2.2.3"></script> -->
+
+  <script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet-clustered-feature-layer/1.0.0-rc.1/esri-leaflet-clustered-feature-layer.js"></script>
+  
+  <!-- Drawer js n Css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script> 
+  <!-- End of drawer Js -->
+  <script src="./assets/js/plugins/leaflet-styleeditor/javascript/Leaflet.StyleEditor.js"></script>
+  <script src="./assets/js/plugins/leaflet-styleeditor/javascript/Leaflet.StyleForms.js"></script>
+  <!-- <script src="./assets/js/plugins/leaflet-style-editor/javascript/Control.js"></script> -->
+  <!-- <script src="src="https://cdn.jsdelivr.net/npm/leaflet-styleeditor@latest/dist/javascript/Leaflet.StyleEditor.min.js""></script> -->
+
+   
+  <link type="text/css" href="./assets/css/argon.css?v=1.0.0" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/custorm.css">
+
+</head>
+
+<body>
+  <!-- Sidenav -->
+  <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-gradient-default" id="sidenav-main">
+    <div class="container-fluid">
+      <!-- Toggler -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars" style="color: #fff;"></i>
+      </button>
+      <!-- Brand -->
+      <a class="navbar-brand text-light pt-0" href="./index.html">        
+        Techmatrix
+      </a>
+      <!-- User -->
+      <ul class="nav align-items-center d-md-none">
+        <!-- <li class="nav-item dropdown">
+          <a class="nav-link nav-link-icon" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="ni ni-bell-55"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right" aria-labelledby="navbar-default_dropdown_1">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li> -->
+        <li class="nav-item dropdown">
+          <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="media align-items-center">
+              <span class="avatar avatar-sm rounded-circle">              
+              </span>
+            </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+            <!-- <div class=" dropdown-header noti-title">
+              <h6 class="text-overflow m-0">Welcome!</h6>
+            </div>
+            <a href="./examples/profile.html" class="dropdown-item">
+              <i class="ni ni-single-02"></i>
+              <span>My profile</span>
+            </a>
+            <a href="./examples/profile.html" class="dropdown-item">
+              <i class="ni ni-settings-gear-65"></i>
+              <span>Settings</span>
+            </a>
+            <a href="./examples/profile.html" class="dropdown-item">
+              <i class="ni ni-calendar-grid-58"></i>
+              <span>Activity</span>
+            </a>
+            <a href="./examples/profile.html" class="dropdown-item">
+              <i class="ni ni-support-16"></i>
+              <span>Support</span>
+            </a> -->
+            <div class="dropdown-divider"></div>
+            <a href="#!" class="dropdown-item">
+              <i class="ni ni-user-run"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </li>
+      </ul>
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+        <!-- Collapse header -->
+        <div class="navbar-collapse-header d-md-none">
+          <div class="row">
+            <div class="col-6 collapse-brand">
+              <a href="./index.html">   Techmatrix </a>
+            </div>
+            <div class="col-6 collapse-close">
+              <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle sidenav">
+                <span></span>
+                <span></span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Form -->
+        <!-- <form class="mt-4 mb-3 d-md-none">
+          <div class="input-group input-group-rounded input-group-merge">
+            <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search" aria-label="Search">
+            <div class="input-group-prepend">
+              <div class="input-group-text">
+                <span class="fa fa-search">Search me</span>
+              </div>
+            </div>
+          </div>
+        </form> -->
+        <!-- Navigation -->
+        <ul class="navbar-nav bg-gradient-default">
+            <li class="nav-item">
+              <a class="nav-link text-light" href="#">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+              </a>
+            </li>
+  
+            <li class="nav-item" style="height: 44px">
+              <a class="nav-link text-light collapse " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-users"></i> User Management 
+              </a>
+              <div class="dropdown">                
+                  <div class="dropdown-menu dropdown-menu dropdown-menu-arrow" x-placement="top-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-161px, -60px, 0px);">
+                    <a class="dropdown-item" href="#"><i class="fas fa-unlock-alt"></i> Permision</a>
+                    <a class="dropdown-item" href="#"><i class="fas fa-briefcase"></i>Role</a>
+                    <a class="dropdown-item" href="#"><i class="fas fa-user"></i>User</a>
+                  </div>
+              </div>
+            </li>
+  
+  
+            <li class="nav-item">
+              <a class="nav-link text-light" href="#">
+                <i class="fas fa-table"></i> Data
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light" href="#">
+                <i class="fas fa-map"></i> Maps
+              </a>
+            </li>
+            
+          </ul>
+        <!-- Divider -->
+        <hr class="my-3">
+        <!-- Heading -->
+        <h6 class="navbar-heading text-orange">Settings</h6>
+        <!-- Navigation -->
+        <ul class="navbar-nav mb-md-3">
+          <li class="nav-item">
+            <a class="nav-link text-light" href="#">
+              <i class="fas fa-eye"></i> Visualization
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="#">
+              <i class="ni ni-settings"></i> Tools
+            </a>
+          </li>          
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Main content -->
+  <div class="main-content" style="background: #e9ecef;">
+        <div class="container-fluid map-name">
+            <div class="row pt-3">
+
+                <div class="col-12">
+                    <h2>Map Name</h2>
+                    <p>Map description.</p>              
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header bg-gradient-grey pt-2 pt-md-2">
+            <!-- <div class="container-fluid">
+                <div class="mb-2 ml-2">
+                    <button type="button" class="btn btn-outline-default">Map</button>
+                    <button type="button" class="btn btn-outline-default">Data</button>
+                </div>
+            </div> -->
+            <nav class="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-default utility">
+                <div class="container-fluid">
+                    
+                    <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-default" aria-controls="navbar-default" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button> -->
+                    
+                    
+                    <!-- collapsed nav -->
+                    <div class="collapse navbar-collapse" id="navbar-default">                      
+                        <!-- Search map -->
+                        <ul class="navbar-nav  search-map">
+                            <form action="">
+                                <div class="search-map-input">
+                                    <input id="autocomplete" class="input-control" type="text"  placeholder="search map">
+                                </div>
+                            </form>
+                        </ul>
+
+                        <!-- Toggle private/public -->
+                        <ul class="navbar-nav ml-lg-auto">
+                            <label class="custom-toggle private">
+                                <!-- <span style="display:inline-block; margin-left: 20px;">Hello</span> -->
+                                <input type="checkbox" checked data-toggle="modal" data-target="#exampleModal">
+                                <span class="custom-toggle-slider rounded-circle"></span>
+                            </label>
+                        </ul>
+                        
+                        <!-- download and share -->
+                        <ul class="navbar-nav ml-lg-auto">
+                            
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-icon" href="#">
+                                    <i class="fas fa-download"></i>                                    
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">                            
+                                <a class="nav-link nav-link-icon" href="#" id="navbar-default_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-share-alt"></i>                                                                       
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-default_dropdown_1">
+                                    <a class="dropdown-item" href="#"><i class="fab fa-twitter"></i>Twitter </a>
+                                    <a class="dropdown-item" href="#"><i class="fas fa-envelope"></i>Mail </a>                                    
+                                    <a class="dropdown-item" href="#">...</a>
+                                </div>
+                            </li>                                                        
+                        </ul>
+                        
+                        <!-- Zoom in and out -->
+                        <!-- <ul class="navbar-nav ml-lg-auto" id="zoom-tool">
+
+                            <li id="zoom-out" class="nav-item">
+                                <a class="nav-link nav-link-icon" href="#">
+                                  <i class="fas fa-search-minus"></i>                                    
+                                </a>
+                            </li> 
+
+                            <li id="zoom-in" class="nav-item">
+                                <a class="nav-link nav-link-icon" href="#">
+                                  <i class="fas fa-search-plus"></i>
+                                </a>
+                            </li> 
+                                                                                  
+                        </ul> -->
+                        
+                    </div> 
+                    
+                </div>
+            </nav>
+        </div>
+        <!-- end Header -->
+
+    <!-- Page content -->
+    
+    
+
+  <!-- main feature table -->
+    <div class="table-wrap">
+        <div class="container-fluid mt-4">
+            <!-- Table -->
+            <div class="row">
+                <div class="col">
+                <div class="card shadow">
+                  <div class="card-header border-0">
+                    <h3 class="mb-0">Map feature table</h3>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                      <thead class="thead-light">
+                        <tr>
+                          <th scope="col">{table head1}</th>
+                          <th scope="col">{table head2}</th>
+                          <th scope="col">{table head3}</th>
+                          <th scope="col">{table head4}</th>
+                          <th scope="col">{table head5}</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">
+                            <div class="media align-items-center">                              
+                              <div class="media-body">
+                                <span class="mb-0 text-sm">Data</span>
+                              </div>
+                            </div>
+                          </th>
+                          <td>
+                            70.03 N
+                          </td>
+                          <td>
+                            <span class="badge badge-dot mr-4">
+                              <i class="bg-warning"></i> 89.9 S
+                            </span>
+                          </td>
+                          <td>
+                            <div class="avatar-group">
+                              PPMV
+                            </div>
+                          </td>
+                          <td>
+                            <div class="d-flex align-items-center">
+                              <span class="mr-2">60%</span>
+                              <div>
+                                <div class="progress">
+                                  <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="text-right">
+                            <div class="dropdown">
+                              <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                              </a>
+                              <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                <a class="dropdown-item" href="#">Edit</a>
+                                <a class="dropdown-item" href="#">Delete</a>
+                                <a class="dropdown-item" href="#">Update</a>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">
+                              <div class="media align-items-center">                              
+                                <div class="media-body">
+                                  <span class="mb-0 text-sm">Data</span>
+                                </div>
+                              </div>
+                            </th>
+                            <td>
+                              70.03 N
+                            </td>
+                            <td>
+                              <span class="badge badge-dot mr-4">
+                                <i class="bg-warning"></i> 89.9 S
+                              </span>
+                            </td>
+                            <td>
+                              <div class="avatar-group">
+                                PPMV
+                              </div>
+                            </td>
+                            <td>
+                              <div class="d-flex align-items-center">
+                                <span class="mr-2">60%</span>
+                                <div>
+                                  <div class="progress">
+                                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td class="text-right">
+                              <div class="dropdown">
+                                <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fas fa-ellipsis-v"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                  <a class="dropdown-item" href="#">Edit</a>
+                                  <a class="dropdown-item" href="#">Delete</a>
+                                  <a class="dropdown-item" href="#">Update</a>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <th scope="row">
+                              <div class="media align-items-center">                              
+                                <div class="media-body">
+                                  <span class="mb-0 text-sm">Data</span>
+                                </div>
+                              </div>
+                            </th>
+                            <td>
+                              70.03 N
+                            </td>
+                            <td>
+                              <span class="badge badge-dot mr-4">
+                                <i class="bg-warning"></i> 89.9 S
+                              </span>
+                            </td>
+                            <td>
+                              <div class="avatar-group">
+                                PPMV
+                              </div>
+                            </td>
+                            <td>
+                              <div class="d-flex align-items-center">
+                                <span class="mr-2">60%</span>
+                                <div>
+                                  <div class="progress">
+                                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td class="text-right">
+                              <div class="dropdown">
+                                <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fas fa-ellipsis-v"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                  <a class="dropdown-item" href="#">Edit</a>
+                                  <a class="dropdown-item" href="#">Delete</a>
+                                  <a class="dropdown-item" href="#">Update</a>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <th scope="row">
+                              <div class="media align-items-center">                              
+                                <div class="media-body">
+                                  <span class="mb-0 text-sm">Data</span>
+                                </div>
+                              </div>
+                            </th>
+                            <td>
+                              70.03 N
+                            </td>
+                            <td>
+                              <span class="badge badge-dot mr-4">
+                                <i class="bg-warning"></i> 89.9 S
+                              </span>
+                            </td>
+                            <td>
+                              <div class="avatar-group">
+                                PPMV
+                              </div>
+                            </td>
+                            <td>
+                              <div class="d-flex align-items-center">
+                                <span class="mr-2">60%</span>
+                                <div>
+                                  <div class="progress">
+                                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="122" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td class="text-right">
+                              <div class="dropdown">
+                                <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fas fa-ellipsis-v"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                  <a class="dropdown-item" href="#">Edit</a>
+                                  <a class="dropdown-item" href="#">Delete</a>
+                                  <a class="dropdown-item" href="#">Update</a>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        
+                      </tbody>
+                    </table>
+                  </div>
+            
+    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Modal -->
+          
+          
+
+
+           <!-- Tab panes -->
+
+   
+  <!-- Argon Scripts -->
+  <!-- Core -->
+  <script src="./assets/vendor/jquery/dist/jquery.min.js"></script>
+  <script src="./assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Optional JS -->
+  <!-- <script src="./assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="./assets/vendor/chart.js/dist/Chart.extension.js"></script> -->
+  <!-- Argon JS -->
+  <script src="./assets/js/argon.js?v=1.0.0"></script>
+  <!-- <script src="./assets/js/map.js"></script>  -->
+</body>
+
+</html>
