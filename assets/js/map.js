@@ -30,7 +30,8 @@ let techMap,
   sites,
   poi,
   bufferCircle,
-  cIndicator;
+  cIndicator,
+  addNewLayer;
 
 $(document).ready(function() {
   //init setting
@@ -612,7 +613,7 @@ function onMapClick(coords) {
 
 function feat1(feature, layer) {
   feature.layer = layer;
-
+  console.log(feature.properties);
   let bd = document.querySelector(".legend-content .card-body .card-text");
   // console.log('layer:',layer)
 
@@ -714,6 +715,7 @@ function fillLayer() {
 
     document.querySelector("#pills-profile").append(el);
   }
+  // return 3;
 }
 function loadLayer(e) {
   // if a layer is not active, add the class active and also add to Map else do d opp
@@ -1138,3 +1140,16 @@ function bufferLayerGen() {
     bl.append(option);
   }
 }
+
+// Testing to add a new layer dynamically
+addNewLayer = () => {
+  const sampleData = L.geoJSON.ajax("./j.json", {
+    pointToLayer: dataStyler,
+    onEachFeature: feat1
+  });
+  overlays["new layer"] = sampleData;
+
+  console.log(sampleData);
+  console.log(overlays);
+  fillLayer();
+};

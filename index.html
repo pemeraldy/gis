@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="./assets/js/plugins/easy-button.css">
   <link rel="stylesheet" href="./assets/js/plugins/leaflet-measure.css">
   <link rel="stylesheet" href="./assets/js/plugins/leaflet.fusesearch.css">
+  <link rel="stylesheet" href="./assets/js/plugins/dropzone.css">
   <!-- <link rel="stylesheet" href="./assets/js/plugins/search/searchbox.min.css"> -->
   <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet-search@2.3.7/dist/leaflet-search.src.css" /> -->
 
@@ -339,7 +340,7 @@
     
           <!-- RIGHT SIDEBAR -->
           <div class="map-sidebar side-open">
-            <div class="d-flex "><h2 class="sidebar-header">Map Legend</h2> <span class="sidebar-anchor"><i class="fas fa-chevron-left"></i></span></div>
+            <div class="d-flex "><h2 class="sidebar-header">Map Legend</h2> <div title="Add new layer" class="add-layer"><i class="fa fa-plus"></i></div> <span class="sidebar-anchor"><i class="fas fa-chevron-left"></i></span></div>
             <hr style="margin-top: 0 !important;">
             <div class="sidebar-inner">
               <div class="tab-content" id="pills-tabContent">
@@ -442,8 +443,8 @@
                       <nav>
                           <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-layer-tab" data-toggle="tab" href="#nav-layer" role="tab" aria-controls="nav-layer" aria-selected="true">Points</a>
-                            <a class="nav-item nav-link" id="" data-toggle="tab" href="#nav-Style" role="tab" aria-controls="nav-Style" aria-selected="false">Icons</a>
-                            <a class="nav-item nav-link" id="" data-toggle="tab" href="#nav-Style" role="tab" aria-controls="nav-Style" aria-selected="false">Category</a>
+                            <a class="nav-item nav-link" id="nav-Style-tab" data-toggle="tab" href="#nav-Style" role="tab" aria-controls="nav-Style" aria-selected="false">Icons</a>
+                            <a class="nav-item nav-link" id="nav-image-tab" data-toggle="tab" href="#nav-image" role="tab" aria-controls="nav-image" aria-selected="false">Image icon</a>
                             <a class="nav-item nav-link" id="" data-toggle="tab" href="#nav-Style" role="tab" aria-controls="nav-Style" aria-selected="false">Cloropleth</a>
                             
                           </div>
@@ -618,12 +619,59 @@
                                     </div>
                               </div>
 
+                              
+
                               <div class="modal-footer">
                                   <button id="cancelIcon" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                   <button id="saveIcon" type="button" class="btn btn-primary">Save</button>
                                 </div>
                                                      
                             </form>
+
+
+                            <!-- Icon upload -->
+                               <div class="row">
+                                <!-- ############ Icon Image ############### -->
+                                <div class="col-md-4">
+                                  <div class="form-group">
+                                      <label for="iconUpload" class="">Upload icon</label>
+                                    <div class="input-group mb-4">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-color"></i></span>
+                                      </div>                                                                            
+                                      <!-- <input id="iconUpload" class="form-control" value="#ffffff"  type="file"> -->
+                                      <span class="" id="iconUpload"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <!-- ###########Image COLOR -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="iconWidth" class="" >width</label>
+                                      <div class="input-group mb-4">
+                                        <input id="iconWidth" class="form-control"  type="number" min="0" max="100" class="form-control"  value="12">
+                                        <div class="input-group-append">
+                                          <span class="input-group-text"><i class="fas fa-color"></i></span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-md-4">
+                                      <div class="form-group">
+                                          <label for="iconHeight" class="">height</label>
+                                        <input id="iconHeight" type="number" min="0" max="100" class="form-control"  value="12"/>
+                                      </div>
+                                    </div>
+                              </div>
+                              
+                          </div>
+
+                          <div class="tab-pane fade" id="nav-image" role="tabpanel" aria-labelledby="nav-image-tab">
+                            <form action="upload.php" id="iconImage" class="p-2 dropzone">
+                                                     
+                            </form>
+                              
                           </div>
                           
                         </div>
@@ -644,6 +692,11 @@
   <script src="./assets/vendor/chart.js/dist/Chart.extension.js"></script> -->
   <!-- Argon JS -->
   <script src="./assets/js/argon.js?v=1.0.0"></script>
+  <script src="./assets/js/plugins/dropzone.js"></script>
+  <script>
+    // let myDropzone = new Dropzone("span#iconUpload", { url: "/upload"});
+    $("#iconUpload").dropzone({ url: "/upload" });
+  </script>
   <script src="./assets/js/map.js"></script>
 </body>
 
