@@ -702,6 +702,7 @@ function fillLayer() {
     edit.classList.add("fa-edit");
     edit.classList.add("edit");
     edit.style.fontSize = "18px";
+    edit.title = "customize layer";
     checked.classList.add("fas");
     checked.style.marginLeft = "auto";
     // checked.classList.add('fa-check-square')
@@ -1143,13 +1144,17 @@ function bufferLayerGen() {
 
 // Testing to add a new layer dynamically
 addNewLayer = () => {
-  const sampleData = L.geoJSON.ajax("./j.json", {
+  const sampleData = L.geoJSON.ajax("./data/hospital.geojson", {
     pointToLayer: dataStyler,
     onEachFeature: feat1
   });
   overlays["new layer"] = sampleData;
-
+  techMap.addLayer(overlays["new layer"]);
   console.log(sampleData);
   console.log(overlays);
   fillLayer();
 };
+const addNewLayerBtn = document.querySelector(".add-layer");
+addNewLayer.addEventListener("click", () => {
+  // call a modal with dropzone
+});
