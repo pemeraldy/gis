@@ -669,17 +669,6 @@ function feat1(feature, layer) {
         }
         bd.innerHTML += `<div><b> ${key}</b>: ${value}</div>`;
       }
-      //   bd.innerHTML += `
-      //             <div class="custom-control custom-checkbox mr-sm-2">
-      //                 <label for="marker"> Change marker</label>
-      //                 <input id="marker" type="text" list="marker-list" value>
-      //                 <datalist id="marker-list">
-      //                     <!-- popluate list of icons -->
-      //                     <option value="1">
-      //                     <option value="2">
-      //                 </datalist>
-      //             </div>
-      //         `;
     } else {
       document.querySelector(".legend-content").innerHTML = ` 
             <h2>Click a Layer to display properties</h2> 
@@ -1157,4 +1146,7 @@ addNewLayer = () => {
 const addNewLayerBtn = document.querySelector(".add-layer");
 addNewLayer.addEventListener("click", () => {
   // call a modal with dropzone
+
+  // add new layer to search group
+  poi.addLayer(overlays["Hospital"]);
 });
