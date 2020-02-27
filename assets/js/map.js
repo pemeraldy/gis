@@ -184,7 +184,7 @@ $(document).ready(function() {
   });
 
   /**** SEARCH LAYERS ***/
-  poi = L.layerGroup([overlays["Hospital"], overlays["Lagos PPMV"]]);
+  poi = L.layerGroup([overlays["Lagos PPMV"]]);
 
   searchControl = L.control.search({
     layer: poi,
@@ -1008,11 +1008,6 @@ saveIconCustomize.addEventListener("click", () => {
   document.getElementById("cancelIcon").click();
 });
 
-// TRY TURF AFRESH
-// var point = turf.point([-90.548630, 14.616599]);
-// var buffered = turf.buffer(point, 500, {units: 'miles'})
-// buffered.addTo(techMap)
-
 // BUFER BUFFER!!!
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
@@ -1145,37 +1140,10 @@ addNewLayer = () => {
   fillLayer();
 };
 const addNewLayerBtn = document.querySelector(".add-layer");
-addNewLayerBtn.addEventListener("click", () => {
+addNewLayerBtn.addEventListener("click", layerName => {
   // call a modal with dropzone
-  console.log("isshshs");
+  poi.addLayer(overlays[`${layerName}`]);
+  // console.log("isshshs");
   // Add new layer based on the file uploaded
   addNewLayer();
 });
-
-// Image as icon
-// var LeafIcon = L.Icon.extend({
-//   options: {
-//     // shadowUrl: "leaf-shadow.png",
-//     iconSize: [38, 95],
-//     // shadowSize: [50, 64],
-//     iconAnchor: [22, 94],
-//     // shadowAnchor: [4, 62],
-//     popupAnchor: [-3, -76]
-//   }
-// });
-// var greenIcon = new LeafIcon({ iconUrl: "carental.png" });
-
-// L.marker([51.5, -0.09], { icon: greenIcon })
-//   .addTo(techMap)
-//   .bindPopup("I am a green leaf.");
-var greenIcon = L.icon({
-  iconUrl: "carrental.png",
-  // shadowUrl: "leaf-shadow.png",
-
-  iconSize: [38, 95], // size of the icon
-  // shadowSize: [50, 64], // size of the shadow
-  iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-  // shadowAnchor: [4, 62], // the same for the shadow
-  popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-});
-L.marker([51.5, -0.09], { icon: greenIcon }).addTo(techMap);
