@@ -613,7 +613,7 @@ function onMapClick(coords) {
 
 function feat1(feature, layer) {
   feature.layer = layer;
-  console.log(feature.properties);
+  // console.log(feature.properties);
   let bd = document.querySelector(".legend-content .card-body .card-text");
   // console.log('layer:',layer)
 
