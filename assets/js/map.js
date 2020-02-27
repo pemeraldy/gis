@@ -613,7 +613,7 @@ function onMapClick(coords) {
 
 function feat1(feature, layer) {
   feature.layer = layer;
-  console.log(feature.properties);
+  // console.log(feature.properties);
   let bd = document.querySelector(".legend-content .card-body .card-text");
   // console.log('layer:',layer)
 
@@ -635,7 +635,7 @@ function feat1(feature, layer) {
       }
       bd.innerHtml += `<hr>`;
       bd.innerHTML += `<div><label>Fill color</label>:<input id="fillCol" type='color' value='${layer.options.fillColor}'></div>`;
-      bd.innerHTML += `<div><label>Fill opacicty</label>:<input id="fillOp" type='number' step='0.1' value='${layer.options.fillOpacity}'></div>`;
+      bd.innerHTML += `<div><label>Fill opacicty</label>:<input id="fillOp" type='number' min='0' max='1' step='0.1' value='${layer.options.fillOpacity}'></div>`;
       console.log(layer.options.fillColor);
 
       // addevent listeners for newly filled htmltags
@@ -655,7 +655,7 @@ function feat1(feature, layer) {
         });
       });
     } else if (feature.geometry.type == "Point") {
-      onMapClick(coords);
+      // onMapClick(coords);
       // console.log(feature.properties)
 
       bd.innerHTML = "";
@@ -669,17 +669,6 @@ function feat1(feature, layer) {
         }
         bd.innerHTML += `<div><b> ${key}</b>: ${value}</div>`;
       }
-      //   bd.innerHTML += `
-      //             <div class="custom-control custom-checkbox mr-sm-2">
-      //                 <label for="marker"> Change marker</label>
-      //                 <input id="marker" type="text" list="marker-list" value>
-      //                 <datalist id="marker-list">
-      //                     <!-- popluate list of icons -->
-      //                     <option value="1">
-      //                     <option value="2">
-      //                 </datalist>
-      //             </div>
-      //         `;
     } else {
       document.querySelector(".legend-content").innerHTML = ` 
             <h2>Click a Layer to display properties</h2> 
@@ -702,6 +691,7 @@ function fillLayer() {
     edit.classList.add("fa-edit");
     edit.classList.add("edit");
     edit.style.fontSize = "18px";
+    edit.title = "customize layer";
     checked.classList.add("fas");
     checked.style.marginLeft = "auto";
     // checked.classList.add('fa-check-square')
@@ -1143,13 +1133,49 @@ function bufferLayerGen() {
 
 // Testing to add a new layer dynamically
 addNewLayer = () => {
-  const sampleData = L.geoJSON.ajax("./j.json", {
+  const sampleData = L.geoJSON.ajax("./data/hospital.geojson", {
     pointToLayer: dataStyler,
     onEachFeature: feat1
   });
   overlays["new layer"] = sampleData;
-
+  techMap.addLayer(overlays["new layer"]);
   console.log(sampleData);
   console.log(overlays);
+  // add the new layer to side bar
   fillLayer();
 };
+const addNewLayerBtn = document.querySelector(".add-layer");
+addNewLayerBtn.addEventListener("click", () => {
+  // call a modal with dropzone
+  console.log("isshshs");
+  // Add new layer based on the file uploaded
+  addNewLayer();
+});
+
+// Image as icon
+// var LeafIcon = L.Icon.extend({
+//   options: {
+//     // shadowUrl: "leaf-shadow.png",
+//     iconSize: [38, 95],
+//     // shadowSize: [50, 64],
+//     iconAnchor: [22, 94],
+//     // shadowAnchor: [4, 62],
+//     popupAnchor: [-3, -76]
+//   }
+// });
+// var greenIcon = new LeafIcon({ iconUrl: "carental.png" });
+
+// L.marker([51.5, -0.09], { icon: greenIcon })
+//   .addTo(techMap)
+//   .bindPopup("I am a green leaf.");
+var greenIcon = L.icon({
+  iconUrl: "carrental.png",
+  // shadowUrl: "leaf-shadow.png",
+
+  iconSize: [38, 95], // size of the icon
+  // shadowSize: [50, 64], // size of the shadow
+  iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+  // shadowAnchor: [4, 62], // the same for the shadow
+  popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+L.marker([51.5, -0.09], { icon: greenIcon }).addTo(techMap);
