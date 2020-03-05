@@ -184,7 +184,7 @@ $(document).ready(function() {
   });
 
   /**** SEARCH LAYERS ***/
-  poi = L.layerGroup([overlays["Hospital"], overlays["Lagos PPMV"]]);
+  poi = L.layerGroup([overlays["Lagos PPMV"]]);
 
   searchControl = L.control.search({
     layer: poi,
@@ -635,7 +635,7 @@ function feat1(feature, layer) {
       }
       bd.innerHtml += `<hr>`;
       bd.innerHTML += `<div><label>Fill color</label>:<input id="fillCol" type='color' value='${layer.options.fillColor}'></div>`;
-      bd.innerHTML += `<div><label>Fill opacicty</label>:<input id="fillOp" type='number' step='0.1' value='${layer.options.fillOpacity}'></div>`;
+      bd.innerHTML += `<div><label>Fill opacicty</label>:<input id="fillOp" type='number' min='0' max='1' step='0.1' value='${layer.options.fillOpacity}'></div>`;
       console.log(layer.options.fillColor);
 
       // addevent listeners for newly filled htmltags
@@ -655,7 +655,7 @@ function feat1(feature, layer) {
         });
       });
     } else if (feature.geometry.type == "Point") {
-      onMapClick(coords);
+      // onMapClick(coords);
       // console.log(feature.properties)
 
       bd.innerHTML = "";
@@ -1008,11 +1008,6 @@ saveIconCustomize.addEventListener("click", () => {
   document.getElementById("cancelIcon").click();
 });
 
-// TRY TURF AFRESH
-// var point = turf.point([-90.548630, 14.616599]);
-// var buffered = turf.buffer(point, 500, {units: 'miles'})
-// buffered.addTo(techMap)
-
 // BUFER BUFFER!!!
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
@@ -1141,12 +1136,29 @@ addNewLayer = () => {
   techMap.addLayer(overlays["new layer"]);
   console.log(sampleData);
   console.log(overlays);
+  // add the new layer to side bar
   fillLayer();
 };
 const addNewLayerBtn = document.querySelector(".add-layer");
-addNewLayer.addEventListener("click", () => {
+addNewLayerBtn.addEventListener("click", layerName => {
   // call a modal with dropzone
-
-  // add new layer to search group
+  if (layerName) {
+    poi.addLayer(overlays["Hospital"]);
+  }
   poi.addLayer(overlays["Hospital"]);
+  // console.log("isshshs");
+  // Add new layer based on the file uploaded
+  addNewLayer();
 });
+
+var control = L.Routing.control({
+  waypoints: [
+    L.latLng(38.7436056, -9.2304153),
+    L.latLng(38.5334477, -0.1312811)
+  ],
+  router: new L.Routing.osrmv1({
+    language: "en",
+    profile: "car"
+  }),
+  geocoder: L.Control.Geocoder.nominatim({})
+}).addTo(techMap);
