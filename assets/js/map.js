@@ -704,19 +704,23 @@ function feat1(feature, layer) {
 // layer wrap event delegation
 const layerWrap = document.querySelector("#pills-profile");
 layerWrap.addEventListener("click", e => {
-  if (
-    e.target.tagName == "BUTTON" ||
-    e.target.parentElement.tagName == "BUTTON"
-  ) {
-    console.log("phew!");
-    delLayer(e);
-  }
+  // if (e.target.tagName == "I") {
+  //   // console.log("phew!");
+  //   delLayer(e);
+  // }
+  delLayer(e);
 });
 
 function delLayer(e) {
-  techMap.removeLayer(overlays[`${e.target.parentElement.innerText}`]);
-  delete overlays[e.target.parentElement.innerText];
-
+  if (e.target.tagName == "I") {
+    techMap.removeLayer(
+      overlays[`${e.target.parentElement.parentElement.innerText}`]
+    );
+    delete overlays[e.target.parentElement.parentElement.innerText];
+  } else if (e.target.tagName == "BUTTON") {
+    techMap.removeLayer(overlays[`${e.target.parentElement.innerText}`]);
+    delete overlays[e.target.parentElement.innerText];
+  }
   fillLayer();
 }
 
@@ -733,7 +737,7 @@ function fillLayer() {
     delBtn.classList.add("btn-sm");
     delBtn.classList.add("del-btn");
     delBtn.classList.add("btn-danger");
-    // delBtn.innerHTML = "<i class='fas fa-times delLayer'></i>";
+    delBtn.innerHTML = "<i class='fas fa-times del-layer'></i>";
     // delBtn.innerText = 'X'
     edit.classList.add("fas");
     edit.classList.add("fa-edit");
