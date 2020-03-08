@@ -711,56 +711,53 @@ function fillLayer() {
     let checked = document.createElement("i");
     let edit = document.createElement("i");
     let delBtn = document.createElement("button");
+
     delBtn.classList.add("btn");
     delBtn.classList.add("btn-sm");
     delBtn.classList.add("del-btn");
     delBtn.classList.add("btn-danger");
     delBtn.innerHTML = "<i class='fas fa-times del-layer'></i>";
-    // delBtn.innerText = 'X'
+
     edit.classList.add("fas");
     edit.classList.add("fa-edit");
     edit.classList.add("edit");
     edit.style.fontSize = "18px";
     edit.title = "customize layer";
+    edit.addEventListener("click", callModal);
+
     checked.classList.add("fas");
     checked.style.marginLeft = "auto";
-    // checked.classList.add('fa-check-square')
+    // checked.classList.add("fa-check-square");
+
     el.innerText = key;
     el.prepend(edit);
     el.prepend(delBtn);
-    edit.addEventListener("click", callModal);
     el.append(checked);
     el.classList.add("inactive");
     el.classList.add("layer");
-    el.addEventListener("click", loadLayer);
-    // delBtn.addEventListener("click", delLayer);
+    // el.addEventListener("click", loadLayer);
 
     document.querySelector("#pills-profile").append(el);
   }
-}
-function loadLayer(e) {
-  // if a layer is not active, add the class active and also add to Map else do d opp
-  if (e.target.tagName !== "DIV") {
-    return;
-  }
-  // console.log(e)
-  e.target.classList.contains("inactive")
-    ? techMap.addLayer(overlays[e.target.innerText])
-    : techMap.removeLayer(overlays[e.target.innerText]);
-  e.target.classList.toggle("inactive");
-  e.target.lastElementChild.classList.toggle("fa-check-square");
-  e.target.lastElementChild.style.fontSize = "22px";
-  // console.log(e.target.lastElementChild)
 }
 
 // layer wrap event delegation
 const layerWrap = document.querySelector("#pills-profile");
 layerWrap.addEventListener("click", e => {
-  // if (e.target.tagName == "I") {
-  //   // console.log("phew!");
-  //   delLayer(e);
-  // }
-  delLayer(e);
+  if (e.target.tagName == "I" || e.target.tagName == "BUTTON") {
+    delLayer(e);
+  } else if (
+    e.target.tagName === "DIV" &&
+    e.target.classList.contains("layer")
+  ) {
+    e.target.classList.contains("inactive")
+      ? techMap.addLayer(overlays[e.target.innerText])
+      : techMap.removeLayer(overlays[e.target.innerText]);
+    e.target.classList.toggle("inactive");
+    console.log("after toggle");
+    e.target.lastElementChild.classList.toggle("fa-check-square");
+    e.target.lastElementChild.style.fontSize = "22px";
+  }
 });
 
 // remove a layer when clicked on the red button
@@ -775,6 +772,7 @@ function delLayer(e) {
     delete overlays[e.target.parentElement.innerText];
   }
   fillLayer();
+  console.log("delLayer");
 }
 
 function callModal(e) {
