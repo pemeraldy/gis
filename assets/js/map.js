@@ -701,29 +701,6 @@ function feat1(feature, layer) {
 }
 
 /*********HELPER FUNCs FOR INFO DIV************/
-// layer wrap event delegation
-const layerWrap = document.querySelector("#pills-profile");
-layerWrap.addEventListener("click", e => {
-  // if (e.target.tagName == "I") {
-  //   // console.log("phew!");
-  //   delLayer(e);
-  // }
-  delLayer(e);
-});
-
-// remove a layer when clicked on the red button
-function delLayer(e) {
-  if (e.target.tagName == "I") {
-    techMap.removeLayer(
-      overlays[e.target.parentElement.parentElement.innerText]
-    );
-    delete overlays[e.target.parentElement.parentElement.innerText];
-  } else if (e.target.tagName == "BUTTON") {
-    techMap.removeLayer(overlays[e.target.parentElement.innerText]);
-    delete overlays[e.target.parentElement.innerText];
-  }
-  fillLayer();
-}
 
 //fill container with a list of loaded layers
 function fillLayer() {
@@ -774,6 +751,30 @@ function loadLayer(e) {
   e.target.lastElementChild.classList.toggle("fa-check-square");
   e.target.lastElementChild.style.fontSize = "22px";
   // console.log(e.target.lastElementChild)
+}
+
+// layer wrap event delegation
+const layerWrap = document.querySelector("#pills-profile");
+layerWrap.addEventListener("click", e => {
+  // if (e.target.tagName == "I") {
+  //   // console.log("phew!");
+  //   delLayer(e);
+  // }
+  delLayer(e);
+});
+
+// remove a layer when clicked on the red button
+function delLayer(e) {
+  if (e.target.tagName == "I") {
+    techMap.removeLayer(
+      overlays[e.target.parentElement.parentElement.innerText]
+    );
+    delete overlays[e.target.parentElement.parentElement.innerText];
+  } else if (e.target.tagName == "BUTTON") {
+    techMap.removeLayer(overlays[e.target.parentElement.innerText]);
+    delete overlays[e.target.parentElement.innerText];
+  }
+  fillLayer();
 }
 
 function callModal(e) {
