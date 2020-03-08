@@ -31,7 +31,9 @@ let techMap,
   poi,
   bufferCircle,
   cIndicator,
-  addNewLayer;
+  addNewLayer,
+  lRounting;
+let routing = false;
 
 $(document).ready(function() {
   //init setting
@@ -149,8 +151,23 @@ $(document).ready(function() {
     });
   }
 
-  // ############### HEATMAP ######
+  // ############### ROUTING ######
   // Heat map deals with points will later create a point extractor function
+  // lat: 6.624315;
+  // lng: 3.32636;
+  lRounting = L.Routing.control({
+    waypoints: [L.latLng(6.624315, 3.32636), L.latLng(6.4678446, 3.3745158)],
+    routeWhileDragging: true
+  }).addTo(techMap);
+
+  // function createButton(label, container) {
+  //   let btn = L.DomUtil.create("button", "", container);
+  //   btn.setAttribute("type", "button");
+  //   btn.innerHTML = label;
+  //   return btn;
+  // }
+
+  techMap.on("click", selectStartOrEndLocation);
 
   // Draw controller
   drawnItems = new L.FeatureGroup();
@@ -206,7 +223,7 @@ $(document).ready(function() {
     moveToLocation: function(latlng, title, techMap) {
       // techMap.fitBounds( latlng.layer.getBounds() );
       // console.log(latlng, title, techMap)
-      // var zoom = techMap.getBoundsZoom(latlng.layer.getBounds());
+      // let zoom = techMap.getBoundsZoom(latlng.layer.getBounds());
       techMap.flyTo(latlng, 11); // access the zoom
     }
   });
@@ -618,7 +635,8 @@ function feat1(feature, layer) {
   // console.log('layer:',layer)
 
   layer.on("click", e => {
-    let coords = e.target.feature.geometry.coordinates;
+    // let coords = e.target.feature.geometry.coordinates;
+    // console.log(coords);
     let props = feature.properties;
     document.querySelector(".legend").classList.remove("trans-open");
     // console.log(props)
@@ -657,6 +675,11 @@ function feat1(feature, layer) {
     } else if (feature.geometry.type == "Point") {
       // onMapClick(coords);
       // console.log(feature.properties)
+      if (routing) {
+        let coords = e.target.feature.geometry.coordinates;
+        console.log(coords);
+        // selectStartOrEndLocation(coords);
+      }
 
       bd.innerHTML = "";
       for (let key in props) {
@@ -678,6 +701,24 @@ function feat1(feature, layer) {
 }
 
 /*********HELPER FUNCs FOR INFO DIV************/
+// layer wrap event delegation
+const layerWrap = document.querySelector("#pills-profile");
+layerWrap.addEventListener("click", e => {
+  if (
+    e.target.tagName == "BUTTON" ||
+    e.target.parentElement.tagName == "BUTTON"
+  ) {
+    console.log("phew!");
+    delLayer(e);
+  }
+});
+
+function delLayer(e) {
+  techMap.removeLayer(overlays[`${e.target.parentElement.innerText}`]);
+  delete overlays[e.target.parentElement.innerText];
+
+  fillLayer();
+}
 
 //fill container with a list of loaded layers
 function fillLayer() {
@@ -687,6 +728,13 @@ function fillLayer() {
     let el = document.createElement("div");
     let checked = document.createElement("i");
     let edit = document.createElement("i");
+    let delBtn = document.createElement("button");
+    delBtn.classList.add("btn");
+    delBtn.classList.add("btn-sm");
+    delBtn.classList.add("del-btn");
+    delBtn.classList.add("btn-danger");
+    // delBtn.innerHTML = "<i class='fas fa-times delLayer'></i>";
+    // delBtn.innerText = 'X'
     edit.classList.add("fas");
     edit.classList.add("fa-edit");
     edit.classList.add("edit");
@@ -697,19 +745,22 @@ function fillLayer() {
     // checked.classList.add('fa-check-square')
     el.innerText = key;
     el.prepend(edit);
+    el.prepend(delBtn);
     edit.addEventListener("click", callModal);
     el.append(checked);
     el.classList.add("inactive");
     el.classList.add("layer");
     el.addEventListener("click", loadLayer);
+    // delBtn.addEventListener("click", delLayer);
 
     document.querySelector("#pills-profile").append(el);
   }
-  // return 3;
 }
 function loadLayer(e) {
   // if a layer is not active, add the class active and also add to Map else do d opp
-  // if(e.target !== 'div'){ return}
+  if (e.target.tagName !== "DIV") {
+    return;
+  }
   // console.log(e)
   e.target.classList.contains("inactive")
     ? techMap.addLayer(overlays[e.target.innerText])
@@ -1142,8 +1193,61 @@ addNewLayer = () => {
 const addNewLayerBtn = document.querySelector(".add-layer");
 addNewLayerBtn.addEventListener("click", layerName => {
   // call a modal with dropzone
-  poi.addLayer(overlays[`${layerName}`]);
-  // console.log("isshshs");
+  if (layerName) {
+    // poi.addLayer(overlays["Hospital"]);
+  }
+  poi.addLayer(overlays["Hospital"]);
+
   // Add new layer based on the file uploaded
   addNewLayer();
 });
+
+// Create button for routing selection
+function createButton(label, container) {
+  let btn = L.DomUtil.create("button", "", container);
+  btn.setAttribute("type", "button");
+  btn.innerHTML = label;
+  return btn;
+}
+
+function selectStartOrEndLocation(e) {
+  let container = L.DomUtil.create("div"),
+    startBtn = createButton("Start from this location", container),
+    destBtn = createButton("Go to this location", container);
+
+  L.popup()
+    .setContent(container)
+    .setLatLng(e.latlng)
+    .openOn(techMap);
+
+  L.DomEvent.on(startBtn, "click", function() {
+    lRounting.spliceWaypoints(0, 1, e.latlng);
+    techMap.closePopup();
+  });
+
+  L.DomEvent.on(destBtn, "click", function() {
+    lRounting.spliceWaypoints(lRounting.getWaypoints().length - 1, 1, e.latlng);
+    techMap.closePopup();
+  });
+}
+
+function routeWithPointsClicked(layer) {
+  let container = L.DomUtil.create("div"),
+    startBtn = createButton("Start from this location", container),
+    destBtn = createButton("Go to this location", container);
+
+  L.popup()
+    .setContent(container)
+    .setLatLng(e.latlng)
+    .openOn(techMap);
+
+  L.DomEvent.on(startBtn, "click", function() {
+    lRounting.spliceWaypoints(0, 1, e.latlng);
+    techMap.closePopup();
+  });
+
+  L.DomEvent.on(destBtn, "click", function() {
+    lRounting.spliceWaypoints(lRounting.getWaypoints().length - 1, 1, e.latlng);
+    techMap.closePopup();
+  });
+}

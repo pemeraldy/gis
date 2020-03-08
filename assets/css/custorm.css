@@ -475,7 +475,11 @@ button[data-target="#collapse3"] {
 .layer i {
   transition: all 0.3s ease-in;
 }
-
+.del-btn {
+  display: inline-block !important;
+  /* margin-left: auto; */
+  /* content: "X"; */
+}
 .edit {
   cursor: pointer;
   transition: all 0.4s ease-in;

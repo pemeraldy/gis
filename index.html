@@ -39,6 +39,7 @@
   <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.css">
   <link rel="stylesheet" href="./assets/js/plugins/MarkerCluster.Default.css">
   <link rel="stylesheet" href="./assets/js/plugins/leaflet-beautify-marker-icon.css">
+  <link rel="stylesheet" href="./assets/js/plugins/leaflet-routing-machine.css">
 
   <!-- leaflet Javascript -->
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
@@ -62,8 +63,8 @@
   <script src="./assets/js/plugins/leaflet-heat.js"></script>
   <script src="./assets/js/plugins/easy-button.js"></script>
   <script src="https://unpkg.com/leaflet-search@2.3.7/dist/leaflet-search.src.js"></script>
-  <script src="./assets/js/plugins/leaflet-omnivore.min.js"></script>
-  <script src="./assets/js/plugins/leaflet.filelayer.js"></script>
+  
+  
   <script src="./assets/js/plugins/leaflet-measure.js"></script>
   <!-- <script src="./assets/js/plugins/L.Control.SlideMenu.js"></script> -->
   <script src="./assets/js/plugins/leaflet.markercluster.js"></script>
@@ -72,6 +73,8 @@
   <script src="./assets/js/plugins/fuse.js"></script>
   <script src="./assets/js/plugins/leaflet.fusesearch.js"></script>
   <script src="./assets/js/plugins/leaflet-beautify-marker-icon.js"></script>
+  <script src="./assets/js/plugins/leaflet-routing-machine.js"></script>
+  <!-- <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script> -->
   <!-- <script src="./assets/js/plugins/search/leaflet.customsearchbox.min.js"></script> -->
   <script src="https://npmcdn.com/@turf/turf@5.1.6/turf.min.js"></script>
 
@@ -343,7 +346,7 @@
             <div class="d-flex "><h2 class="sidebar-header">Map Legend</h2> <div title="Add new layer" class="add-layer"><i class="fa fa-plus"></i></div> <span class="sidebar-anchor"><i class="fas fa-chevron-left"></i></span></div>
             <hr style="margin-top: 0 !important;">
             <div class="sidebar-inner">
-              <div class="tab-content" id="pills-tabContent">
+              <div class="tab-content layer-wrap" id="pills-tabContent">
               <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-">
                 
           <div id="osm" class="map-thumb base-active">
@@ -548,7 +551,7 @@
                                   <div class="form-group">
                                     <label for="icon" class="">Point symbol</label>
                                     <input type="text" list="icon" value="" class="form-control" id="iconType" placeholder="choose icon">
-                                    <select id="icon">
+                                    <datalist id="icon">
                                       <option value="cross"></option>  
                                       <option value="dot-circle"></option> 
                                       <option value="star"></option>                                   
@@ -563,7 +566,7 @@
                                       <option value="user-nurse"></option>
                                       <option value="user-md">doctor</option>
 
-                                    </select>
+                                    </datalist>
                                   </div>
                                 </div>
                                 <!-- ############ Fill color and opacity ############### -->
