@@ -466,12 +466,13 @@ button[data-target="#collapse3"] {
 /* Layer Bar */
 .layer {
   /* border-bottom: 1px dashed #1a174d; */
-  background: #dfdede;
+  background: #e9ecef;
   padding: 5px 0 0 5px;
   margin-top: 2px;
   display: flex;
   justify-content: space-between;
   transition: all 0.4s ease-in;
+  cursor: pointer;
 }
 .layer i {
   transition: all 0.3s ease-in;

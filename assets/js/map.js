@@ -754,7 +754,7 @@ layerWrap.addEventListener("click", e => {
       ? techMap.addLayer(overlays[e.target.innerText])
       : techMap.removeLayer(overlays[e.target.innerText]);
     e.target.classList.toggle("inactive");
-    console.log("after toggle");
+
     e.target.lastElementChild.classList.toggle("fa-check-square");
     e.target.lastElementChild.style.fontSize = "22px";
   }
@@ -772,7 +772,6 @@ function delLayer(e) {
     delete overlays[e.target.parentElement.innerText];
   }
   fillLayer();
-  console.log("delLayer");
 }
 
 function callModal(e) {
@@ -821,15 +820,7 @@ const modalFormValues = () => {
     fillColor: fillColor,
     fillOpacity: fillOpacity
   };
-
-  // changePoints("Hospital", points )
 };
-
-// const editLayerModalForm = document.getElementById('editLayer')
-// // console.log(editLayerModalForm)
-
-// const saveCustomize = document.getElementById('saveCustomize')
-// saveCustomize.addEventListener('click', changePoints)
 
 var myIcon = L.icon({
   iconUrl: "./assets/carrental.png",
