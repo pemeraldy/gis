@@ -711,14 +711,15 @@ layerWrap.addEventListener("click", e => {
   delLayer(e);
 });
 
+// remove a layer when clicked on the red button
 function delLayer(e) {
   if (e.target.tagName == "I") {
     techMap.removeLayer(
-      overlays[`${e.target.parentElement.parentElement.innerText}`]
+      overlays[e.target.parentElement.parentElement.innerText]
     );
     delete overlays[e.target.parentElement.parentElement.innerText];
   } else if (e.target.tagName == "BUTTON") {
-    techMap.removeLayer(overlays[`${e.target.parentElement.innerText}`]);
+    techMap.removeLayer(overlays[e.target.parentElement.innerText]);
     delete overlays[e.target.parentElement.innerText];
   }
   fillLayer();
