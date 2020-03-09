@@ -33,7 +33,7 @@ let techMap,
   cIndicator,
   addNewLayer,
   lRounting;
-let routing = false;
+let routingMode = false;
 
 $(document).ready(function() {
   //init setting
@@ -156,7 +156,7 @@ $(document).ready(function() {
   // lat: 6.624315;
   // lng: 3.32636;
   lRounting = L.Routing.control({
-    waypoints: [L.latLng(6.624315, 3.32636), L.latLng(6.4678446, 3.3745158)],
+    waypoints: [null, null],
     routeWhileDragging: true
   }).addTo(techMap);
 
@@ -167,7 +167,7 @@ $(document).ready(function() {
   //   return btn;
   // }
 
-  techMap.on("click", selectStartOrEndLocation);
+  routingMode === true ? techMap.on("click", selectStartOrEndLocation) : "";
 
   // Draw controller
   drawnItems = new L.FeatureGroup();
@@ -463,6 +463,9 @@ $(document).ready(function() {
   techMap.on("click", function(e) {
     // let attr = json.properties
     console.log(e);
+    if (routingMode === true) {
+      selectStartOrEndLocation(e);
+    }
   });
 
   fillLayer();
@@ -637,7 +640,7 @@ function feat1(feature, layer) {
   layer.on("click", e => {
     // let coords = e.target.feature.geometry.coordinates;
     // console.log(coords);
-    routeWithPointsClicked(e);
+    // routeWithPointsClicked(e);
     let props = feature.properties;
     document.querySelector(".legend").classList.remove("trans-open");
     // console.log(props)
@@ -676,10 +679,14 @@ function feat1(feature, layer) {
     } else if (feature.geometry.type == "Point") {
       // onMapClick(coords);
       // console.log(feature.properties)
-      if (routing) {
-        let coords = e.target.feature.geometry.coordinates;
-        console.log(coords);
-        // selectStartOrEndLocation(coords);
+      // if (routingMode === true) {
+      //   let coords = e.target.feature.geometry.coordinates;
+      //   console.log(coords);
+      //   // selectStartOrEndLocation(coords);
+      // }
+      if (routingMode == true) {
+        routeWithPointsClicked(e);
+        return false;
       }
 
       bd.innerHTML = "";
@@ -1199,6 +1206,7 @@ addNewLayerBtn.addEventListener("click", layerName => {
 });
 
 // Create button for routing selection
+
 function createButton(label, container) {
   let btn = L.DomUtil.create("button", "", container);
   btn.setAttribute("type", "button");
@@ -1206,6 +1214,7 @@ function createButton(label, container) {
   return btn;
 }
 
+// when clicked on anywhere on the map choose start/end of a route
 function selectStartOrEndLocation(e) {
   let container = L.DomUtil.create("div"),
     startBtn = createButton("Start from this location", container),
@@ -1227,6 +1236,7 @@ function selectStartOrEndLocation(e) {
   });
 }
 
+// GIve option to make clicked points start/end of a route
 function routeWithPointsClicked(e) {
   let container = L.DomUtil.create("div"),
     startBtn = createButton("Start from this location", container),
@@ -1261,3 +1271,34 @@ function routeWithPointsClicked(e) {
     techMap.closePopup();
   });
 }
+
+// sideNav Tools btn access
+const routeToggle = document.getElementById("touteToggle");
+const bufferTool = document.getElementById("bufferTool");
+const viewLayers = document.getElementById("viewLayers");
+
+routeToggle.addEventListener("click", () => {
+  routingMode === true ? (routingMode = false) : (routingMode = true);
+  routingMode === true
+    ? (routeToggle.innerHTML = `<i class="fas fa-map"></i>Stop routing`)
+    : (routeToggle.innerHTML = `<i class="fas fa-map"></i>Route`);
+  routingMode === true
+    ? (document.getElementById(
+        "toolsNav"
+      ).innerHTML = `<i class="fas fa-tools"></i> Tools <button class="btn btn-sm btn-info ml-2">Route Active</button>`)
+    : (document.getElementById(
+        "toolsNav"
+      ).innerHTML = `<i class="fas fa-tools"></i> Tools `);
+
+  console.log(routingMode);
+});
+
+bufferTool.addEventListener("click", () => {
+  document.querySelector(".map-sidebar").classList.remove("side-open");
+  document.getElementById("pills-contact-tab").click();
+});
+
+viewLayers.addEventListener("click", () => {
+  document.querySelector(".map-sidebar").classList.remove("side-open");
+  document.getElementById("pills-profile-tab").click();
+});

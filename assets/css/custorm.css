@@ -551,3 +551,7 @@ li .search-tip {
 .buffer-tool {
   display: flex;
 }
+
+#toolsNav {
+  transition: all 0.5s linear;
+}
