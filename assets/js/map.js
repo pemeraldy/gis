@@ -637,6 +637,7 @@ function feat1(feature, layer) {
   layer.on("click", e => {
     // let coords = e.target.feature.geometry.coordinates;
     // console.log(coords);
+    routeWithPointsClicked(e);
     let props = feature.properties;
     document.querySelector(".legend").classList.remove("trans-open");
     // console.log(props)
@@ -1226,23 +1227,37 @@ function selectStartOrEndLocation(e) {
   });
 }
 
-function routeWithPointsClicked(layer) {
+function routeWithPointsClicked(e) {
   let container = L.DomUtil.create("div"),
     startBtn = createButton("Start from this location", container),
-    destBtn = createButton("Go to this location", container);
+    destBtn = createButton("Go to this location", container),
+    coords = e.target.feature.geometry.coordinates;
+  console.log(coords);
+  objPoints = {};
+  objPoints.lat = coords[1];
+  objPoints.lng = coords[0];
+
+  // convert the array of coordinates to object
+  // for (i = 0; i < coords.length; i++) {
+  //   objPoints[i] = coords[i];
+  // }
 
   L.popup()
     .setContent(container)
-    .setLatLng(e.latlng)
+    .setLatLng(objPoints)
     .openOn(techMap);
 
   L.DomEvent.on(startBtn, "click", function() {
-    lRounting.spliceWaypoints(0, 1, e.latlng);
+    lRounting.spliceWaypoints(0, 1, objPoints);
     techMap.closePopup();
   });
 
   L.DomEvent.on(destBtn, "click", function() {
-    lRounting.spliceWaypoints(lRounting.getWaypoints().length - 1, 1, e.latlng);
+    lRounting.spliceWaypoints(
+      lRounting.getWaypoints().length - 1,
+      1,
+      objPoints
+    );
     techMap.closePopup();
   });
 }
