@@ -157,8 +157,10 @@ $(document).ready(function() {
   // lng: 3.32636;
   lRounting = L.Routing.control({
     waypoints: [null, null],
-    routeWhileDragging: true
+    routeWhileDragging: true,
+    collapsible: true
   }).addTo(techMap);
+  lRounting.hide();
 
   // function createButton(label, container) {
   //   let btn = L.DomUtil.create("button", "", container);
@@ -642,6 +644,8 @@ function feat1(feature, layer) {
     // console.log(coords);
     // routeWithPointsClicked(e);
     let props = feature.properties;
+
+    // check if routing is active
     routingMode == false
       ? document.querySelector(".legend").classList.remove("trans-open")
       : "";
@@ -1284,6 +1288,7 @@ routeToggle.addEventListener("click", () => {
   routingMode === true
     ? (routeToggle.innerHTML = `<i class="fas fa-map"></i>Stop routing`)
     : (routeToggle.innerHTML = `<i class="fas fa-map"></i>Route`);
+
   routingMode === true
     ? (document.getElementById(
         "toolsNav"
@@ -1291,6 +1296,8 @@ routeToggle.addEventListener("click", () => {
     : (document.getElementById(
         "toolsNav"
       ).innerHTML = `<i class="fas fa-tools"></i> Tools `);
+
+  routingMode === true ? lRounting.show() : lRounting.hide();
 
   console.log(routingMode);
 });
