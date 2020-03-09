@@ -642,7 +642,9 @@ function feat1(feature, layer) {
     // console.log(coords);
     // routeWithPointsClicked(e);
     let props = feature.properties;
-    document.querySelector(".legend").classList.remove("trans-open");
+    routingMode == false
+      ? document.querySelector(".legend").classList.remove("trans-open")
+      : "";
     // console.log(props)
 
     if (feature.geometry.type == "MultiPolygon") {
