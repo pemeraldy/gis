@@ -1298,8 +1298,9 @@ routeToggle.addEventListener("click", () => {
       ).innerHTML = `<i class="fas fa-tools"></i> Tools `);
 
   routingMode === true ? lRounting.show() : lRounting.hide();
-
+  // routingMode === false ? lRounting.setWaypoints() : "";
   console.log(routingMode);
+  lRounting.setWaypoints();
 });
 
 bufferTool.addEventListener("click", () => {
